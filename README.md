@@ -22,7 +22,7 @@ $ npm install -g mo-dx-plugin
 $ mo-dx-plugin COMMAND
 running command...
 $ mo-dx-plugin (-v|--version|version)
-mo-dx-plugin/0.0.0 darwin-x64 node-v8.9.4
+mo-dx-plugin/0.0.1 darwin-x64 node-v9.5.0
 $ mo-dx-plugin --help [COMMAND]
 USAGE
   $ mo-dx-plugin COMMAND
@@ -59,7 +59,7 @@ EXAMPLES
      Hello myname! This is org: MyOrg and I will be around until Tue Mar 20 2018!
 ```
 
-_See code: [src/commands/hello/org.ts](https://github.com/ForceProjects/mo-dx-plugin/blob/v0.0.0/src/commands/hello/org.ts)_
+_See code: [src/commands/hello/org.ts](https://github.com/ForceProjects/mo-dx-plugin/blob/v0.0.1/src/commands/hello/org.ts)_
 
 ## `mo-dx-plugin retrieve:dxsource`
 
@@ -84,10 +84,10 @@ OPTIONS
   --loglevel=(trace|debug|info|warn|error|fatal)  logging level for this command invocation
 
 EXAMPLE
-  $ sfdx retrieve:dxsource -u myOrg@example.com -n <package/changeset> -p <pathName>
+  $ sfdx retrieve:dxsource -u myOrg@example.com -n <package/changeset> -p <[pathName]>
 ```
 
-_See code: [src/commands/retrieve/dxsource.ts](https://github.com/ForceProjects/mo-dx-plugin/blob/v0.0.0/src/commands/retrieve/dxsource.ts)_
+_See code: [src/commands/retrieve/dxsource.ts](https://github.com/ForceProjects/mo-dx-plugin/blob/v0.0.1/src/commands/retrieve/dxsource.ts)_
 <!-- commandsstop -->
 <!-- debugging-your-plugin -->
 # Debugging your plugin

@@ -1,6 +1,6 @@
 {
   "name": "mo-dx-plugin",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "author": "Mohith Shrivastava",
   "bugs": "https://github.com/ForceProjects/mo-dx-plugin/issues",
   "dependencies": {
@@ -36,7 +36,7 @@
     "/npm-shrinkwrap.json",
     "/oclif.manifest.json"
   ],
-  "homepage": "https://github.com/ForceProjects/mo-dx-plugin",
+  "homepage": "https://github.com/msrivastav13/mo-dx-plugin",
   "keywords": [
     "sfdx-plugin"
   ],
