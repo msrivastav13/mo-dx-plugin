@@ -38,4 +38,4 @@ EXAMPLE
   $ sfdx retrieve:dxsource -u myOrg@example.com -n <package/changeset> -p <[pathName]>
 ```
 
-_See code: [src/commands/retrieve/dxsource.ts](https://github.com/ForceProjects/mo-dx-plugin/blob/v0.0.1/src/commands/retrieve/dxsource.ts)_
+_See code: [src/commands/retrieve/dxsource.ts](https://github.com/msrivastav13/mo-dx-plugin/blob/master/src/commands/retrieve/dxsource.ts)_
