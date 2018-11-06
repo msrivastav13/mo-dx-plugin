@@ -63,7 +63,7 @@ export default class DxSource extends SfdxCommand {
 
     try {
       const convertResult = await exec(`sfdx force:mdapi:convert -r ./${tmpDir} -d ${target} --json`);
-      this.ux.stopSpinner(`done (converted ${JSON.parse(convertResult.stdout).result.length} items).  Cleaning up...`);
+      this.ux.stopSpinner(`Done Converting mdapi to DX format.....Cleaning..`);
     } catch (err) {
       this.ux.errorJson(err);
       this.ux.error('Error from conversion--it may have been too much metadata');
