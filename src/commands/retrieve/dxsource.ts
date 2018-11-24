@@ -20,13 +20,17 @@ export default class DxSource extends SfdxCommand {
   public static description = messages.getMessage('commandDescription');
 
   public static examples = [
+  `$ sfdx retrieve:dxsource -n <package/changeset> -p <[pathName]>`,
   `$ sfdx retrieve:dxsource -u myOrg@example.com -n <package/changeset> -p <[pathName]>`
   ];
+
+
 
   protected static flagsConfig = {
     // flag with a value (-n, --name=VALUE)
     packagename: {type: 'string', required: true, char: 'n', description: 'the name of the package you want to retrieve	' },
-    pathname: {type: 'string', char: 'p', default: 'force-app', description: 'where to convert the result to...defaults to force-app' }
+    pathname: {type: 'string', char: 'p', default: 'force-app', description: 'where to convert the result to...defaults to force-app' },
+    targetusername : {type: 'string', char: 'u', description: 'target org alias/username to retrieve from' }
   };
 
   // Comment this out if your command does not require an org username
@@ -36,13 +40,13 @@ export default class DxSource extends SfdxCommand {
   protected static requiresProject = true;
 
   public async run(): Promise<core.AnyJson> {
-    const outputString = 'Retrieve Successfull';
     const target = this.flags.pathname;
+    const defaultusername = this.flags.targetusername ? this.flags.targetusername :this.org.getUsername();
 
-    this.ux.startSpinner('Starting retrieval...');
+    this.ux.startSpinner('Retrieving Metadata...');
 
     // Return an object to be displayed with --json
-    const retrieveCommand = `sfdx force:mdapi:retrieve -s -p "${this.flags.packagename}" -u ${this.org.getUsername()}  -r ./${tmpDir} -w 30`;
+    const retrieveCommand = `sfdx force:mdapi:retrieve -s -p "${this.flags.packagename}" -u ${defaultusername}  -r ./${tmpDir} -w 30`;
     const retrieveResult = await exec(retrieveCommand, { maxBuffer: 1000000 * 1024 });
     if (retrieveResult.stderr) {
       this.ux.error(retrieveResult.stderr);
@@ -53,7 +57,7 @@ export default class DxSource extends SfdxCommand {
 
     const unzipResult = await exec(`unzip -qqo ./${tmpDir}/unpackaged.zip -d ./${tmpDir}`);
 
-    this.ux.startSpinner('Unzip Completed.  Converting...');
+    this.ux.startSpinner('Unzip Completed.  Converting To DX Source Format...');
 
     const removeDirResult = await exec(`rm -rf ./${manifestDir}/`);
 
@@ -63,15 +67,13 @@ export default class DxSource extends SfdxCommand {
 
     try {
       const convertResult = await exec(`sfdx force:mdapi:convert -r ./${tmpDir} -d ${target} --json`);
-      this.ux.stopSpinner(`Done Converting mdapi to DX format.....Cleaning..`);
+      this.ux.stopSpinner(`Done Converting mdapi to DX format.....Cleaning Unused Directory..`);
     } catch (err) {
       this.ux.errorJson(err);
       this.ux.error('Error from conversion--it may have been too much metadata');
     }
-
+    this.ux.startSpinner('Cleaning Unused Directory Started');
     await exec(`rm -rf ./${tmpDir}`);
-    process.stdout.write('Done!\n');
-
-    this.ux.log('Finished Retrieving Source Code..');
+    this.ux.stopSpinner('Finished..');
   }
 }
