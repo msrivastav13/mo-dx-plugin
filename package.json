@@ -8,7 +8,9 @@
     "@oclif/config": "1",
     "@oclif/errors": "1",
     "@salesforce/command": "0.1.6",
-    "tslib": "1"
+    "tslib": "1",
+    "fs-extra": "^7.0.0",
+    "lodash": "^4.17.10"
   },
   "devDependencies": {
     "@oclif/dev-cli": "1",
@@ -19,13 +21,15 @@
     "@types/jsforce": "1.8.13",
     "@types/mocha": "5",
     "@types/node": "10",
+    "@types/lodash": "^4.14.116",
     "chai": "^4",
     "globby": "8",
     "mocha": "^5",
     "nyc": "^12",
     "sinon": "5",
     "ts-node": "6",
-    "typescript": "2.9"
+    "typescript": "2.9",
+    "@types/fs-extra": "^5.0.3"
   },
   "engines": {
     "node": ">=8.0.0"

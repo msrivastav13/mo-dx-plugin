@@ -20,11 +20,9 @@ export default class DxSource extends SfdxCommand {
   public static description = messages.getMessage('commandDescription');
 
   public static examples = [
-  `$ sfdx retrieve:dxsource -n <package/changeset> -p <[pathName]>`,
-  `$ sfdx retrieve:dxsource -u myOrg@example.com -n <package/changeset> -p <[pathName]>`
+  '$ sfdx retrieve:dxsource -n <package/changeset> -p <[pathName]>',
+  '$ sfdx retrieve:dxsource -u myOrg@example.com -n <package/changeset> -p <[pathName]>'
   ];
-
-
 
   protected static flagsConfig = {
     // flag with a value (-n, --name=VALUE)
@@ -67,7 +65,7 @@ export default class DxSource extends SfdxCommand {
 
     try {
       const convertResult = await exec(`sfdx force:mdapi:convert -r ./${tmpDir} -d ${target} --json`);
-      this.ux.stopSpinner(`Done Converting mdapi to DX format.....Cleaning Unused Directory..`);
+      this.ux.stopSpinner('Done Converting mdapi to DX format.....Cleaning Unused Directory..');
     } catch (err) {
       this.ux.errorJson(err);
       this.ux.error('Error from conversion--it may have been too much metadata');

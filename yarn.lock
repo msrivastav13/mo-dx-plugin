@@ -258,6 +258,12 @@
   version "1.2.0"
   resolved "http://registry.npmjs.org/@types/events/-/events-1.2.0.tgz#81a6731ce4df43619e5c8c945383b3e62a89ea86"
 
+"@types/fs-extra@^5.0.3":
+  version "5.0.4"
+  resolved "https://registry.yarnpkg.com/@types/fs-extra/-/fs-extra-5.0.4.tgz#b971134d162cc0497d221adde3dbb67502225599"
+  dependencies:
+    "@types/node" "*"
+
 "@types/jsforce@1.8.13":
   version "1.8.13"
   resolved "https://registry.yarnpkg.com/@types/jsforce/-/jsforce-1.8.13.tgz#a3a958c45b56167d1287e323bfc04567484ecdfd"
