@@ -33,9 +33,11 @@ export class Deploy {
 
     // Create MetadataContainer request
     const metadataContainerResult = await createMetadataContainer(this.containerType, this.conn) as SobjectResult;
+    // console.log('Metadata Container' + JSON.stringify(metadataContainerResult.id));
     if (metadataContainerResult.success) {
       // Create ApexClassMember request
       const apexClassMemberResult = await createMetadataMember(this.classMember, metadataContainerResult.id, this.componentBody, this.componentId, this.conn) as SobjectResult;
+      // console.log('Metadata Member' + JSON.stringify(apexClassMemberResult));
       if (apexClassMemberResult.success) {
         // Create ContainerAsyncRequest request to deploy apex
         const containerAsyncResult = await createDeployRequest(metadataContainerResult.id, false, this.conn) as QueryResult;
