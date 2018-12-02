@@ -39,7 +39,7 @@ export default class ApexDeploy extends SfdxCommand {
 
   public async run(): Promise<core.AnyJson> {
 
-    this.ux.startSpinner(chalk.bold.yellow('Deploying....'));
+    this.ux.startSpinner(chalk.bold.yellowBright('Deploying....'));
 
     interface ApexClass {
       Body: string;
@@ -58,11 +58,13 @@ export default class ApexDeploy extends SfdxCommand {
       const deployAction = new Deploy('ApexContainer', 'ApexClassMember' , classId , filebody, conn);
       const deployResult = await deployAction.deployMetadata() as DeployResult;
       if (deployResult.success) {
-        this.ux.stopSpinner(chalk.bold.greenBright('Apex Class Updated..'));
+        this.ux.stopSpinner(chalk.bold.greenBright('Apex Class Successfully Updated.'));
         return '';
       } else {
         this.ux.stopSpinner(chalk.bold.redBright('Apex Class Update Failed'));
-        console.log(chalk.bold.redBright(deployResult.error));
+        if ( typeof deployResult.error !== 'undefined' ) {
+          console.log(chalk.bold.redBright(deployResult.error));
+        }
       }
     } else {
         // logic to create an apex class
@@ -73,7 +75,7 @@ export default class ApexDeploy extends SfdxCommand {
 
         const apexSaveResult = await conn.tooling.sobject('ApexClass').create(apexClass) as SobjectResult;
         if ( apexSaveResult.success) {
-          this.ux.stopSpinner(chalk.bold.green('Apex Class Created....'));
+          this.ux.stopSpinner(chalk.bold.green('Apex Class Successfully Created.'));
           return '';
         } else {
           for (const error of apexSaveResult.errors) {
