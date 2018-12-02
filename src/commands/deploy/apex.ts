@@ -3,9 +3,9 @@ import chalk from 'chalk';
 import fs = require('fs-extra');
 import {QueryResult} from '../../models/queryResult';
 import {SobjectResult} from '../../models/sObjectResult';
-import {createDeployRequest} from '../../service/containerasyncRequest';
-import {createMetadataContainer} from '../../service/createmetadataContainer';
-import {createMetadataMember} from '../../service/createmetadataMember';
+import {createDeployRequest} from '../../service/containerAsyncRequest';
+import {createMetadataContainer} from '../../service/createMetadataContainer';
+import {createMetadataMember} from '../../service/createMetadataMember';
 import {getFileName} from '../../service/getFileName';
 import {executeToolingQuery} from '../../service/toolingQuery';
 
@@ -63,6 +63,8 @@ export default class ApexDeploy extends SfdxCommand {
           const containerAsyncResult = await createDeployRequest(metadataContainerResult.id, false, conn) as QueryResult;
           if ( containerAsyncResult.records[0].State === 'Completed' ) {
             this.ux.stopSpinner(chalk.bold.green('Apex Class Updated....'));
+          } else {
+            this.ux.stopSpinner(chalk.bold.red('Failed to save..'));
           }
         } else {
           console.table(apexClassMemberResult.errors);

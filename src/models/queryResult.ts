@@ -9,9 +9,12 @@ interface Record {
   Id: string;
   State: string;
   ErrorMsg: string;
-  DeployDetails: DeployDetails;
+  DeployDetails: Error[];
 }
 
-interface DeployDetails {
-  componentFailures: string;
+interface Error {
+  columnNumber: number;
+  lineNumber: number;
+  fullName: number;
+  problem: string;
 }

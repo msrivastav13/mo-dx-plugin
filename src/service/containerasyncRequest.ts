@@ -2,8 +2,8 @@ import {Connection} from '@salesforce/core';
 import chalk from 'chalk';
 import {QueryResult} from '../models/queryResult';
 import {SobjectResult} from '../models/sObjectResult';
-import {delay} from '../service/delay';
-import {executeToolingQuery} from '../service/toolingQuery';
+import {delay} from './delay';
+import {executeToolingQuery} from './toolingQuery';
 
 export async function createDeployRequest(containerId: string, ischeck: boolean, conn: Connection) {
 
@@ -41,8 +41,9 @@ export async function createDeployRequest(containerId: string, ischeck: boolean,
         console.log('Deployed..');
         break;
         case 'Failed':
-        console.log('Fix below probelms..');
-        console.table(chalk.red((JSON.stringify(containerAsyncRequestRes.DeployDetails.componentFailures))));
+        for (const error of containerAsyncRequestRes.DeployDetails.componentFailures) {
+          console.log(chalk.redBright('Line:' + error.lineNumber + ' Column:' + error.columnNumber + ' Error Description:' + error.problem + '\r\n'));
+        }
         break;
         case 'Error':
         console.log('Error..' + JSON.stringify(containerAsyncRequestRes.DeployDetails.componentFailures));
