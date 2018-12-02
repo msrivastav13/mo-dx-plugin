@@ -1,4 +1,5 @@
 import {Connection} from '@salesforce/core';
+import chalk from 'chalk';
 import {QueryResult} from '../models/queryResult';
 import {SobjectResult} from '../models/sObjectResult';
 import {delay} from '../service/delay';
@@ -18,12 +19,13 @@ export async function createDeployRequest(containerId: string, ischeck: boolean,
   } as ContainerAsyncRequest;
 
   const containerAsyncResult = await conn.tooling.sobject('ContainerAsyncRequest').create(containerasynRequestReq) as SobjectResult;
+  let containerRequestResponse;
 
   if (containerAsyncResult.success) {
     const asyncResultId = containerAsyncResult.id;
     let containerRequestQuery = 'Select Id, State, ErrorMsg, DeployDetails FROM ContainerAsyncRequest where Id =\'';
     containerRequestQuery = containerRequestQuery + asyncResultId + '\'';
-    let containerRequestResponse = await executeToolingQuery(containerRequestQuery, conn) as QueryResult;
+    containerRequestResponse = await executeToolingQuery(containerRequestQuery, conn) as QueryResult;
     if (containerRequestResponse.records.length > 0) {
       let containerAsyncRequestRes = containerRequestResponse.records[0];
       while (containerAsyncRequestRes.State.toLocaleLowerCase() === 'queued') {
@@ -39,7 +41,8 @@ export async function createDeployRequest(containerId: string, ischeck: boolean,
         console.log('Deployed..');
         break;
         case 'Failed':
-        console.log('Failed..' + JSON.stringify(containerAsyncRequestRes.DeployDetails.componentFailures));
+        console.log('Fix below probelms..');
+        console.table(chalk.red((JSON.stringify(containerAsyncRequestRes.DeployDetails.componentFailures))));
         break;
         case 'Error':
         console.log('Error..' + JSON.stringify(containerAsyncRequestRes.DeployDetails.componentFailures));
@@ -51,5 +54,5 @@ export async function createDeployRequest(containerId: string, ischeck: boolean,
     }
   }
 
-  return containerAsyncResult;
+  return containerRequestResponse;
 }
