@@ -6,6 +6,7 @@ import {SobjectResult} from '../../models/sObjectResult';
 import {createDeployRequest} from '../../service/containerAsyncRequest';
 import {createMetadataContainer} from '../../service/createMetadataContainer';
 import {createMetadataMember} from '../../service/createMetadataMember';
+import {Deploy, DeployResult} from '../../service/deploy';
 import {getFileName} from '../../service/getFileName';
 import {executeToolingQuery} from '../../service/toolingQuery';
 
@@ -38,13 +39,14 @@ export default class ApexDeploy extends SfdxCommand {
 
   public async run(): Promise<core.AnyJson> {
 
+    this.ux.startSpinner(chalk.bold.yellow('Deploying....'));
+
     interface ApexClass {
       Body: string;
     }
 
     const filebody = await fs.readFile(this.flags.filepath, 'utf8');
     const conn = this.org.getConnection();
-    this.ux.startSpinner(chalk.bold.yellow('Deploying....'));
      // get the apex class Id using the class Name
     const className = getFileName(this.flags.filepath, '.cls');
     let query = 'Select Id from Apexclass where Name=\'';
@@ -53,28 +55,15 @@ export default class ApexDeploy extends SfdxCommand {
     // logic to update apex class
     if (apexclass.records.length > 0) {
       const classId = apexclass.records[0].Id ;
-      // Create MetadataContainer request
-      const metadataContainerResult = await createMetadataContainer('ApexContainer', conn) as SobjectResult;
-      if (metadataContainerResult.success) {
-        // Create ApexClassMember request
-        const apexClassMemberResult = await createMetadataMember('ApexClassMember', metadataContainerResult.id, filebody, classId, conn) as SobjectResult;
-        if (apexClassMemberResult.success) {
-          // Create ContainerAsyncRequest request to deploy apex
-          const containerAsyncResult = await createDeployRequest(metadataContainerResult.id, false, conn) as QueryResult;
-          if ( containerAsyncResult.records[0].State === 'Completed' ) {
-            this.ux.stopSpinner(chalk.bold.green('Apex Class Updated....'));
-          } else {
-            this.ux.stopSpinner(chalk.bold.red('Failed to save..'));
-          }
-        } else {
-          console.table(apexClassMemberResult.errors);
-          this.ux.stopSpinner(chalk.bold.red('Failed to save..'));
-        }
+      const deployAction = new Deploy('ApexContainer', 'ApexClassMember' , classId , filebody, conn);
+      const deployResult = await deployAction.deployMetadata() as DeployResult;
+      if (deployResult.success) {
+        this.ux.stopSpinner(chalk.bold.greenBright('Apex Class Updated..'));
+        return '';
       } else {
-          console.table(metadataContainerResult.errors);
-          this.ux.stopSpinner(chalk.bold.red('Failed to save..'));
-        }
-      return 'success';
+        this.ux.stopSpinner(chalk.bold.redBright('Apex Class Update Failed'));
+        console.log(chalk.bold.redBright(deployResult.error));
+      }
     } else {
         // logic to create an apex class
           // Create Container AsyncRequest Object
@@ -85,6 +74,12 @@ export default class ApexDeploy extends SfdxCommand {
         const apexSaveResult = await conn.tooling.sobject('ApexClass').create(apexClass) as SobjectResult;
         if ( apexSaveResult.success) {
           this.ux.stopSpinner(chalk.bold.green('Apex Class Created....'));
+          return '';
+        } else {
+          for (const error of apexSaveResult.errors) {
+            console.log(chalk.redBright(error));
+          }
+          this.ux.stopSpinner(chalk.bold.red());
         }
       }
     }

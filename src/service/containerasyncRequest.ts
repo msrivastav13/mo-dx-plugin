@@ -19,7 +19,7 @@ export async function createDeployRequest(containerId: string, ischeck: boolean,
   } as ContainerAsyncRequest;
 
   const containerAsyncResult = await conn.tooling.sobject('ContainerAsyncRequest').create(containerasynRequestReq) as SobjectResult;
-  let containerRequestResponse;
+  let containerRequestResponse = {} as QueryResult;
 
   if (containerAsyncResult.success) {
     const asyncResultId = containerAsyncResult.id;
@@ -35,10 +35,9 @@ export async function createDeployRequest(containerId: string, ischeck: boolean,
       }
       switch (containerAsyncRequestRes.State) {
         case 'Invalidated':
-        console.log(containerAsyncRequestRes.DeployDetails.componentFailures);
+        console.log(chalk.redBright(JSON.stringify(containerAsyncRequestRes.DeployDetails.componentFailures)));
         break;
         case 'Completed':
-        console.log('Deployed..');
         break;
         case 'Failed':
         for (const error of containerAsyncRequestRes.DeployDetails.componentFailures) {
@@ -46,7 +45,7 @@ export async function createDeployRequest(containerId: string, ischeck: boolean,
         }
         break;
         case 'Error':
-        console.log('Error..' + JSON.stringify(containerAsyncRequestRes.DeployDetails.componentFailures));
+        console.log(chalk.redBright(JSON.stringify(containerAsyncRequestRes.DeployDetails.componentFailures)));
         break;
         case 'Aborted':
         console.log('Aborted..');

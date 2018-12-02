@@ -9,7 +9,11 @@ interface Record {
   Id: string;
   State: string;
   ErrorMsg: string;
-  DeployDetails: Error[];
+  DeployDetails: ComponentFailures;
+}
+
+interface ComponentFailures {
+  componentFailures: Error[];
 }
 
 interface Error {
