@@ -3,9 +3,6 @@ import chalk from 'chalk';
 import fs = require('fs-extra');
 import {QueryResult} from '../../models/queryResult';
 import {SobjectResult} from '../../models/sObjectResult';
-import {createDeployRequest} from '../../service/containerAsyncRequest';
-import {createMetadataContainer} from '../../service/createMetadataContainer';
-import {createMetadataMember} from '../../service/createMetadataMember';
 import {Deploy, DeployResult} from '../../service/deploy';
 import {getFileName} from '../../service/getFileName';
 import {executeToolingQuery} from '../../service/toolingQuery';
@@ -59,7 +56,7 @@ export default class TriggerDeploy extends SfdxCommand {
     // logic to update apex class
     if (apextrigger.records.length > 0) {
       const triggerId = apextrigger.records[0].Id ;
-      const deployAction = new Deploy('TriggerContainer', 'ApexTriggerMember', triggerId , filebody, conn);
+      const deployAction = new Deploy('TriggerContainer', 'ApexTriggerMember' , triggerId , filebody, conn);
       const deployResult = await deployAction.deployMetadata() as DeployResult;
       if (deployResult.success) {
         this.ux.stopSpinner(chalk.bold.greenBright('Trigger Successfully Updated'));
