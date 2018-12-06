@@ -2,7 +2,6 @@ import {core, flags, SfdxCommand} from '@salesforce/command';
 import chalk from 'chalk';
 import fs = require('fs-extra');
 import promisify = require('util');
-import {QueryResult} from '../../models/queryResult';
 import {SobjectResult} from '../../models/sObjectResult';
 
 // Initialize Messages with the current plugin directory
@@ -35,11 +34,15 @@ export default class AuraDeploy extends SfdxCommand {
 
     this.ux.startSpinner(chalk.bold.yellowBright('Saving ....'));
 
+    const conn = this.org.getConnection();
+
     interface AuraDefinitionBundle {
       DeveloperName: string;
       MasterLabel: string;
       TableEnumOrId: string;
       Description: string;
+      Id: string;
+      NamespacePrefix: string;
     }
 
     interface AuraDefinition {
@@ -47,48 +50,104 @@ export default class AuraDeploy extends SfdxCommand {
       DefType: string;
       Format: string;
       Source: string;
-    }
-
-    interface FileObject {
-      Name: string;
-      Body: string;
+      Id: string;
     }
 
     let isDirectory: boolean = false;
-    console.log(this.flags.filepath);
-    const temp = this.flags.filepath;
-    const index = temp.lastIndexOf('/');
-    console.log(index);
-    const pathString = temp.substring(index + 1);
-    console.log(pathString);
-    let fileNames;
-    let fileName;
-    let fileExtension;
+    const _path = this.flags.filepath;
+    const _lastindex = _path.lastIndexOf('/');
+    const _fileOrDirName = _path.substring(_lastindex + 1);
 
-    if (pathString === pathString.split('.')[0]) {
-       isDirectory = true;
+    let fileNames: string[];
+    let validFiles: string[]; // filter all files with xml as it is metadata xml and we dont need to save them via tooling API
+    let fileKey: string [];
+
+    if (_fileOrDirName === _fileOrDirName.split('.')[0]) {
+      isDirectory = true;
     } else {
-      fileName = pathString.split('.')[0];
-      fileExtension = pathString.split('.')[1];
+      const fileName = _fileOrDirName.split('.')[0];
+      const fileExtension = _fileOrDirName.split('.')[1];
     }
 
     if (isDirectory) {
-      fileNames = await fs.readdir(this.flags.filepath);
-      const files = await getFileBodyMap(fileNames);
-      console.log(files);
-      console.log(fileNames);
+      fileNames = await fs.readdir(_path);
+      validFiles = fileNames.filter( file => {
+        if (file.substring(file.lastIndexOf('.') + 1) !== 'xml') {
+          return file;
+        }
+      });
+      const files = await getFileBodyMap(validFiles);
+      fileKey = getFileKey(validFiles);
+      const auraDefinitionBundles = await getAuraDefinitionBundle(_fileOrDirName) as AuraDefinitionBundle[];
+      if (auraDefinitionBundles.length > 0) {
+        const auraDefinitions = await getAuraDefinitions(auraDefinitionBundles[0].Id) as AuraDefinition[];
+        if (auraDefinitions.length > 0) {
+            const auraDefinitionsResult = await updateAuraDefinition(auraDefinitions, files, auraDefinitionBundles[0].Id) as SobjectResult[];
+            console.log(auraDefinitionsResult);
+        }
+      } else {
+        // Create the AuraDefinition Bundle Here
+      }
     }
 
-    // let fileName = filePathName.split('.')[0];
-   //  const fileExtension = filePathName.split('.')[1];
+    // function to get FileKey
+    function getFileKey(files: string[]) {
+      return files.map( file => {
+        return getDefType(file.split('.')[1], file.split('.')[0]);
+      });
+    }
 
    // function to get the file body concurrently using Promise.All
     async function getFileBodyMap(files: string[]) {
       return Promise.all(
         files.map(async file => {
-          return await fs.readFile(temp + '/' + file , 'utf8');
+          return await fs.readFile(_path + '/' + file , 'utf8');
         })
       );
+    }
+
+    // function to update all the AuraDefinition
+    async function updateAuraDefinition(auraDefinitions: AuraDefinition[] , files: string[], bundleId: string) {
+        const auraDefinitionsToCreate: AuraDefinition[] = [];
+        const auraDefinitionsToUpdate: AuraDefinition[] = [];
+        const promiseArray = [];
+        fileKey.forEach ( key => {
+          const auraDef = auraDefinitions.find(auraDefinition => auraDefinition.DefType === key);
+          if (auraDef) {
+            const definitionToUpdate = {} as AuraDefinition;
+            definitionToUpdate.Id = auraDef.Id;
+            definitionToUpdate.Source = files[fileKey.indexOf(auraDef.DefType)];
+            auraDefinitionsToUpdate.push(definitionToUpdate);
+          } else {
+            const definitionToInsert = {} as AuraDefinition;
+            definitionToInsert.AuraDefinitionBundleId = bundleId;
+            definitionToInsert.DefType = key;
+            definitionToInsert.Format = getAuraFormat((validFiles[fileKey.indexOf(key)].split('.'))[1]);
+            definitionToInsert.Source = files[fileKey.indexOf(key)];
+            auraDefinitionsToCreate.push(definitionToInsert);
+          }
+        });
+        if (auraDefinitionsToUpdate.length > 0) {
+          promiseArray.push(conn.tooling.sobject('AuraDefinition').update(auraDefinitionsToUpdate));
+        }
+        if (auraDefinitionsToCreate.length > 0) {
+          promiseArray.push(conn.tooling.sobject('AuraDefinition').create(auraDefinitionsToCreate));
+        }
+        return Promise.all(promiseArray);
+    }
+
+    // function to get AuraDefinitionBundleId
+    async function getAuraDefinitionBundle(name: string) {
+      return conn.tooling.sobject('AuraDefinitionBundle').find({
+        DeveloperName: name
+      });
+    }
+
+    // function to get AuraDefinition
+    async function getAuraDefinitions(bundleId: string) {
+      return conn.tooling.sobject('AuraDefinition').find({
+        AuraDefinitionBundleId: bundleId
+      });
     }
 
     // function to get file extension
@@ -116,16 +175,13 @@ export default class AuraDeploy extends SfdxCommand {
             // SVG — SVG graphic resource
             return 'SVG';
         case 'js':
-            filename = fileName.toLowerCase();
-            if (filename.endsWith('controller')) {
-                fileName = fileName.replace('Controller', '');
+            const fname = filename.toLowerCase();
+            if (fname.endsWith('controller')) {
                 return 'CONTROLLER';
-            } else if (filename.endsWith('helper')) {
-                fileName = fileName.replace('Helper', '');
+            } else if (fname.endsWith('helper')) {
                 return 'HELPER';
-            } else if (filename.endsWith('renderer')) {
+            } else if (fname.endsWith('renderer')) {
                 // RENDERER — client-side renderer
-                fileName = fileName.replace('Renderer', '');
                 return 'RENDERER';
             }
             break;
