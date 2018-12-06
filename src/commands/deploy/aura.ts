@@ -1,7 +1,6 @@
 import {core, flags, SfdxCommand} from '@salesforce/command';
 import chalk from 'chalk';
 import fs = require('fs-extra');
-import promisify = require('util');
 import {SobjectResult} from '../../models/sObjectResult';
 
 // Initialize Messages with the current plugin directory
@@ -82,8 +81,13 @@ export default class AuraDeploy extends SfdxCommand {
       if (auraDefinitionBundles.length > 0) {
         const auraDefinitions = await getAuraDefinitions(auraDefinitionBundles[0].Id) as AuraDefinition[];
         if (auraDefinitions.length > 0) {
-            const auraDefinitionsResult = await updateAuraDefinition(auraDefinitions, files, auraDefinitionBundles[0].Id) as SobjectResult[];
-            console.log(auraDefinitionsResult);
+            try {
+              const auraDefinitionsResult = await updateAuraDefinition(auraDefinitions, files, auraDefinitionBundles[0].Id) as SobjectResult[];
+              console.log(auraDefinitionsResult);
+            } catch (exception) {
+               console.log(chalk.bold.redBright(exception));
+               return exception;
+            }
         }
       } else {
         // Create the AuraDefinition Bundle Here
@@ -205,8 +209,7 @@ export default class AuraDeploy extends SfdxCommand {
       }
     }
 
-    this.ux.stopSpinner('Executed Successfully');
-
+    this.ux.stopSpinner(chalk.bold.greenBright('Executed Successfully'));
     return '';
   }
 }
