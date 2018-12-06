@@ -85,8 +85,8 @@ export default class AuraDeploy extends SfdxCommand {
               const auraDefinitionsResult = await updateAuraDefinition(auraDefinitions, files, auraDefinitionBundles[0].Id) as SobjectResult[];
               console.log(auraDefinitionsResult);
             } catch (exception) {
-               console.log(chalk.bold.redBright(exception));
-               return exception;
+              this.ux.stopSpinner(chalk.bold.redBright('Failed'));
+              console.log(chalk.bold.redBright(exception));
             }
         }
       } else {
