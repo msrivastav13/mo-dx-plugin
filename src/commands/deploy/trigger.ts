@@ -24,7 +24,6 @@ export default class TriggerDeploy extends SfdxCommand {
 
   protected static flagsConfig = {
     // flag with a value (-n, --name=VALUE)
-    classname: {type: 'string', required: false, char: 'n', description: 'name of the trigger' },
     filepath: {type: 'string', char: 'p', description: 'file path' }
   };
 
@@ -46,7 +45,6 @@ export default class TriggerDeploy extends SfdxCommand {
 
     const filebody = await fs.readFile(this.flags.filepath, 'utf8');
     const tableName = filebody.split(' ')[3];
-    console.log(tableName);
     const conn = this.org.getConnection();
      // get the apex class Id using the class Name
     const triggerName = getFileName(this.flags.filepath, '.trigger');

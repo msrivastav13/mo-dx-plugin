@@ -42,6 +42,7 @@ export default class AuraDeploy extends SfdxCommand {
       Description: string;
       Id: string;
       NamespacePrefix: string;
+      ApiVersion: number;
     }
 
     interface AuraDefinition {
@@ -77,21 +78,42 @@ export default class AuraDeploy extends SfdxCommand {
       });
       const files = await getFileBodyMap(validFiles);
       fileKey = getFileKey(validFiles);
-      const auraDefinitionBundles = await getAuraDefinitionBundle(_fileOrDirName) as AuraDefinitionBundle[];
-      if (auraDefinitionBundles.length > 0) {
-        const auraDefinitions = await getAuraDefinitions(auraDefinitionBundles[0].Id) as AuraDefinition[];
-        if (auraDefinitions.length > 0) {
-            try {
-              const auraDefinitionsResult = await updateAuraDefinition(auraDefinitions, files, auraDefinitionBundles[0].Id) as SobjectResult[];
-              console.log(auraDefinitionsResult);
-            } catch (exception) {
-              this.ux.stopSpinner(chalk.bold.redBright('Failed'));
-              console.log(chalk.bold.redBright(exception));
-            }
+      let auraDefinitionBundles = [] as AuraDefinitionBundle[];
+      auraDefinitionBundles = await getAuraDefinitionBundle(_fileOrDirName) as AuraDefinitionBundle[];
+      if (auraDefinitionBundles.length === 0) {
+        const newauraDefinitionBundle = await createAuraDefinitionBundle(_fileOrDirName) as SobjectResult;
+        if (newauraDefinitionBundle.success) {
+          const auraDefinitionBundleVar = {} as AuraDefinitionBundle;
+          auraDefinitionBundleVar.Id = newauraDefinitionBundle.id;
+          auraDefinitionBundles.push(auraDefinitionBundleVar);
+        } else {
+          console.log(chalk.bold.redBright(JSON.stringify(newauraDefinitionBundle.errors)));
         }
-      } else {
-        // Create the AuraDefinition Bundle Here
       }
+      if (auraDefinitionBundles.length > 0) {
+        let auraDefinitions = await getAuraDefinitions(auraDefinitionBundles[0].Id) as AuraDefinition[];
+        auraDefinitions = auraDefinitions.length > 0 ? auraDefinitions : [];
+        try {
+          const auraDefinitionsResult = await upsertAuraDefinition(auraDefinitions, files, auraDefinitionBundles[0].Id) as SobjectResult[];
+          this.ux.stopSpinner(chalk.bold.greenBright('Executed Successfully'));
+          // console.log(auraDefinitionsResult);
+        } catch (exception) {
+          this.ux.stopSpinner(chalk.bold.redBright('Failed'));
+          console.log(chalk.bold.redBright(exception));
+        }
+      }
+    } else {
+
+    }
+
+    // function to create AuraDefinitionBundle
+    async function createAuraDefinitionBundle(name: string) {
+      const newauraDefinition = {} as AuraDefinitionBundle;
+      newauraDefinition.DeveloperName = name;
+      newauraDefinition.MasterLabel = name;
+      newauraDefinition.Description = 'A Lightning Bundle';
+      newauraDefinition.ApiVersion = 44.0;
+      return conn.tooling.sobject('AuraDefinitionBundle').create(newauraDefinition);
     }
 
     // function to get FileKey
@@ -111,7 +133,7 @@ export default class AuraDeploy extends SfdxCommand {
     }
 
     // function to update all the AuraDefinition
-    async function updateAuraDefinition(auraDefinitions: AuraDefinition[] , files: string[], bundleId: string) {
+    async function upsertAuraDefinition(auraDefinitions: AuraDefinition[] , files: string[], bundleId: string) {
         const auraDefinitionsToCreate: AuraDefinition[] = [];
         const auraDefinitionsToUpdate: AuraDefinition[] = [];
         const promiseArray = [];
@@ -196,7 +218,7 @@ export default class AuraDeploy extends SfdxCommand {
       }
     }
 
-    // get Auraformar
+    // get Auraformat
     function getAuraFormat(ext: string) {
       // is 'js', 'css', or 'xml'
       switch (ext) {
@@ -208,8 +230,6 @@ export default class AuraDeploy extends SfdxCommand {
               return 'XML';
       }
     }
-
-    this.ux.stopSpinner(chalk.bold.greenBright('Executed Successfully'));
     return '';
   }
 }
