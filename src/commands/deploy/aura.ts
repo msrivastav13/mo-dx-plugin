@@ -38,6 +38,8 @@ export default class AuraDeploy extends SfdxCommand {
 
     const namespacePrefix = await getNameSpacePrefix(conn);
 
+    const apiVersion = conn.getApiVersion();
+
     interface AuraDefinitionBundle {
       DeveloperName: string;
       MasterLabel: string;
@@ -100,7 +102,7 @@ export default class AuraDeploy extends SfdxCommand {
         auraDefinitions = auraDefinitions.length > 0 ? auraDefinitions : [];
         try {
           const auraDefinitionsResult = await upsertAuraDefinition(auraDefinitions, fileBodyArray, auraDefinitionBundles[0].Id) as SobjectResult[];
-          this.ux.stopSpinner(chalk.bold.greenBright('Executed Successfully'));
+          this.ux.stopSpinner(chalk.bold.greenBright('AuraBundle Deployed SuccessFully..'));
           // console.log(auraDefinitionsResult);
         } catch (exception) {
           this.ux.stopSpinner(chalk.bold.redBright('Failed'));
@@ -118,7 +120,7 @@ export default class AuraDeploy extends SfdxCommand {
       newauraDefinition.DeveloperName = name;
       newauraDefinition.MasterLabel = name;
       newauraDefinition.Description = 'A Lightning Bundle';
-      newauraDefinition.ApiVersion = 44.0;
+      newauraDefinition.ApiVersion = Number(apiVersion);
       return conn.tooling.sobject('AuraDefinitionBundle').create(newauraDefinition);
     }
 

@@ -54,6 +54,7 @@ export default class ApexDeploy extends SfdxCommand {
       Name: className,
       NameSpacePrefix : namespacePrefix
     }) as ApexClass [];
+
     // logic to update apex class
     if (apexclass.length > 0) {
       const classId = apexclass[0].Id ;
