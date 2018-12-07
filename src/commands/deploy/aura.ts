@@ -2,6 +2,7 @@ import {core, flags, SfdxCommand} from '@salesforce/command';
 import chalk from 'chalk';
 import fs = require('fs-extra');
 import {SobjectResult} from '../../models/sObjectResult';
+import {getNameSpacePrefix} from '../../service/getNameSpacePrefix';
 
 // Initialize Messages with the current plugin directory
 core.Messages.importMessagesDirectory(__dirname);
@@ -34,6 +35,8 @@ export default class AuraDeploy extends SfdxCommand {
     this.ux.startSpinner(chalk.bold.yellowBright('Saving ....'));
 
     const conn = this.org.getConnection();
+
+    const namespacePrefix = await getNameSpacePrefix(conn);
 
     interface AuraDefinitionBundle {
       DeveloperName: string;
@@ -169,7 +172,8 @@ export default class AuraDeploy extends SfdxCommand {
     // function to get AuraDefinitionBundleId
     async function getAuraDefinitionBundle(name: string) {
       return conn.tooling.sobject('AuraDefinitionBundle').find({
-        DeveloperName: name
+        DeveloperName: name,
+        NamespacePrefix: namespacePrefix
       });
     }
 

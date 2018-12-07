@@ -1,7 +1,6 @@
 import {core, flags, SfdxCommand} from '@salesforce/command';
 import chalk from 'chalk';
 import fs = require('fs-extra');
-import {QueryResult} from '../../models/queryResult';
 import {SobjectResult} from '../../models/sObjectResult';
 import {Deploy, DeployResult} from '../../service/deploy';
 import {getFileName} from '../../service/getFileName';
@@ -41,8 +40,8 @@ export default class TriggerDeploy extends SfdxCommand {
       Body: string;
       Name: string;
       TableEnumOrId: string;
-      Id: string;
       NamespacePrefix: string;
+      Id?: string;
     }
 
     const conn = this.org.getConnection();
@@ -76,10 +75,10 @@ export default class TriggerDeploy extends SfdxCommand {
         // logic to create an apex class
           // Create Container AsyncRequest Object
         const apexTrigger = {
-          Name: triggerName,
           Body: filebody,
+          Name: triggerName,
           TableEnumOrId: tableName,
-          NameSpacePrefix: namespacePrefix
+          NamespacePrefix: namespacePrefix
         } as ApexTrigger;
 
         const apexSaveResult = await conn.tooling.sobject('ApexTrigger').create(apexTrigger) as SobjectResult;
