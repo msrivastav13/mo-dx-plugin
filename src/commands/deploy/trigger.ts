@@ -5,7 +5,7 @@ import {QueryResult} from '../../models/queryResult';
 import {SobjectResult} from '../../models/sObjectResult';
 import {Deploy, DeployResult} from '../../service/deploy';
 import {getFileName} from '../../service/getFileName';
-import {executeToolingQuery} from '../../service/toolingQuery';
+import {getNameSpacePrefix} from '../../service/getNameSpacePrefix';
 
 // Initialize Messages with the current plugin directory
 core.Messages.importMessagesDirectory(__dirname);
@@ -41,19 +41,26 @@ export default class TriggerDeploy extends SfdxCommand {
       Body: string;
       Name: string;
       TableEnumOrId: string;
+      Id: string;
+      NamespacePrefix: string;
     }
+
+    const conn = this.org.getConnection();
+
+    const namespacePrefix = await getNameSpacePrefix(conn);
 
     const filebody = await fs.readFile(this.flags.filepath, 'utf8');
     const tableName = filebody.split(' ')[3];
-    const conn = this.org.getConnection();
-     // get the apex class Id using the class Name
+
+     // get the trigger Id using the trigger Name
     const triggerName = getFileName(this.flags.filepath, '.trigger');
-    let query = 'Select Id from Apextrigger where Name=\'';
-    query = query + triggerName + '\'';
-    const apextrigger = await executeToolingQuery(query, conn) as QueryResult;
+    const apextrigger = await conn.tooling.sobject('Apextrigger').find({
+      Name: triggerName,
+      NameSpacePrefix : namespacePrefix
+    }) as ApexTrigger [];
     // logic to update apex class
-    if (apextrigger.records.length > 0) {
-      const triggerId = apextrigger.records[0].Id ;
+    if (apextrigger.length > 0) {
+      const triggerId = apextrigger[0].Id ;
       const deployAction = new Deploy('TriggerContainer', 'ApexTriggerMember' , triggerId , filebody, conn);
       const deployResult = await deployAction.deployMetadata() as DeployResult;
       if (deployResult.success) {
@@ -71,7 +78,8 @@ export default class TriggerDeploy extends SfdxCommand {
         const apexTrigger = {
           Name: triggerName,
           Body: filebody,
-          TableEnumOrId: tableName
+          TableEnumOrId: tableName,
+          NameSpacePrefix: namespacePrefix
         } as ApexTrigger;
 
         const apexSaveResult = await conn.tooling.sobject('ApexTrigger').create(apexTrigger) as SobjectResult;

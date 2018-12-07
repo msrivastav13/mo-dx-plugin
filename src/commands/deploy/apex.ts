@@ -1,11 +1,10 @@
 import {core, flags, SfdxCommand} from '@salesforce/command';
 import chalk from 'chalk';
 import fs = require('fs-extra');
-import {QueryResult} from '../../models/queryResult';
 import {SobjectResult} from '../../models/sObjectResult';
 import {Deploy, DeployResult} from '../../service/deploy';
 import {getFileName} from '../../service/getFileName';
-import {executeToolingQuery} from '../../service/toolingQuery';
+import {getNameSpacePrefix} from '../../service/getNameSpacePrefix';
 
 // Initialize Messages with the current plugin directory
 core.Messages.importMessagesDirectory(__dirname);
@@ -39,18 +38,25 @@ export default class ApexDeploy extends SfdxCommand {
 
     interface ApexClass {
       Body: string;
+      NamespacePrefix: string;
+      Id: string;
     }
 
-    const filebody = await fs.readFile(this.flags.filepath, 'utf8');
     const conn = this.org.getConnection();
+
+    const namespacePrefix = await getNameSpacePrefix(conn);
+
+    const filebody = await fs.readFile(this.flags.filepath, 'utf8');
+
      // get the apex class Id using the class Name
     const className = getFileName(this.flags.filepath, '.cls');
-    let query = 'Select Id from Apexclass where Name=\'';
-    query = query + className + '\'';
-    const apexclass = await executeToolingQuery(query, conn) as QueryResult;
+    const apexclass = await conn.tooling.sobject('Apexclass').find({
+      Name: className,
+      NameSpacePrefix : namespacePrefix
+    }) as ApexClass [];
     // logic to update apex class
-    if (apexclass.records.length > 0) {
-      const classId = apexclass.records[0].Id ;
+    if (apexclass.length > 0) {
+      const classId = apexclass[0].Id ;
       const deployAction = new Deploy('ApexContainer', 'ApexClassMember' , classId , filebody, conn);
       const deployResult = await deployAction.deployMetadata() as DeployResult;
       if (deployResult.success) {
@@ -66,7 +72,8 @@ export default class ApexDeploy extends SfdxCommand {
         // logic to create an apex class
           // Create Container AsyncRequest Object
         const apexClass = {
-          Body: filebody
+          Body: filebody,
+          NamespacePrefix: namespacePrefix
         } as ApexClass;
 
         const apexSaveResult = await conn.tooling.sobject('ApexClass').create(apexClass) as SobjectResult;

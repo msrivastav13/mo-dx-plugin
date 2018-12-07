@@ -10,6 +10,7 @@ interface Record {
   State: string;
   ErrorMsg: string;
   DeployDetails: ComponentFailures;
+  NamespacePrefix: string;
 }
 
 interface ComponentFailures {

@@ -15,7 +15,7 @@ export default class AuraDeploy extends SfdxCommand {
   public static description = messages.getMessage('commandDescription');
 
   public static examples = [
-  '$ $ sfdx deploy:aura -p filepath'
+  '$ sfdx deploy:aura -p filepath'
   ];
 
   protected static flagsConfig = {
