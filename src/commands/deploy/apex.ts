@@ -24,7 +24,6 @@ export default class ApexDeploy extends SfdxCommand {
 
   protected static flagsConfig = {
     // flag with a value (-n, --name=VALUE)
-    classname: {type: 'string', required: false, char: 'n', description: 'name of the apex class' },
     filepath: {type: 'string', char: 'p', description: 'file path' }
   };
 

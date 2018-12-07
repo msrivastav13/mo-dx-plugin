@@ -53,30 +53,32 @@ export default class AuraDeploy extends SfdxCommand {
       Id: string;
     }
 
-    let isDirectory: boolean = false;
     const _path = this.flags.filepath;
     const _lastindex = _path.lastIndexOf('/');
-    const _fileOrDirName = _path.substring(_lastindex + 1);
+    let _fileOrDirName = _path.substring(_lastindex + 1);
+    let isDirectory: boolean = false;
 
-    let fileNames: string[];
-    let validFiles: string[]; // filter all files with xml as it is metadata xml and we dont need to save them via tooling API
-    let fileKey: string [];
+    let validFiles: string[] = []; // Array of all file Names to Save to Server
+    let fileKey: string []; // This is equivalent to the definitionType
 
+    // This is when user provided the directory path
     if (_fileOrDirName === _fileOrDirName.split('.')[0]) {
+      const fileNames = await fs.readdir(_path);
       isDirectory = true;
-    } else {
-      const fileName = _fileOrDirName.split('.')[0];
-      const fileExtension = _fileOrDirName.split('.')[1];
-    }
-
-    if (isDirectory) {
-      fileNames = await fs.readdir(_path);
+      // filter all files without xml
       validFiles = fileNames.filter( file => {
         if (file.substring(file.lastIndexOf('.') + 1) !== 'xml') {
           return file;
         }
       });
-      const files = await getFileBodyMap(validFiles);
+    } else {
+      // Below code when user provided file path and Not directory path
+      validFiles.push(_fileOrDirName);
+      _fileOrDirName = _fileOrDirName.split('.')[0];
+    }
+
+    try {
+      const fileBodyArray = await getFileBodyMap(validFiles);
       fileKey = getFileKey(validFiles);
       let auraDefinitionBundles = [] as AuraDefinitionBundle[];
       auraDefinitionBundles = await getAuraDefinitionBundle(_fileOrDirName) as AuraDefinitionBundle[];
@@ -94,7 +96,7 @@ export default class AuraDeploy extends SfdxCommand {
         let auraDefinitions = await getAuraDefinitions(auraDefinitionBundles[0].Id) as AuraDefinition[];
         auraDefinitions = auraDefinitions.length > 0 ? auraDefinitions : [];
         try {
-          const auraDefinitionsResult = await upsertAuraDefinition(auraDefinitions, files, auraDefinitionBundles[0].Id) as SobjectResult[];
+          const auraDefinitionsResult = await upsertAuraDefinition(auraDefinitions, fileBodyArray, auraDefinitionBundles[0].Id) as SobjectResult[];
           this.ux.stopSpinner(chalk.bold.greenBright('Executed Successfully'));
           // console.log(auraDefinitionsResult);
         } catch (exception) {
@@ -102,8 +104,9 @@ export default class AuraDeploy extends SfdxCommand {
           console.log(chalk.bold.redBright(exception));
         }
       }
-    } else {
-
+    } catch (exception) {
+      this.ux.stopSpinner(chalk.bold.redBright('Failed'));
+      console.log(chalk.bold.redBright(exception));
     }
 
     // function to create AuraDefinitionBundle
@@ -127,7 +130,8 @@ export default class AuraDeploy extends SfdxCommand {
     async function getFileBodyMap(files: string[]) {
       return Promise.all(
         files.map(async file => {
-          return await fs.readFile(_path + '/' + file , 'utf8');
+          const path = isDirectory ? _path + '/' + file : _path;
+          return await fs.readFile(path , 'utf8');
         })
       );
     }
