@@ -23,7 +23,7 @@ The commands in this plugin are used within the DX Code Companion extension (htt
 
 4. Link the plugin: `sfdx plugins:link` .
 
-### Commands
+### **Commands**
 
 #### **sfdx retrieve:dxsource**
 
@@ -65,14 +65,78 @@ USAGE
 OPTIONS
   --p, --pathname=pathname                   (required) the file path of the apex class you want to save
 
-  -u, --targetusername=targetusername             username or alias for the target org; overrides default target org
-
-  --json                                          format output as json
-
-  --loglevel=(trace|debug|info|warn|error|fatal)  logging level for this command invocation
-
 EXAMPLES
   $ sfdx deploy:apex -p pathname // Default authorized org is used for the deploy
 ```
 
 _See code: [src/commands/deploy/apex.ts](https://github.com/msrivastav13/mo-dx-plugin/blob/master/src/commands/deploy/apex.ts)_
+
+#### **sfdx deploy:trigger**
+
+Deploys apex trigger code to the Salesforce Org using Tooling API.
+
+```
+USAGE
+  $ sfdx deploy:trigger
+
+OPTIONS
+  --p, --pathname=pathname                   (required) the file path of the apex trigger you want to save
+
+EXAMPLES
+  $ sfdx deploy:trigger -p pathname // Default authorized org is used for the deploy
+```
+
+_See code: [src/commands/deploy/trigger.ts](https://github.com/msrivastav13/mo-dx-plugin/blob/master/src/commands/deploy/trigger.ts)_
+
+#### **sfdx deploy:vf**
+
+Deploys visualforce page to the Salesforce Org using Tooling API.
+
+```
+USAGE
+  $ sfdx deploy:vf
+
+OPTIONS
+  --p, --pathname=pathname                   (required) the file path of the vf page you want to save
+
+EXAMPLES
+  $ sfdx deploy:vf -p pathname // Default authorized org is used for the deploy
+```
+
+_See code: [src/commands/deploy/vf.ts](https://github.com/msrivastav13/mo-dx-plugin/blob/master/src/commands/deploy/vf.ts)_
+
+#### **sfdx deploy:vfcomponent**
+
+Deploys visualforce components to the Salesforce Org using Tooling API.
+
+```
+USAGE
+  $ sfdx deploy:vfcomponent
+
+OPTIONS
+  --p, --pathname=pathname                   (required) the file path of the vf component you want to save
+
+EXAMPLES
+  $ sfdx deploy:vfcomponent -p pathname // Default authorized org is used for the deploy
+```
+
+_See code: [src/commands/deploy/vfcomponent.ts](https://github.com/msrivastav13/mo-dx-plugin/blob/master/src/commands/deploy/vfcomponent.ts)_
+
+#### **sfdx deploy:aura**
+
+Deploys aura lightning bundle to the Salesforce Org using Tooling API.
+
+Supports deploying whole aura bundle as well individual files .To deploy the AuraBundle provide the directory path in path(p) parameter
+
+```
+USAGE
+  $ sfdx deploy:aura
+
+OPTIONS
+  --p, --pathname=pathname                   (required) the file path of the aura bundle you want to save
+
+EXAMPLES
+  $ sfdx deploy:aura -p pathname // Default authorized org is used for the deploy
+```
+
+_See code: [src/commands/deploy/aura.ts](https://github.com/msrivastav13/mo-dx-plugin/blob/master/src/commands/deploy/aura.ts)_
