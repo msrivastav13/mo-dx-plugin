@@ -151,4 +151,8 @@ _See code: [src/commands/deploy/aura.ts](https://github.com/msrivastav13/mo-dx-p
 
 ### Important Note When Using these Commands With Scratch Org
 
->> **If you are using deploy commands in scratch orgs , note that these commands does not track that a code has been pushed from local and you will run into the conflict issue where classes pushed will show a server conflict .You can easily workaround this using the force parameter in the `force:source:push` or `force:source:pull` commands. If you have made some config changes to the org during the time you used these commands to save  the class run `force:source:pull -f` to resolve and bring all the changes in .**
+**If you are using deploy commands in scratch orgs , note that these commands does not track that a code has been pushed from local and you will run into the conflict issue where classes pushed will show a server conflict and local conflict.You can easily workaround this using the force parameter(-f) in the `force:source:push` or `force:source:pull` commands. If you have made some config changes to the org during the time you used these commands to save  the class run `force:source:pull -f` to resolve and bring all the changes in from the org.**
+
+### Important Note When Using these Commands With Non-Scratch Org
+
+**These commands do not maintain history and files are overriden on server .Make sure you have source control for the project setup so you do not loose anything**
