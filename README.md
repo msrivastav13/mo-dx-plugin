@@ -4,7 +4,9 @@ A plugin for Salesforce DX CLI that provides ability to save Apex Classes, Apex 
 
 Plugin also provides a retrieve command that can retrieve metadata in salesforceDx source format from salesforce using unmanaged/managed package or changesets.
 
-The commands in this plugin are used within the DX Code Companion extension (https://marketplace.visualstudio.com/items?itemName=MohithShrivastava.dx-code-companion).If you are Visual Studio Code user then recommend installing the extension along with the  plugin to avoid having to remember the commands.
+The commands in this plugin are used within the **_DX Code Companion extension_** (https://marketplace.visualstudio.com/items?itemName=MohithShrivastava.dx-code-companion).
+
+If you are Visual Studio Code user then recommend installing the extension along with the  plugin to avoid having to remember the commands.
 
 ## Setup
 
