@@ -68,7 +68,7 @@ export default class DxSource extends SfdxCommand {
       this.ux.stopSpinner('Done Converting mdapi to DX format.....Cleaning Unused Directory..');
     } catch (err) {
       this.ux.errorJson(err);
-      this.ux.error('Error from conversion--it may have been too much metadata');
+      this.ux.error('Error from conversion');
     }
     this.ux.startSpinner('Cleaning Unused Directory Started');
     await exec(`rm -rf ./${tmpDir}`);

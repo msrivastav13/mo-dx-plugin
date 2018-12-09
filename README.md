@@ -1,13 +1,20 @@
-# sfdx-retrieve:dxsource plugin
+# mo-dx-plugin
 
-A plugin for Salesforce DX CLI that retrieves metadata from unmanaged package/changeset and creates a package.xml manifest and converts source code to SalesforceDX format.
+A plugin for Salesforce DX CLI that provides ability to save Apex Classes, Apex Triggers, Visualforce Page, Visualforce Components and AuraBundle(Lightning Components) to Salesforce org (Scratch/Non-Scratch orgs) using Tooling API.
+
+Plugin also provides a retrieve command that can retrieve metadata in salesforceDx source format from salesforce using unmanaged/managed package or changesets.
+
+The commands in this plugin are used within the DX Code Companion extension (https://marketplace.visualstudio.com/items?itemName=MohithShrivastava.dx-code-companion). If you are Visual Studio Code user then recommend installing the extension along with the  plugin to avoid having to remember the commands .
+
 
 ## Setup
-### Install as plugin
-1. Install plugin: `sfdx plugins:install mo-dx-plugin`
+
+### **Install as plugin (Recommended approach for Installing)**
+
+ Install plugin using command : `sfdx plugins:install mo-dx-plugin`
 
 
-### Install from source
+### **Install from source(Preferred approach for debugging and enhancing the plugin)**
 1. Install the SDFX CLI.
 
 2. Clone the repository: `git clone git@github.com:msrivastav13/mo-dx-plugin.git`
@@ -15,6 +22,12 @@ A plugin for Salesforce DX CLI that retrieves metadata from unmanaged package/ch
 3. Install npm modules: `npm install`
 
 4. Link the plugin: `sfdx plugins:link` .
+
+### Commands
+
+#### **sfdx retrieve:dxsource**
+
+Retrieves Sourecode From Managed/Unmamaged package or Changesets.This command works for only Non-scratch orgs .
 
 ```
 USAGE
@@ -34,8 +47,32 @@ OPTIONS
 
   --loglevel=(trace|debug|info|warn|error|fatal)  logging level for this command invocation
 
-EXAMPLE
+EXAMPLES
+  $ sfdx retrieve:dxsource -n <package/changeset> // Default authorized org is used as username or org alias
   $ sfdx retrieve:dxsource -u myOrg@example.com -n <package/changeset> -p <[pathName]>
 ```
 
 _See code: [src/commands/retrieve/dxsource.ts](https://github.com/msrivastav13/mo-dx-plugin/blob/master/src/commands/retrieve/dxsource.ts)_
+
+#### **sfdx deploy:apex**
+
+Deploys apex code to the Salesforce Org using Tooling API.
+
+```
+USAGE
+  $ sfdx deploy:apex
+
+OPTIONS
+  --p, --pathname=pathname                   (required) the file path of the apex class you want to save
+
+  -u, --targetusername=targetusername             username or alias for the target org; overrides default target org
+
+  --json                                          format output as json
+
+  --loglevel=(trace|debug|info|warn|error|fatal)  logging level for this command invocation
+
+EXAMPLES
+  $ sfdx deploy:apex -p pathname // Default authorized org is used for the deploy
+```
+
+_See code: [src/commands/deploy/apex.ts](https://github.com/msrivastav13/mo-dx-plugin/blob/master/src/commands/deploy/apex.ts)_
