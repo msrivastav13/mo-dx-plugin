@@ -24,7 +24,16 @@ The commands in this plugin are used within the DX Code Companion extension (htt
 
 ### **Commands**
 
+<!-- commands -->
+
 ## `sfdx retrieve:dxsource`
+
+* [`sfdx retrieve:dxsource`](#sfdx-retrievedxsource)
+* [`sfdx deploy:apex`](#sfdx-deployapex)
+* [`sfdx deploy:trigger`](#sfdx-deploytrigger)
+* [`sfdx deploy:vf`](#sfdx-deployvf)
+* [`sfdx deploy:vfcomponent`](#sfdx-deployvfcomponent)
+* [`sfdx deploy:aura`](#sfdx-deployaura)
 
 Retrieves soure code from Managed/Unmamaged package or Changesets.This command works for only Non-scratch orgs .If you are trying to convert a traditional project in Managed/Unmanaged package , this command can help convert the sourcecode to DX format.
 
@@ -142,4 +151,4 @@ _See code: [src/commands/deploy/aura.ts](https://github.com/msrivastav13/mo-dx-p
 
 ### Important Note When Using these Commands With Scratch Org
 
-> **If you are using deploy commands in scratch orgs , note that these commands does not track that a code has been pushed from local and you will run into the conflict issue where classes pushed will show a server conflict .You can easily workaround this using the force parameter in the `force:source:push` or `force:source:pull` commands. If you have made some config changes to the org during the time you used these commands to save  the class run `force:source:pull -f` to resolve and bring all the changes in .**
+>> **If you are using deploy commands in scratch orgs , note that these commands does not track that a code has been pushed from local and you will run into the conflict issue where classes pushed will show a server conflict .You can easily workaround this using the force parameter in the `force:source:push` or `force:source:pull` commands. If you have made some config changes to the org during the time you used these commands to save  the class run `force:source:pull -f` to resolve and bring all the changes in .**
