@@ -73,7 +73,7 @@ USAGE
   $ sfdx deploy:apex
 
 OPTIONS
-  --p, --pathname=pathname                   (required) the file path of the apex class you want to save
+  --p, --pathname=pathname                   (required) the file path of the apex class you want to save to salesforce. Note you can run pwd command on terminal to obtain the path easily.
 
 EXAMPLES
   $ sfdx deploy:apex -p pathname // Default authorized org is used for the deploy .The pathname parameter must be enclosed in double quotes. Example if your path is /Users/mohith/Desktop/ForceProjects/TestApp/force-app/main/default/classes/Constants.cls then the command to save this class will be sfdx deploy:apex -p "/Users/mohith/Desktop/ForceProjects/TestApp/force-app/main/default/classes/Constants.cls"
@@ -90,7 +90,7 @@ USAGE
   $ sfdx deploy:trigger
 
 OPTIONS
-  --p, --pathname=pathname                   (required) the file path of the apex trigger you want to save
+  --p, --pathname=pathname                   (required) the file path of the apex trigger you want to save to salesforce. Note you can run pwd command on terminal to obtain the path easily
 
 EXAMPLES
   $ sfdx deploy:trigger -p pathname // Default authorized org is used for the deploy
@@ -107,7 +107,7 @@ USAGE
   $ sfdx deploy:vf
 
 OPTIONS
-  --p, --pathname=pathname                   (required) the file path of the vf page you want to save
+  --p, --pathname=pathname                   (required) the file path of the vf page you want to save to salesforce . Note you can run pwd command on terminal to obtain the path.
 
 EXAMPLES
   $ sfdx deploy:vf -p pathname // Default authorized org is used for the deploy
@@ -127,7 +127,7 @@ OPTIONS
   --p, --pathname=pathname                   (required) the file path of the vf component you want to save
 
 EXAMPLES
-  $ sfdx deploy:vfcomponent -p pathname // Default authorized org is used for the deploy
+  $ sfdx deploy:vfcomponent -p pathname // file path used to save the component to Salesforce.
 ```
 
 _See code: [src/commands/deploy/vfcomponent.ts](https://github.com/msrivastav13/mo-dx-plugin/blob/master/src/commands/deploy/vfcomponent.ts)_
@@ -143,7 +143,7 @@ USAGE
   $ sfdx deploy:aura
 
 OPTIONS
-  --p, --pathname=pathname                   (required) the file path of the aura bundle you want to save
+  --p, --pathname=pathname                   (required) the file path of the aura bundle you want to save to Salesforce.
 
 EXAMPLES
   $ sfdx deploy:aura -p pathname // Default authorized org is used for the deploy
