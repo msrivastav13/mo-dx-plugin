@@ -26,8 +26,6 @@ If you are Visual Studio Code user then recommend installing the extension along
 
 ### **Commands**
 
-<!-- commands -->
-
 ## `sfdx retrieve:dxsource`
 
 * [`sfdx retrieve:dxsource`](#sfdx-retrievedxsource)
@@ -50,6 +48,8 @@ OPTIONS
                                                   force-app
 
   -u, --targetusername=targetusername             username or alias for the target org; overrides default target org
+
+  -m, --retainmetadata                            provide a random string to retain the mdapiout folder that has source code in mdapi format
 
   --apiversion=apiversion                         override the api version used for api requests made by this command
 

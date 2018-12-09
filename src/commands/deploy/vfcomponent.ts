@@ -18,7 +18,7 @@ export default class ApexComponentDeploy extends SfdxCommand {
   public static description = messages.getMessage('commandDescription');
 
   public static examples = [
-  '$ $ sfdx deploy:vfcomponent -p filepath'
+  '$ sfdx deploy:vfcomponent -p filepath'
   ];
 
   protected static flagsConfig = {

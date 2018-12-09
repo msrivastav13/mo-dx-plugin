@@ -18,7 +18,7 @@ export default class ApexDeploy extends SfdxCommand {
   public static description = messages.getMessage('commandDescription');
 
   public static examples = [
-  '$ $ sfdx deploy:apex -p filepath'
+  '$ sfdx deploy:apex -p filepath'
   ];
 
   protected static flagsConfig = {

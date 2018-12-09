@@ -1,6 +1,6 @@
 {
   "name": "mo-dx-plugin",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "author": "Mohith Shrivastava",
   "bugs": "https://github.com/ForceProjects/mo-dx-plugin/issues",
   "dependencies": {
@@ -50,7 +50,13 @@
     "commands": "./lib/commands",
     "topics": {
       "hello": {
-        "description": "Commands to say hello."
+        "description": "Commands to say hello.This is just kept to demonstrate hello world example."
+      },
+      "deploy": {
+        "description": "Commands to deploy apex,vf,trigger and aura bundle."
+      },
+      "retrieve":{
+        "description": "Commands to get DX formatted code from the unmanaged package/managed package or changeset."
       }
     },
     "devPlugins": [

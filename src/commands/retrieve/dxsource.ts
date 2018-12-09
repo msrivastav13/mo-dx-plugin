@@ -1,4 +1,5 @@
 import {core, flags, SfdxCommand} from '@salesforce/command';
+import chalk from 'chalk';
 import * as child from 'child_process';
 import * as util from 'util';
 
@@ -20,6 +21,8 @@ export default class DxSource extends SfdxCommand {
   public static description = messages.getMessage('commandDescription');
 
   public static examples = [
+  '$ sfdx retrieve:dxsource -n <package/changeset>',
+  '$ sfdx retrieve:dxsource -n <package/changeset> -m "true"',
   '$ sfdx retrieve:dxsource -n <package/changeset> -p <[pathName]>',
   '$ sfdx retrieve:dxsource -u myOrg@example.com -n <package/changeset> -p <[pathName]>'
   ];
@@ -28,7 +31,8 @@ export default class DxSource extends SfdxCommand {
     // flag with a value (-n, --name=VALUE)
     packagename: {type: 'string', required: true, char: 'n', description: 'the name of the package you want to retrieve	' },
     pathname: {type: 'string', char: 'p', default: 'force-app', description: 'where to convert the result to...defaults to force-app' },
-    targetusername : {type: 'string', char: 'u', description: 'target org alias/username to retrieve from' }
+    targetusername : {type: 'string', char: 'u', description: 'target org alias/username to retrieve from' },
+    retainmetadata : {type: 'string', char: 'm', description: 'If set retain the metadata folder in mdapiout directory and do not clean'}
   };
 
   // Comment this out if your command does not require an org username
@@ -39,39 +43,49 @@ export default class DxSource extends SfdxCommand {
 
   public async run(): Promise<core.AnyJson> {
     const target = this.flags.pathname;
-    const defaultusername = this.flags.targetusername ? this.flags.targetusername :this.org.getUsername();
+    const defaultusername = this.flags.targetusername ? this.flags.targetusername : this.org.getUsername();
+    let errored = false;
 
-    this.ux.startSpinner('Retrieving Metadata...');
+    this.ux.startSpinner(chalk.yellowBright('Retrieving Metadata...'));
 
     // Return an object to be displayed with --json
-    const retrieveCommand = `sfdx force:mdapi:retrieve -s -p "${this.flags.packagename}" -u ${defaultusername}  -r ./${tmpDir} -w 30`;
-    const retrieveResult = await exec(retrieveCommand, { maxBuffer: 1000000 * 1024 });
-    if (retrieveResult.stderr) {
-      this.ux.error(retrieveResult.stderr);
-      return;
-    }
-
-    this.ux.stopSpinner('Retrieve Completed.  Unzipping...');
-
-    const unzipResult = await exec(`unzip -qqo ./${tmpDir}/unpackaged.zip -d ./${tmpDir}`);
-
-    this.ux.startSpinner('Unzip Completed.  Converting To DX Source Format...');
-
-    const removeDirResult = await exec(`rm -rf ./${manifestDir}/`);
-
-    const mkdirResult = await exec(`mkdir ./${manifestDir}`);
-
-    const copyResult = await exec(`cp -a ./${tmpDir}/package.xml ./${manifestDir}/`);
-
+    const retrieveCommand = `sfdx force:mdapi:retrieve -s -p "${this.flags.packagename}" -u ${defaultusername}  -r ./${tmpDir} -w 30 --json`;
     try {
-      const convertResult = await exec(`sfdx force:mdapi:convert -r ./${tmpDir} -d ${target} --json`);
-      this.ux.stopSpinner('Done Converting mdapi to DX format.....Cleaning Unused Directory..');
-    } catch (err) {
-      this.ux.errorJson(err);
-      this.ux.error('Error from conversion');
+      const retrieveResult = await exec(retrieveCommand, { maxBuffer: 1000000 * 1024 });
+    } catch (exception) {
+      errored = true;
+      this.ux.errorJson(exception);
+      this.ux.stopSpinner(chalk.redBright('Retrieve Operation Failed.'));
     }
-    this.ux.startSpinner('Cleaning Unused Directory Started');
-    await exec(`rm -rf ./${tmpDir}`);
-    this.ux.stopSpinner('Finished..');
+
+    if (!errored) {
+
+      this.ux.stopSpinner(chalk.greenBright('Retrieve Completed.  Unzipping...'));
+      // unzip result to a temp folder mdapi
+      const unzipResult = await exec(`unzip -qqo ./${tmpDir}/unpackaged.zip -d ./${tmpDir}`);
+      // Prepare folder and directory for DX Conversion
+      this.ux.startSpinner(chalk.yellowBright('Unzip Completed.  Converting To DX Source Format...'));
+
+      const removeDirResult = await exec(`rm -rf ./${manifestDir}/`);
+
+      const mkdirResult = await exec(`mkdir ./${manifestDir}`);
+
+      const copyResult = await exec(`cp -a ./${tmpDir}/package.xml ./${manifestDir}/`);
+      // DX Conversion
+      try {
+        const convertResult = await exec(`sfdx force:mdapi:convert -r ./${tmpDir} -d ${target} --json`);
+        this.ux.stopSpinner(chalk.greenBright('Done Converting mdapi to DX format.....'));
+      } catch (err) {
+        this.ux.errorJson(err);
+        this.ux.error(chalk.redBright('Error from conversion'));
+      }
+      if (!this.flags.retainmetadata) {
+        this.ux.startSpinner(chalk.blueBright('Cleaning Unused Directory Started'));
+        await exec(`rm -rf ./${tmpDir}`);
+      }
+      this.ux.stopSpinner(chalk.greenBright('Finished..'));
+    }
+
+    return '';
   }
 }

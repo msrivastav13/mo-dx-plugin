@@ -18,7 +18,7 @@ export default class VfDeploy extends SfdxCommand {
   public static description = messages.getMessage('commandDescription');
 
   public static examples = [
-  '$ $ sfdx deploy:vf -p filepath'
+  '$ sfdx deploy:vf -p filepath'
   ];
 
   protected static flagsConfig = {
