@@ -1,4 +1,5 @@
 import {core, flags, SfdxCommand} from '@salesforce/command';
+import * as AdmZip from 'adm-zip';
 import chalk from 'chalk';
 import * as child from 'child_process';
 import * as util from 'util';
@@ -62,7 +63,20 @@ export default class DxSource extends SfdxCommand {
 
       this.ux.stopSpinner(chalk.greenBright('Retrieve Completed.  Unzipping...'));
       // unzip result to a temp folder mdapi
-      const unzipResult = await exec(`unzip -qqo ./${tmpDir}/unpackaged.zip -d ./${tmpDir}`);
+      if (process.platform.includes('darwin')) {
+        const unzipResult = await exec(`unzip -qqo ./${tmpDir}/unpackaged.zip -d ./${tmpDir}`); // Use standard MACOSX unzip
+      } else {
+        // use a third party library to unzip the zipped resource
+        try {
+          const tempPath = './' + tmpDir + '/unpackaged.zip';
+          const zip = new AdmZip(tempPath);
+          zip.extractAllTo('./' + tmpDir, true);
+        } catch (error) {
+          console.error(chalk.redBright(error));
+          return ;
+        }
+      }
+
       // Prepare folder and directory for DX Conversion
       this.ux.startSpinner(chalk.yellowBright('Unzip Completed.  Converting To DX Source Format...'));
 

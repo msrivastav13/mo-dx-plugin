@@ -250,6 +250,13 @@
   dependencies:
     array-from "^2.1.1"
 
+"@types/adm-zip@^0.4.31":
+  version "0.4.31"
+  resolved "https://registry.yarnpkg.com/@types/adm-zip/-/adm-zip-0.4.31.tgz#a3376b9fa8f4c6e9c078c176d2df2caeb7939de3"
+  integrity sha1-ozdrn6j0xunAeMF20t8srreTneM=
+  dependencies:
+    "@types/node" "*"
+
 "@types/chai@4", "@types/chai@^4.1.4":
   version "4.1.7"
   resolved "https://registry.yarnpkg.com/@types/chai/-/chai-4.1.7.tgz#1b8e33b61a8c09cbe1f85133071baa0dbf9fa71a"
@@ -291,6 +298,11 @@
 "@types/sinon@^5.0.2":
   version "5.0.5"
   resolved "https://registry.yarnpkg.com/@types/sinon/-/sinon-5.0.5.tgz#de600fa07eb1ec9d5f55669d5bac46a75fc88115"
+
+adm-zip@0.4.7:
+  version "0.4.7"
+  resolved "https://registry.yarnpkg.com/adm-zip/-/adm-zip-0.4.7.tgz#8606c2cbf1c426ce8c8ec00174447fd49b6eafc1"
+  integrity sha1-hgbCy/HEJs6MjsABdER/1Jtur8E=
 
 ajv@^5.3.0:
   version "5.5.2"
