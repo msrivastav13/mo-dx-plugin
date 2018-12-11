@@ -1,6 +1,6 @@
 {
   "name": "mo-dx-plugin",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "author": "Mohith Shrivastava",
   "bugs": "https://github.com/ForceProjects/mo-dx-plugin/issues",
   "dependencies": {
@@ -9,7 +9,7 @@
     "@oclif/errors": "1",
     "@salesforce/command": "0.1.6",
     "tslib": "1",
-    "adm-zip": "0.4.7",
+    "adm-zip": "^0.4.11",
     "fs-extra": "^7.0.0",
     "lodash": "^4.17.10",
     "chalk": "^2.4.1"
