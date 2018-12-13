@@ -67,7 +67,7 @@ _See code: [src/commands/retrieve/dxsource.ts](https://github.com/msrivastav13/m
 
 ## `sfdx retrieve:pkgsource`
 
-Retrieves soure code from Managed/Unmamaged package or Changesets.This command works for only Non-scratch orgs .This retrieves metadata in traditional source format.
+Retrieves soure code from Managed/Unmamaged package or Changesets.This command works for only Non-scratch orgs.This retrieves metadata in traditional source format.
 
 ```
 USAGE
