@@ -26,14 +26,15 @@ If you are Visual Studio Code user then recommend installing the extension along
 
 ### **Commands**
 
-## `sfdx retrieve:dxsource`
-
 * [`sfdx retrieve:dxsource`](#sfdx-retrievedxsource)
+* [`sfdx retrieve:pkgsource`](#sfdx-retrievepkgsource)
 * [`sfdx deploy:apex`](#sfdx-deployapex)
 * [`sfdx deploy:trigger`](#sfdx-deploytrigger)
 * [`sfdx deploy:vf`](#sfdx-deployvf)
 * [`sfdx deploy:vfcomponent`](#sfdx-deployvfcomponent)
 * [`sfdx deploy:aura`](#sfdx-deployaura)
+
+## `sfdx retrieve:dxsource`
 
 Retrieves soure code from Managed/Unmamaged package or Changesets.This command works for only Non-scratch orgs .If you are trying to convert a traditional project in Managed/Unmanaged package , this command can help convert the sourcecode to DX format.
 
@@ -63,6 +64,24 @@ EXAMPLES
 ```
 
 _See code: [src/commands/retrieve/dxsource.ts](https://github.com/msrivastav13/mo-dx-plugin/blob/master/src/commands/retrieve/dxsource.ts)_
+
+## `sfdx retrieve:pkgsource`
+
+Retrieves soure code from Managed/Unmamaged package or Changesets.This command works for only Non-scratch orgs .This retrieves metadata in traditional source format.
+
+```
+USAGE
+  $ sfdx retrieve:pkgsource
+
+OPTIONS
+  -n, --packagename=packagename                   (required) the name of the package you want to retrieve.The package parameter value must be enclosed in double quotes.Example if you have a package named HR App the command would be sfdx retrieve:pkgsource -n "HR App"
+
+EXAMPLES
+  $ sfdx retrieve:pkgsource -n <package/changeset> // Default authorized org is used as username or org alias
+```
+
+_See code: [src/commands/retrieve/pkgsource.ts](https://github.com/msrivastav13/mo-dx-plugin/blob/master/src/commands/retrieve/pkgsource.ts)_
+
 
 ## `sfdx deploy:apex`
 
