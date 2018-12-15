@@ -80,6 +80,11 @@ export default class AuraDeploy extends SfdxCommand {
       // Below code when user provided file path and Not directory path
       validFiles.push(_fileOrDirName);
       _fileOrDirName = _fileOrDirName.split('.')[0];
+      const validdefTypes = ['Controller', 'Helper', 'Renderer'];
+      const filterValidTypes = validdefTypes.filter (filetype => _fileOrDirName.lastIndexOf(filetype) > -1 );
+      if (filterValidTypes.length > 0) {
+        _fileOrDirName = _fileOrDirName.replace(filterValidTypes[0], '');
+      }
     }
 
     try {
