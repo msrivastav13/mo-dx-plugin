@@ -15,7 +15,7 @@ const messages = core.Messages.loadMessages('mo-dx-plugin', 'org');
 
 export default class TriggerDeploy extends SfdxCommand {
 
-  public static description = messages.getMessage('commandDescription');
+  public static description = messages.getMessage('triggerDeploy');
 
   public static examples = [
   '$ sfdx deploy:trigger -p filepath'

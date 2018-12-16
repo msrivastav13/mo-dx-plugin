@@ -15,7 +15,7 @@ const messages = core.Messages.loadMessages('mo-dx-plugin', 'org');
 
 export default class ApexDeploy extends SfdxCommand {
 
-  public static description = messages.getMessage('commandDescription');
+  public static description = messages.getMessage('apexDeploy');
 
   public static examples = [
   '$ sfdx deploy:apex -p filepath'

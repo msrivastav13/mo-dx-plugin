@@ -13,7 +13,7 @@ const messages = core.Messages.loadMessages('mo-dx-plugin', 'org');
 
 export default class AuraDeploy extends SfdxCommand {
 
-  public static description = messages.getMessage('commandDescription');
+  public static description = messages.getMessage('auraDeploy');
 
   public static examples = [
   '$ sfdx deploy:aura -p filepath'

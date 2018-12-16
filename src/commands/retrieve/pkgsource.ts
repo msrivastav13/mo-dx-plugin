@@ -18,7 +18,7 @@ const exec = util.promisify(child.exec);
 
 export default class Pkgsource extends SfdxCommand {
 
-  public static description = messages.getMessage('commandDescription');
+  public static description = messages.getMessage('retrieveSource');
 
   public static examples = [
   '$ sfdx retrieve:pkgsource -n <package/changeset>'

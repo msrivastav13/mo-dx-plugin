@@ -19,7 +19,7 @@ const exec = util.promisify(child.exec);
 
 export default class DxSource extends SfdxCommand {
 
-  public static description = messages.getMessage('commandDescription');
+  public static description = messages.getMessage('retrieveDxSource');
 
   public static examples = [
   '$ sfdx retrieve:dxsource -n <package/changeset>',

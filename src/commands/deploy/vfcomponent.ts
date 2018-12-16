@@ -15,7 +15,7 @@ const messages = core.Messages.loadMessages('mo-dx-plugin', 'org');
 
 export default class ApexComponentDeploy extends SfdxCommand {
 
-  public static description = messages.getMessage('commandDescription');
+  public static description = messages.getMessage('vfComponentDeploy');
 
   public static examples = [
   '$ sfdx deploy:vfcomponent -p filepath'
