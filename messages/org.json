@@ -8,6 +8,7 @@
   "vfDeploy": "Deploy visualforce page without source tracking",
   "vfComponentDeploy": "Deploy visualforce components without source tracking",
   "triggerDeploy": "Deploy apex triggers without source tracking",
+  "lwcDeploy": "Deploy lwc without source tracking",
   "retrieveDxSource": "Retrieves Dx Source from Unmanaged/Managed package",
   "retrieveSource": "Retrieves Source from Unmanaged/Managed package in Metadata API format"
 }
