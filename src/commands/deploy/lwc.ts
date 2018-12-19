@@ -48,6 +48,23 @@ export default class LWCDeploy extends SfdxCommand {
       NamespacePrefix: string;
       ApiVersion: number;
       FullName: string;
+      IsExplicitImport: boolean;
+      IsExposed: boolean;
+      Metadata: LightningComponentMetadataBundle;
+    }
+
+    interface LightningComponentMetadataBundle {
+      masterLabel: string;
+      description: string;
+      apiVersion: number;
+      lwcResources: LwcResources;
+      isExposed: boolean;
+      isExplicitImport: boolean;
+      targets: Target;
+    }
+
+    interface Target {
+      target: string[];
     }
 
     interface LightningComponentResource {
@@ -57,6 +74,19 @@ export default class LWCDeploy extends SfdxCommand {
       Source: string;
       Id: string;
       Metadata: string;
+    }
+
+    interface LwcResources {
+      lwcResource: LwcResource[];
+    }
+
+    interface LwcResource {
+      filePath: string;
+      source: Source;
+    }
+
+    interface Source {
+      asByteArray: string;
     }
 
     const _path = this.flags.filepath;
@@ -85,7 +115,7 @@ export default class LWCDeploy extends SfdxCommand {
       let lwcBundles = [] as LightningComponentBundle[];
       lwcBundles = await getLWCDefinitionBundle(_fileOrDirName) as LightningComponentBundle[];
       if (lwcBundles.length === 0) {
-        const newLWCBundle = await createLWCBundle(_fileOrDirName) as SobjectResult;
+        const newLWCBundle = await createLWCBundle(_fileOrDirName, fileBodyArray) as SobjectResult;
         if (newLWCBundle.success) {
           const lwcBundleVar = {} as LightningComponentBundle;
           lwcBundleVar.Id = newLWCBundle.id;
@@ -95,6 +125,7 @@ export default class LWCDeploy extends SfdxCommand {
         }
       }
       if (lwcBundles.length > 0) {
+        console.log(JSON.stringify(lwcBundles[0], null, 2));
         let lwcResources = await getLWCResources(lwcBundles[0].Id) as LightningComponentResource[];
         lwcResources = lwcResources.length > 0 ? lwcResources : [];
         try {
@@ -112,13 +143,44 @@ export default class LWCDeploy extends SfdxCommand {
     }
 
     // function to create LightningComponentBundle
-    async function createLWCBundle(name: string) {
+    async function createLWCBundle(name: string, files: string[]) {
+      // LWC bundles require metadata as LWCBundle with all the resources for creation
+      const newLWCMetadataBundle = {} as LightningComponentMetadataBundle;
+      newLWCMetadataBundle.masterLabel = name;
+      newLWCMetadataBundle.description = 'A LWC Bundle';
+      newLWCMetadataBundle.apiVersion = Number(apiVersion);
+      newLWCMetadataBundle.isExposed = false;
+      newLWCMetadataBundle.isExplicitImport = false;
+      const target = ['lightning__HomePage'];
+      const targetObject = {} as Target;
+      targetObject.target = target;
+      newLWCMetadataBundle.targets = targetObject;
+      // Create LWC Resources
+      const lstlwcResources = [] as LwcResource[];
+      validFiles.forEach ( key => {
+        const lwcResourceFile = {} as LwcResource;
+        lwcResourceFile.filePath = 'lwc/' + _fileOrDirName + '/' + key;
+        const source = {} as Source;
+        source.asByteArray = Buffer.from((files[filePath.indexOf('lwc/' + _fileOrDirName + '/' + key)])).toString('base64');
+        lwcResourceFile.source = source;
+        lstlwcResources.push(lwcResourceFile);
+      });
+      // Create LWC Resource
+      const lwcResources = {} as LwcResources;
+      lwcResources.lwcResource = lstlwcResources;
+
+      // Assign to metadata Bundle
+      newLWCMetadataBundle.lwcResources = lwcResources;
+
       const newLWCBundle = {} as LightningComponentBundle;
       newLWCBundle.DeveloperName = name;
       newLWCBundle.MasterLabel = name;
       newLWCBundle.Description = 'A LWC Bundle';
       newLWCBundle.ApiVersion = Number(apiVersion);
       newLWCBundle.FullName = name;
+      newLWCBundle.Metadata = newLWCMetadataBundle;
+      newLWCBundle.IsExposed = false;
+      console.log(JSON.stringify(newLWCBundle, null, 2));
       return conn.tooling.sobject('LightningComponentBundle').create(newLWCBundle);
     }
 
