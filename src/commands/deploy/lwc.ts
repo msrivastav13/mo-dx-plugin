@@ -125,7 +125,7 @@ export default class LWCDeploy extends SfdxCommand {
         }
       }
       if (lwcBundles.length > 0) {
-        console.log(JSON.stringify(lwcBundles[0], null, 2));
+        // console.log(JSON.stringify(lwcBundles[0], null, 2));
         let lwcResources = await getLWCResources(lwcBundles[0].Id) as LightningComponentResource[];
         lwcResources = lwcResources.length > 0 ? lwcResources : [];
         try {
@@ -180,7 +180,7 @@ export default class LWCDeploy extends SfdxCommand {
       newLWCBundle.FullName = name;
       newLWCBundle.Metadata = newLWCMetadataBundle;
       newLWCBundle.IsExposed = false;
-      console.log(JSON.stringify(newLWCBundle, null, 2));
+      // console.log(JSON.stringify(newLWCBundle, null, 2));
       return conn.tooling.sobject('LightningComponentBundle').create(newLWCBundle);
     }
 

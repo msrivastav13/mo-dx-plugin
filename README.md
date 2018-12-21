@@ -33,6 +33,7 @@ If you are Visual Studio Code user then recommend installing the extension along
 * [`sfdx deploy:vf`](#sfdx-deployvf)
 * [`sfdx deploy:vfcomponent`](#sfdx-deployvfcomponent)
 * [`sfdx deploy:aura`](#sfdx-deployaura)
+* [`sfdx deploy:lwc`](#sfdx-deploylwc)
 
 ## `sfdx retrieve:dxsource`
 
@@ -169,6 +170,25 @@ EXAMPLES
 ```
 
 _See code: [src/commands/deploy/aura.ts](https://github.com/msrivastav13/mo-dx-plugin/blob/master/src/commands/deploy/aura.ts)_
+
+## `sfdx deploy:lwc`
+
+Deploys lighnting web component bundle to the Salesforce Org using Tooling API.
+
+Supports deploying lwc bundle as well individual files in lwc bundle .To deploy the Lightning Bundle as a whole provide the directory path in path(p) parameter
+
+```
+USAGE
+  $ sfdx deploy:lwc
+
+OPTIONS
+  --p, --pathname=pathname                   (required) the file path of the lightning web components bundle you want to save to Salesforce.
+
+EXAMPLES
+  $ sfdx deploy:lwc -p pathname // Default authorized org is used for the deploy
+```
+
+_See code: [src/commands/deploy/lwc.ts](https://github.com/msrivastav13/mo-dx-plugin/blob/master/src/commands/deploy/lwc.ts)_
 
 ### Important Note When Using these Commands With Scratch Org
 
