@@ -80,15 +80,19 @@ export default class ApexComponentDeploy extends SfdxCommand {
           Masterlabel: vfComponentName + 'Label'
         } as ApexComponent;
 
-        const vfComponentSaveResult = await conn.tooling.sobject('ApexComponent').create(vfComponent) as SobjectResult;
-        if ( vfComponentSaveResult.success) {
-          this.ux.stopSpinner(chalk.bold.green('Visualforce Component Successfully Created'));
-          return '';
-        } else {
-          for (const error of vfComponentSaveResult.errors) {
-            console.log(chalk.redBright(error));
+        try {
+          const vfComponentSaveResult = await conn.tooling.sobject('ApexComponent').create(vfComponent) as SobjectResult;
+          if ( vfComponentSaveResult.success) {
+            this.ux.stopSpinner(chalk.bold.green('Visualforce Component Successfully Created'));
+            return '';
+          } else {
+            for (const error of vfComponentSaveResult.errors) {
+              console.log(chalk.redBright(error));
+            }
+            this.ux.stopSpinner(chalk.bold.red('Visualforce Component Creation Failed'));
           }
-          this.ux.stopSpinner(chalk.bold.red('Visualforce Component Creation Failed'));
+        } catch (ex) {
+          this.ux.stopSpinner(chalk.bold.red(ex));
         }
       }
     }

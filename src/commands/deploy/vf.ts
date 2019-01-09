@@ -80,15 +80,19 @@ export default class VfDeploy extends SfdxCommand {
           Masterlabel: pageName + 'Label'
         } as ApexPage;
 
-        const vfSaveResult = await conn.tooling.sobject('ApexPage').create(vfPage) as SobjectResult;
-        if ( vfSaveResult.success) {
-          this.ux.stopSpinner(chalk.bold.green('Visualforce Page Successfully Created'));
-          return '';
-        } else {
-          for (const error of vfSaveResult.errors) {
-            console.log(chalk.redBright(error));
+        try {
+          const vfSaveResult = await conn.tooling.sobject('ApexPage').create(vfPage) as SobjectResult;
+          if ( vfSaveResult.success) {
+            this.ux.stopSpinner(chalk.bold.green('Visualforce Page Successfully Created'));
+            return '';
+          } else {
+            for (const error of vfSaveResult.errors) {
+              console.log(chalk.redBright(error));
+            }
+            this.ux.stopSpinner(chalk.bold.red('Visualforce Page Creation Failed'));
           }
-          this.ux.stopSpinner(chalk.bold.red('Visualforce Page Creation Failed'));
+        } catch (ex) {
+          this.ux.stopSpinner(chalk.bold.red(ex));
         }
       }
     }

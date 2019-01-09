@@ -80,16 +80,19 @@ export default class TriggerDeploy extends SfdxCommand {
           TableEnumOrId: tableName,
           NamespacePrefix: namespacePrefix
         } as ApexTrigger;
-
-        const apexSaveResult = await conn.tooling.sobject('ApexTrigger').create(apexTrigger) as SobjectResult;
-        if ( apexSaveResult.success) {
-          this.ux.stopSpinner(chalk.bold.green('Trigger Successfully Created'));
-          return '';
-        } else {
-          for (const error of apexSaveResult.errors) {
-            console.log(chalk.redBright(error));
+        try {
+          const triggerResult = await conn.tooling.sobject('ApexTrigger').create(apexTrigger) as SobjectResult;
+          if ( triggerResult.success) {
+            this.ux.stopSpinner(chalk.bold.green('Trigger Successfully Created'));
+            return '';
+          } else {
+            for (const error of triggerResult.errors) {
+              console.log(chalk.redBright(error));
+            }
+            this.ux.stopSpinner(chalk.bold.red('Trigger Creation Failed'));
           }
-          this.ux.stopSpinner(chalk.bold.red('Trigger Creation Failed'));
+        } catch (ex) {
+          this.ux.stopSpinner(chalk.bold.red(ex));
         }
       }
     }

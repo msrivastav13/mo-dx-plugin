@@ -77,15 +77,19 @@ export default class ApexDeploy extends SfdxCommand {
           NamespacePrefix: namespacePrefix
         } as ApexClass;
 
-        const apexSaveResult = await conn.tooling.sobject('ApexClass').create(apexClass) as SobjectResult;
-        if ( apexSaveResult.success) {
-          this.ux.stopSpinner(chalk.bold.green('Apex Class Successfully Created'));
-          return '';
-        } else {
-          for (const error of apexSaveResult.errors) {
-            console.log(chalk.redBright(error));
+        try {
+          const apexSaveResult = await conn.tooling.sobject('ApexClass').create(apexClass) as SobjectResult;
+          if ( apexSaveResult.success) {
+            this.ux.stopSpinner(chalk.bold.green('Apex Class Successfully Created'));
+            return '';
+          } else {
+            for (const error of apexSaveResult.errors) {
+              console.log(chalk.redBright(error));
+            }
+            this.ux.stopSpinner(chalk.bold.red('Apex Class Creation Failed'));
           }
-          this.ux.stopSpinner(chalk.bold.red('Apex Class Creation Failed'));
+        } catch (ex) {
+          this.ux.stopSpinner(chalk.bold.red(ex));
         }
       }
     }
