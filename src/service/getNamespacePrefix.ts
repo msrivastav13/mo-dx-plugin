@@ -1,6 +1,5 @@
 import {Connection} from '@salesforce/core';
 import {QueryResult} from '../models/queryResult';
-import {executeToolingQuery} from '../service/toolingQuery';
 
 export async function getNameSpacePrefix(conn: Connection) {
   const query = 'Select NamespacePrefix from Organization';

@@ -1,4 +1,4 @@
-import {core, flags, SfdxCommand} from '@salesforce/command';
+import {core, SfdxCommand} from '@salesforce/command';
 import chalk from 'chalk';
 import fs = require('fs-extra');
 import {SobjectResult} from '../../models/sObjectResult';

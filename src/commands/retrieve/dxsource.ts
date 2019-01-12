@@ -1,4 +1,4 @@
-import {core, flags, SfdxCommand} from '@salesforce/command';
+import {core, SfdxCommand} from '@salesforce/command';
 import * as AdmZip from 'adm-zip';
 import chalk from 'chalk';
 import * as child from 'child_process';
@@ -52,7 +52,7 @@ export default class DxSource extends SfdxCommand {
     // Return an object to be displayed with --json
     const retrieveCommand = `sfdx force:mdapi:retrieve -s -p "${this.flags.packagename}" -u ${defaultusername}  -r ./${tmpDir} -w 30 --json`;
     try {
-      const retrieveResult = await exec(retrieveCommand, { maxBuffer: 1000000 * 1024 });
+      await exec(retrieveCommand, { maxBuffer: 1000000 * 1024 });
     } catch (exception) {
       errored = true;
       this.ux.errorJson(exception);
@@ -64,7 +64,7 @@ export default class DxSource extends SfdxCommand {
       this.ux.stopSpinner(chalk.greenBright('Retrieve Completed.  Unzipping...'));
       // unzip result to a temp folder mdapi
       if (process.platform.includes('darwin')) {
-        const unzipResult = await exec(`unzip -qqo ./${tmpDir}/unpackaged.zip -d ./${tmpDir}`); // Use standard MACOSX unzip
+        await exec(`unzip -qqo ./${tmpDir}/unpackaged.zip -d ./${tmpDir}`); // Use standard MACOSX unzip
       } else {
         // use a third party library to unzip the zipped resource
         try {
@@ -80,14 +80,14 @@ export default class DxSource extends SfdxCommand {
       // Prepare folder and directory for DX Conversion
       this.ux.startSpinner(chalk.yellowBright('Unzip Completed.  Converting To DX Source Format...'));
 
-      const removeDirResult = await exec(`rm -rf ./${manifestDir}/`);
+      await exec(`rm -rf ./${manifestDir}/`);
 
-      const mkdirResult = await exec(`mkdir ./${manifestDir}`);
+      await exec(`mkdir ./${manifestDir}`);
 
-      const copyResult = await exec(`cp -a ./${tmpDir}/package.xml ./${manifestDir}/`);
+      await exec(`cp -a ./${tmpDir}/package.xml ./${manifestDir}/`);
       // DX Conversion
       try {
-        const convertResult = await exec(`sfdx force:mdapi:convert -r ./${tmpDir} -d ${target} --json`);
+        await exec(`sfdx force:mdapi:convert -r ./${tmpDir} -d ${target} --json`);
         this.ux.stopSpinner(chalk.greenBright('Done Converting mdapi to DX format.....'));
       } catch (err) {
         this.ux.errorJson(err);

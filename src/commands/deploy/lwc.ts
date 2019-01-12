@@ -1,4 +1,4 @@
-import {core, flags, SfdxCommand} from '@salesforce/command';
+import {core, SfdxCommand} from '@salesforce/command';
 import chalk from 'chalk';
 import fs = require('fs-extra');
 import {SobjectResult} from '../../models/sObjectResult';
@@ -120,7 +120,7 @@ export default class LWCDeploy extends SfdxCommand {
         let lwcResources = await getLWCResources(lwcBundles[0].Id) as LightningComponentResource[];
         lwcResources = lwcResources.length > 0 ? lwcResources : [];
         try {
-          const lwcResourcesResult = await upsertLWCDefinition(lwcResources, fileBodyArray, lwcBundles[0].Id) as SobjectResult[];
+          await upsertLWCDefinition(lwcResources, fileBodyArray, lwcBundles[0].Id);
           this.ux.stopSpinner(chalk.bold.greenBright('Lighnting Web Components Deployed SuccessFully..'));
           // console.log(auraDefinitionsResult);
         } catch (exception) {

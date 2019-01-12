@@ -1,4 +1,4 @@
-import {core, flags, SfdxCommand} from '@salesforce/command';
+import {core, SfdxCommand} from '@salesforce/command';
 import * as AdmZip from 'adm-zip';
 import chalk from 'chalk';
 import * as child from 'child_process';
@@ -36,7 +36,6 @@ export default class Pkgsource extends SfdxCommand {
   protected static requiresProject = true;
 
   public async run(): Promise<core.AnyJson> {
-    const target = this.flags.pathname;
     const defaultusername = this.flags.targetusername ? this.flags.targetusername : this.org.getUsername();
     let errored = false;
 
@@ -46,7 +45,7 @@ export default class Pkgsource extends SfdxCommand {
     const retrieveCommand = `sfdx force:mdapi:retrieve -s -p "${this.flags.packagename}" -u ${defaultusername}  -r ./${tmpDir} -w -1 --json`;
 
     try {
-      const retrieveResult = await exec(retrieveCommand, { maxBuffer: 1000000 * 1024 });
+      await exec(retrieveCommand, { maxBuffer: 1000000 * 1024 });
     } catch (exception) {
       errored = true;
       this.ux.errorJson(exception);
@@ -58,7 +57,7 @@ export default class Pkgsource extends SfdxCommand {
       this.ux.stopSpinner(chalk.greenBright('Retrieve Completed.  Unzipping...'));
       // unzip result to a temp folder mdapi
       if (process.platform.includes('darwin')) {
-        const unzipResult = await exec(`unzip -qqo ./${tmpDir}/unpackaged.zip -d ./${tmpDir}`); // Use standard MACOSX unzip
+        await exec(`unzip -qqo ./${tmpDir}/unpackaged.zip -d ./${tmpDir}`); // Use standard MACOSX unzip
       } else {
         // use a third party library to unzip the zipped resource
         try {

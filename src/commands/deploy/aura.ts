@@ -1,4 +1,4 @@
-import {core, flags, SfdxCommand} from '@salesforce/command';
+import {core, SfdxCommand} from '@salesforce/command';
 import chalk from 'chalk';
 import fs = require('fs-extra');
 import {SobjectResult} from '../../models/sObjectResult';
@@ -106,9 +106,8 @@ export default class AuraDeploy extends SfdxCommand {
         let auraDefinitions = await getAuraDefinitions(auraDefinitionBundles[0].Id) as AuraDefinition[];
         auraDefinitions = auraDefinitions.length > 0 ? auraDefinitions : [];
         try {
-          const auraDefinitionsResult = await upsertAuraDefinition(auraDefinitions, fileBodyArray, auraDefinitionBundles[0].Id) as SobjectResult[];
+          await upsertAuraDefinition(auraDefinitions, fileBodyArray, auraDefinitionBundles[0].Id);
           this.ux.stopSpinner(chalk.bold.greenBright('AuraBundle Deployed SuccessFully..'));
-          // console.log(auraDefinitionsResult);
         } catch (exception) {
           this.ux.stopSpinner(chalk.bold.redBright('Failed'));
           console.log(chalk.bold.redBright(exception));
