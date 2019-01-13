@@ -4,7 +4,7 @@ import fs = require('fs-extra');
 import {SobjectResult} from '../../models/sObjectResult';
 import {Deploy, DeployResult} from '../../service/deploy';
 import {getFileName} from '../../service/getFileName';
-import {getNameSpacePrefix} from '../../service/getNameSpacePrefix';
+import {getNameSpacePrefix} from '../../service/getNamespacePrefix';
 
 // Initialize Messages with the current plugin directory
 core.Messages.importMessagesDirectory(__dirname);

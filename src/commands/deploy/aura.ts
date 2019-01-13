@@ -2,7 +2,7 @@ import {core, SfdxCommand} from '@salesforce/command';
 import chalk from 'chalk';
 import fs = require('fs-extra');
 import {SobjectResult} from '../../models/sObjectResult';
-import {getNameSpacePrefix} from '../../service/getNameSpacePrefix';
+import {getNameSpacePrefix} from '../../service/getNamespacePrefix';
 
 // Initialize Messages with the current plugin directory
 core.Messages.importMessagesDirectory(__dirname);

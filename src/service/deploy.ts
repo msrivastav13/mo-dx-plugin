@@ -1,9 +1,9 @@
 import {Connection} from '@salesforce/core';
 import {QueryResult} from '../models/queryResult';
 import {SobjectResult} from '../models/sObjectResult';
-import {createDeployRequest} from '../service/containerAsyncRequest';
-import {createMetadataContainer} from '../service/createMetadataContainer';
-import {createMetadataMember} from '../service/createMetadataMember';
+import {createDeployRequest} from '../service/containerasyncRequest';
+import {createMetadataContainer} from '../service/createmetadataContainer';
+import {createMetadataMember} from '../service/createmetadataMember';
 
 export interface DeployResult {
   success: boolean;
