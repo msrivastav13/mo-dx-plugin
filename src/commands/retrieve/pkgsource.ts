@@ -1,4 +1,5 @@
 import {core, SfdxCommand} from '@salesforce/command';
+import {AnyJson} from '@salesforce/ts-types';
 import * as AdmZip from 'adm-zip';
 import chalk from 'chalk';
 import * as child from 'child_process';
@@ -35,7 +36,7 @@ export default class Pkgsource extends SfdxCommand {
   // Set this to true if your command requires a project workspace; 'requiresProject' is false by default
   protected static requiresProject = true;
 
-  public async run(): Promise<core.AnyJson> {
+  public async run(): Promise<AnyJson> {
     const defaultusername = this.flags.targetusername ? this.flags.targetusername : this.org.getUsername();
     let errored = false;
 

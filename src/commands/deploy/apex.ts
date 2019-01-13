@@ -1,4 +1,5 @@
 import {core, SfdxCommand} from '@salesforce/command';
+import {AnyJson} from '@salesforce/ts-types';
 import chalk from 'chalk';
 import fs = require('fs-extra');
 import {SobjectResult} from '../../models/sObjectResult';
@@ -32,7 +33,7 @@ export default class ApexDeploy extends SfdxCommand {
   // Set this to true if your command requires a project workspace; 'requiresProject' is false by default
   protected static requiresProject = true;
 
-  public async run(): Promise<core.AnyJson> {
+  public async run(): Promise<AnyJson> {
 
     this.ux.startSpinner(chalk.bold.yellowBright('Saving ....'));
 

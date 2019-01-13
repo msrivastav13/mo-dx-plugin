@@ -1,4 +1,5 @@
-import {core, flags, SfdxCommand} from '@salesforce/command';
+import {core , SfdxCommand} from '@salesforce/command';
+import {AnyJson} from '@salesforce/ts-types';
 
 // Initialize Messages with the current plugin directory
 core.Messages.importMessagesDirectory(__dirname);
@@ -21,12 +22,12 @@ export default class Org extends SfdxCommand {
   `
   ];
 
-  public static args = [{name: 'file'}];
+  public static args = [{name: 'org', require}];
 
   protected static flagsConfig = {
     // flag with a value (-n, --name=VALUE)
-    name: flags.string({char: 'n', description: messages.getMessage('nameFlagDescription')}),
-    force: flags.boolean({char: 'f', description: messages.getMessage('forceFlagDescription')})
+    name: {char: 'n', type: 'string', description: messages.getMessage('nameFlagDescription')},
+    force: {char: 'f', type: 'boolean', description: messages.getMessage('forceFlagDescription')}
   };
 
   // Comment this out if your command does not require an org username
@@ -38,7 +39,7 @@ export default class Org extends SfdxCommand {
   // Set this to true if your command requires a project workspace; 'requiresProject' is false by default
   protected static requiresProject = false;
 
-  public async run(): Promise<core.AnyJson> {
+  public async run(): Promise<AnyJson> {
     const name = this.flags.name || 'world';
 
     // this.org is guaranteed because requiresUsername=true, as opposed to supportsUsername

@@ -7,7 +7,8 @@
     "@oclif/command": "1",
     "@oclif/config": "1",
     "@oclif/errors": "1",
-    "@salesforce/command": "0.1.6",
+    "@salesforce/command": "0.2.5",
+    "@salesforce/ts-types": "^0.11.0",
     "tslib": "1",
     "adm-zip": "^0.4.11",
     "fs-extra": "^7.0.0",
@@ -19,7 +20,7 @@
     "@oclif/dev-cli": "1",
     "@oclif/plugin-help": "1",
     "@oclif/test": "^1",
-    "@salesforce/dev-config": "1.1.0",
+    "@salesforce/dev-config": "1.1.4",
     "@types/chai": "4",
     "@types/jsforce": "1.8.13",
     "@types/mocha": "5",
@@ -31,7 +32,7 @@
     "nyc": "^12",
     "sinon": "5",
     "ts-node": "6",
-    "typescript": "2.9",
+    "typescript": "3.0",
     "@types/fs-extra": "^5.0.3"
   },
   "engines": {
