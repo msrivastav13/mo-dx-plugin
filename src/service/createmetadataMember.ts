@@ -1,6 +1,6 @@
 import {Connection} from '@salesforce/core';
 
-export async function createMetadataMember(name: string, containerId: string, body: string, entityId: string, conn: Connection) {
+export async function createMetadataMember(name: string, containerId: string, body: string, entityId: string, conn: Connection): Promise<object> {
 
   interface MetadataMember {
     MetadataContainerId: string;

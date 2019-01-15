@@ -1,4 +1,4 @@
-import {core, SfdxCommand} from '@salesforce/command';
+import {core, flags, SfdxCommand} from '@salesforce/command';
 import {AnyJson} from '@salesforce/ts-types';
 import chalk from 'chalk';
 import fs = require('fs-extra');
@@ -22,7 +22,7 @@ export default class AuraDeploy extends SfdxCommand {
 
   protected static flagsConfig = {
     // flag with a value (-n, --name=VALUE)
-    filepath: {type: 'string', char: 'p', description: 'file path' }
+    filepath: flags.string({ char: 'p', description: 'file path', required: true })
   };
 
   // Comment this out if your command does not require an org username

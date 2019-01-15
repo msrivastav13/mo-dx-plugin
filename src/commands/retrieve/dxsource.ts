@@ -1,4 +1,4 @@
-import {core, SfdxCommand} from '@salesforce/command';
+import {core, flags, SfdxCommand} from '@salesforce/command';
 import {AnyJson} from '@salesforce/ts-types';
 import * as AdmZip from 'adm-zip';
 import chalk from 'chalk';
@@ -31,10 +31,9 @@ export default class DxSource extends SfdxCommand {
 
   protected static flagsConfig = {
     // flag with a value (-n, --name=VALUE)
-    packagename: {type: 'string', required: true, char: 'n', description: 'the name of the package you want to retrieve	' },
-    pathname: {type: 'string', char: 'p', default: 'force-app', description: 'where to convert the result to...defaults to force-app' },
-    targetusername : {type: 'string', char: 'u', description: 'target org alias/username to retrieve from' },
-    retainmetadata : {type: 'string', char: 'm', description: 'If set retain the metadata folder in mdapiout directory and do not clean'}
+    packagename: flags.string({required: true, char: 'n', description: 'the name of the package you want to retrieve' }),
+    pathname: flags.string({char: 'p', default: 'force-app', description: 'where to convert the result to.defaults to force-app' }),
+    retainmetadata : flags.string({char: 'm', description: 'If set retain the metadata folder in mdapiout directory and do not clean'})
   };
 
   // Comment this out if your command does not require an org username

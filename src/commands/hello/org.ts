@@ -1,4 +1,4 @@
-import {core , SfdxCommand} from '@salesforce/command';
+import {core , flags, SfdxCommand} from '@salesforce/command';
 import {AnyJson} from '@salesforce/ts-types';
 
 // Initialize Messages with the current plugin directory
@@ -26,8 +26,8 @@ export default class Org extends SfdxCommand {
 
   protected static flagsConfig = {
     // flag with a value (-n, --name=VALUE)
-    name: {char: 'n', type: 'string', description: messages.getMessage('nameFlagDescription')},
-    force: {char: 'f', type: 'boolean', description: messages.getMessage('forceFlagDescription')}
+    name: flags.string({char: 'n', description: messages.getMessage('nameFlagDescription')}),
+    force: flags.boolean({char: 'f', description: messages.getMessage('forceFlagDescription')})
   };
 
   // Comment this out if your command does not require an org username

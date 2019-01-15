@@ -1,4 +1,4 @@
-import {core, SfdxCommand} from '@salesforce/command';
+import {core, flags, SfdxCommand} from '@salesforce/command';
 import {AnyJson} from '@salesforce/ts-types';
 import * as AdmZip from 'adm-zip';
 import chalk from 'chalk';
@@ -27,7 +27,7 @@ export default class Pkgsource extends SfdxCommand {
 
   protected static flagsConfig = {
     // flag with a value (-n, --name=VALUE)
-    packagename: {type: 'string', required: true, char: 'n', description: 'the name of the package you want to retrieve	' }
+    packagename: flags.string({required: true, char: 'n', description: 'the name of the package you want to retrieve	' })
   };
 
   // Comment this out if your command does not require an org username
