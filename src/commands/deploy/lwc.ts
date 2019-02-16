@@ -3,6 +3,7 @@ import {AnyJson} from '@salesforce/ts-types';
 import chalk from 'chalk';
 import fs = require('fs-extra');
 import {SobjectResult} from '../../models/sObjectResult';
+import {displaylog} from '../../service/displayError';
 import {getNameSpacePrefix} from '../../service/getNamespacePrefix';
 
 // Initialize Messages with the current plugin directory
@@ -114,7 +115,7 @@ export default class LWCDeploy extends SfdxCommand {
           lwcBundleVar.Id = newLWCBundle.id;
           lwcBundles.push(lwcBundleVar);
         } else {
-          console.log(chalk.bold.redBright(JSON.stringify(newLWCBundle.errors)));
+          displaylog(chalk.bold.redBright(JSON.stringify(newLWCBundle.errors)), this.ux);
         }
       }
       if (lwcBundles.length > 0) {
@@ -126,12 +127,12 @@ export default class LWCDeploy extends SfdxCommand {
           // console.log(auraDefinitionsResult);
         } catch (exception) {
           this.ux.stopSpinner(chalk.bold.redBright('Failed'));
-          console.log(chalk.bold.redBright(exception));
+          displaylog(chalk.bold.redBright(exception), this.ux);
         }
       }
     } catch (exception) {
       this.ux.stopSpinner(chalk.bold.redBright('Failed'));
-      console.log(chalk.bold.redBright(exception));
+      displaylog(chalk.bold.redBright(exception), this.ux);
     }
 
     // function to create LightningComponentBundle

@@ -3,3 +3,7 @@ export interface CompileErrors {
   columnNumber: number;
   problem: string;
 }
+
+export interface ConsoleError {
+  errorMsg: string;
+}

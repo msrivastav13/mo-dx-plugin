@@ -3,6 +3,7 @@ import {AnyJson} from '@salesforce/ts-types';
 import chalk from 'chalk';
 import fs = require('fs-extra');
 import {SobjectResult} from '../../models/sObjectResult';
+import {displaylog} from '../../service/displayTable';
 import {getNameSpacePrefix} from '../../service/getNamespacePrefix';
 
 // Initialize Messages with the current plugin directory
@@ -100,8 +101,8 @@ export default class AuraDeploy extends SfdxCommand {
           auraDefinitionBundleVar.Id = newauraDefinitionBundle.id;
           auraDefinitionBundles.push(auraDefinitionBundleVar);
         } else {
-          this.ux.table(newauraDefinitionBundle.errors);
-          console.log(chalk.bold.redBright('Aura Component Save Failed'));
+          displaylog(JSON.stringify(newauraDefinitionBundle.errors), this.ux);
+          displaylog(chalk.bold.redBright('Aura Component Save Failed'), this.ux);
         }
       }
       if (auraDefinitionBundles.length > 0) {
@@ -111,13 +112,13 @@ export default class AuraDeploy extends SfdxCommand {
           await upsertAuraDefinition(auraDefinitions, fileBodyArray, auraDefinitionBundles[0].Id);
           this.ux.stopSpinner(chalk.bold.greenBright('AuraBundle Deployed SuccessFully..'));
         } catch (exception) {
-          this.ux.stopSpinner(chalk.bold.redBright('Failed'));
-          console.log(chalk.bold.redBright(exception));
+          this.ux.stopSpinner(chalk.bold.redBright('Aura Component Save Failed'));
+          displaylog(exception, this.ux);
         }
       }
     } catch (exception) {
-      this.ux.stopSpinner(chalk.bold.redBright('Failed'));
-      console.log(chalk.bold.redBright(exception));
+      this.ux.stopSpinner(chalk.bold.redBright('Aura Component Save Failed'));
+      displaylog(exception, this.ux);
     }
 
     // function to create AuraDefinitionBundle

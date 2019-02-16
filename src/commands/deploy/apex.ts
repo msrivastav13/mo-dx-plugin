@@ -4,7 +4,7 @@ import chalk from 'chalk';
 import fs = require('fs-extra');
 import { SobjectResult } from '../../models/sObjectResult';
 import { Deploy, DeployResult } from '../../service/deploy';
-import {display} from '../../service/displayTable';
+import {display, displaylog} from '../../service/displayTable';
 import { getFileName } from '../../service/getFileName';
 import { getNameSpacePrefix } from '../../service/getNamespacePrefix';
 
@@ -78,7 +78,7 @@ export default class ApexDeploy extends SfdxCommand {
           }
           return apexSaveResult as any ; // tslint:disable-line:no-any
         } catch (ex) {
-          console.log(chalk.bold.red(ex));
+          displaylog(chalk.bold.red(ex), this.ux);
           this.ux.stopSpinner(chalk.bold.red('Apex Class Creation Failed'));
         }
       }
@@ -95,7 +95,7 @@ export default class ApexDeploy extends SfdxCommand {
         display(deployResult, this.ux);
       }
       if (typeof deployResult.error !== 'undefined') {
-        console.log(chalk.bold.redBright(deployResult.error));
+        displaylog(chalk.bold.redBright(deployResult.error), this.ux);
       }
       this.ux.stopSpinner(chalk.bold.redBright('Apex Class Update Failed'));
     }

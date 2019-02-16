@@ -4,7 +4,7 @@ import chalk from 'chalk';
 import fs = require('fs-extra');
 import {SobjectResult} from '../../models/sObjectResult';
 import {Deploy, DeployResult} from '../../service/deploy';
-import {display} from '../../service/displayTable';
+import {display, displaylog} from '../../service/displayError';
 import {getFileName} from '../../service/getFileName';
 import {getNameSpacePrefix} from '../../service/getNamespacePrefix';
 
@@ -71,7 +71,7 @@ export default class VfDeploy extends SfdxCommand {
         display(deployResult, this.ux);
         this.ux.stopSpinner(chalk.bold.redBright('Visualforce Page Update Failed'));
         if ( typeof deployResult.error !== 'undefined' ) {
-          console.log(chalk.bold.redBright(deployResult.error));
+          displaylog(chalk.bold.redBright(deployResult.error), this.ux);
         }
       }
     } else {
@@ -90,12 +90,13 @@ export default class VfDeploy extends SfdxCommand {
             return '';
           } else {
             for (const error of vfSaveResult.errors) {
-              console.log(chalk.redBright(error));
+              displaylog(chalk.redBright(error), this.ux);
             }
             this.ux.stopSpinner(chalk.bold.red('Visualforce Page Creation Failed'));
           }
         } catch (ex) {
-          this.ux.stopSpinner(chalk.bold.red(ex));
+          displaylog(chalk.redBright(ex), this.ux);
+          this.ux.stopSpinner(chalk.bold.red('Visualforce Page Creation Failed'));
         }
       }
     }
