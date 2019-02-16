@@ -100,7 +100,8 @@ export default class AuraDeploy extends SfdxCommand {
           auraDefinitionBundleVar.Id = newauraDefinitionBundle.id;
           auraDefinitionBundles.push(auraDefinitionBundleVar);
         } else {
-          console.log(chalk.bold.redBright(JSON.stringify(newauraDefinitionBundle.errors)));
+          this.ux.table(newauraDefinitionBundle.errors);
+          console.log(chalk.bold.redBright('Aura Component Save Failed'));
         }
       }
       if (auraDefinitionBundles.length > 0) {

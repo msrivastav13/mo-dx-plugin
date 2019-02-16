@@ -1,11 +1,12 @@
-import {core, flags, SfdxCommand} from '@salesforce/command';
-import {AnyJson} from '@salesforce/ts-types';
+import { core, flags, SfdxCommand } from '@salesforce/command';
+import { AnyJson } from '@salesforce/ts-types';
 import chalk from 'chalk';
 import fs = require('fs-extra');
-import {SobjectResult} from '../../models/sObjectResult';
-import {Deploy, DeployResult} from '../../service/deploy';
-import {getFileName} from '../../service/getFileName';
-import {getNameSpacePrefix} from '../../service/getNamespacePrefix';
+import { SobjectResult } from '../../models/sObjectResult';
+import { Deploy, DeployResult } from '../../service/deploy';
+import {display} from '../../service/displayTable';
+import { getFileName } from '../../service/getFileName';
+import { getNameSpacePrefix } from '../../service/getNamespacePrefix';
 
 // Initialize Messages with the current plugin directory
 core.Messages.importMessagesDirectory(__dirname);
@@ -13,6 +14,12 @@ core.Messages.importMessagesDirectory(__dirname);
 // Load the specific messages for this file. Messages from @salesforce/command, @salesforce/core,
 // or any library that is using the messages framework can also be loaded this way.
 const messages = core.Messages.loadMessages('mo-dx-plugin', 'org');
+
+interface ApexClass {
+  Body: string;
+  NamespacePrefix: string;
+  Id: string;
+}
 
 export default class ApexDeploy extends SfdxCommand {
 
@@ -37,12 +44,6 @@ export default class ApexDeploy extends SfdxCommand {
 
     this.ux.startSpinner(chalk.bold.yellowBright('Saving ....'));
 
-    interface ApexClass {
-      Body: string;
-      NamespacePrefix: string;
-      Id: string;
-    }
-
     const conn = this.org.getConnection();
 
     const namespacePrefix = await getNameSpacePrefix(conn);
@@ -58,21 +59,10 @@ export default class ApexDeploy extends SfdxCommand {
 
     // logic to update apex class
     if (apexclass.length > 0) {
-      const classId = apexclass[0].Id ;
-      const deployAction = new Deploy('ApexContainer', 'ApexClassMember' , classId , filebody, conn);
-      const deployResult = await deployAction.deployMetadata() as DeployResult;
-      if (deployResult.success) {
-        this.ux.stopSpinner(chalk.bold.greenBright('Apex Class Successfully Updated'));
-        return '';
-      } else {
-        this.ux.stopSpinner(chalk.bold.redBright('Apex Class Update Failed'));
-        if ( typeof deployResult.error !== 'undefined' ) {
-           console.log(chalk.bold.redBright(deployResult.error));
-        }
-      }
+      const updateResult = await this.updateApex(apexclass, filebody, conn) as any; // tslint:disable-line:no-any
+      return  updateResult;
     } else {
         // logic to create an apex class
-          // Create Container AsyncRequest Object
         const apexClass = {
           Body: filebody,
           NamespacePrefix: namespacePrefix
@@ -82,16 +72,33 @@ export default class ApexDeploy extends SfdxCommand {
           const apexSaveResult = await conn.tooling.sobject('ApexClass').create(apexClass) as SobjectResult;
           if ( apexSaveResult.success) {
             this.ux.stopSpinner(chalk.bold.green('Apex Class Successfully Created'));
-            return '';
           } else {
-            for (const error of apexSaveResult.errors) {
-              console.log(chalk.redBright(error));
-            }
+            this.ux.table(apexSaveResult.errors);
             this.ux.stopSpinner(chalk.bold.red('Apex Class Creation Failed'));
           }
+          return apexSaveResult as any ; // tslint:disable-line:no-any
         } catch (ex) {
-          this.ux.stopSpinner(chalk.bold.red(ex));
+          console.log(chalk.bold.red(ex));
+          this.ux.stopSpinner(chalk.bold.red('Apex Class Creation Failed'));
         }
       }
     }
+
+  private async updateApex(apexclass: ApexClass[], filebody: string, conn: core.Connection) {
+    const classId = apexclass[0].Id;
+    const deployAction = new Deploy('ApexContainer', 'ApexClassMember', classId, filebody, conn);
+    const deployResult = await deployAction.deployMetadata() as DeployResult;
+    if (deployResult.success) {
+      this.ux.stopSpinner(chalk.bold.greenBright('Apex Class Successfully Updated'));
+    } else {
+      if (deployResult.queryResult.records.length > 0 && deployResult.queryResult.records[0].DeployDetails.componentFailures.length > 0) {
+        display(deployResult, this.ux);
+      }
+      if (typeof deployResult.error !== 'undefined') {
+        console.log(chalk.bold.redBright(deployResult.error));
+      }
+      this.ux.stopSpinner(chalk.bold.redBright('Apex Class Update Failed..'));
+    }
+    return deployResult;
+  }
 }

@@ -4,6 +4,7 @@ import chalk from 'chalk';
 import fs = require('fs-extra');
 import {SobjectResult} from '../../models/sObjectResult';
 import {Deploy, DeployResult} from '../../service/deploy';
+import {display} from '../../service/displayTable';
 import {getFileName} from '../../service/getFileName';
 import {getNameSpacePrefix} from '../../service/getNamespacePrefix';
 
@@ -67,6 +68,9 @@ export default class TriggerDeploy extends SfdxCommand {
         this.ux.stopSpinner(chalk.bold.greenBright('Trigger Successfully Updated'));
         return '';
       } else {
+        if (deployResult.queryResult.records.length > 0 && deployResult.queryResult.records[0].DeployDetails.componentFailures.length > 0) {
+          display(deployResult, this.ux);
+        }
         this.ux.stopSpinner(chalk.bold.redBright('Trigger Update Failed'));
         if ( typeof deployResult.error !== 'undefined' ) {
           console.log(chalk.bold.redBright(deployResult.error));
@@ -87,9 +91,7 @@ export default class TriggerDeploy extends SfdxCommand {
             this.ux.stopSpinner(chalk.bold.green('Trigger Successfully Created'));
             return '';
           } else {
-            for (const error of triggerResult.errors) {
-              console.log(chalk.redBright(error));
-            }
+            this.ux.table(triggerResult.errors);
             this.ux.stopSpinner(chalk.bold.red('Trigger Creation Failed'));
           }
         } catch (ex) {

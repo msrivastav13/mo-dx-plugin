@@ -4,6 +4,7 @@ import chalk from 'chalk';
 import fs = require('fs-extra');
 import {SobjectResult} from '../../models/sObjectResult';
 import {Deploy, DeployResult} from '../../service/deploy';
+import {display} from '../../service/displayTable';
 import {getFileName} from '../../service/getFileName';
 import {getNameSpacePrefix} from '../../service/getNamespacePrefix';
 
@@ -67,6 +68,7 @@ export default class ApexComponentDeploy extends SfdxCommand {
         this.ux.stopSpinner(chalk.bold.greenBright('Visualforce Component Successfully Updated'));
         return '';
       } else {
+        display(deployResult, this.ux);
         this.ux.stopSpinner(chalk.bold.redBright('Visualforce Component Update Failed'));
         if ( typeof deployResult.error !== 'undefined' ) {
           console.log(chalk.bold.redBright(deployResult.error));

@@ -46,6 +46,7 @@ export class Deploy {
           deployMsg.queryResult = containerAsyncResult;
         } else {
           deployMsg.success = false;
+          deployMsg.queryResult = containerAsyncResult;
         }
       } else {
         deployMsg.success = false;

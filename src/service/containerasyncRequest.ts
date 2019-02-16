@@ -1,21 +1,14 @@
 import {Connection} from '@salesforce/core';
-import chalk from 'chalk';
 import {QueryResult} from '../models/queryResult';
 import {SobjectResult} from '../models/sObjectResult';
 import {delay} from './delay';
 import {executeToolingQuery} from './toolingQuery';
 
-export async function createDeployRequest(containerId: string, ischeck: boolean, conn: Connection) {
+export async function createDeployRequest(containerId: string, ischeck: boolean, conn: Connection): Promise<QueryResult> {
 
   interface ContainerAsyncRequest {
     IsCheckOnly: boolean;
     MetadataContainerId: string;
-  }
-
-  interface CompileErrors {
-    lineNumber: string;
-    columnNumber: string;
-    problem: string;
   }
 
   // Create Container AsyncRequest Object
@@ -41,36 +34,15 @@ export async function createDeployRequest(containerId: string, ischeck: boolean,
       }
       switch (containerAsyncRequestRes.State) {
         case 'Invalidated':
-        console.log(chalk.redBright(JSON.stringify(containerAsyncRequestRes.DeployDetails.componentFailures)));
         break;
         case 'Completed':
         break;
         case 'Failed':
-        // this.ux.table(containerAsyncRequestRes.DeployDetails.componentFailures);
-        console.table(containerAsyncRequestRes.DeployDetails.componentFailures);
-        const errors = [] as CompileErrors[];
-        const tableColumnData = {
-          columns: [
-              { key: 'lineNumber', label: 'Line' },
-              { key: 'columnNumber', label: 'Column' },
-              { key: 'problem', label: 'Error Description' }
-          ]
-        };
-        for (const error of containerAsyncRequestRes.DeployDetails.componentFailures) {
-          const errorLog = {} as CompileErrors;
-          error.columnNumber = error.columnNumber;
-          error.lineNumber = error.lineNumber ;
-          error.problem = error.problem;
-          errors.push(errorLog);
-          // console.table(chalk.redBright('Line:' + error.lineNumber + ' Column:' + error.columnNumber + ' Error Description:' + error.problem + '\r\n'));
-        }
-        this.ux.table(errors, tableColumnData);
         break;
         case 'Error':
-        console.log(chalk.redBright(JSON.stringify(containerAsyncRequestRes.DeployDetails.componentFailures)));
         break;
         case 'Aborted':
-        console.log('Aborted..');
+        console.log('Request Aborted!!! Retry Saving..');
         break;
       }
     }
