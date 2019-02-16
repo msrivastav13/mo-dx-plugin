@@ -1,6 +1,7 @@
 import {core, flags, SfdxCommand} from '@salesforce/command';
 import {AnyJson} from '@salesforce/ts-types';
 import chalk from 'chalk';
+import Table = require ('cli-table');
 import fs = require('fs-extra');
 import {SobjectResult} from '../../models/sObjectResult';
 import {Deploy, DeployResult} from '../../service/deploy';
@@ -67,7 +68,20 @@ export default class ApexDeploy extends SfdxCommand {
       } else {
         this.ux.stopSpinner(chalk.bold.redBright('Apex Class Update Failed'));
         if ( typeof deployResult.error !== 'undefined' ) {
-          console.log(chalk.bold.redBright(deployResult.error));
+          // instantiate
+          const table = new Table({
+            head: ['TH 1 label', 'TH 2 label']
+          , colWidths: [100, 200]
+          });
+
+          // table is an Array, so you can `push`, `unshift`, `splice` and friends
+          table.push(
+            ['First value', 'Second value']
+          , ['First value', 'Second value']
+          );
+
+          console.log(table.toString());
+          // console.log(chalk.bold.redBright(deployResult.error));
         }
       }
     } else {

@@ -12,6 +12,12 @@ export async function createDeployRequest(containerId: string, ischeck: boolean,
     MetadataContainerId: string;
   }
 
+  interface CompileErrors {
+    lineNumber: string;
+    columnNumber: string;
+    problem: string;
+  }
+
   // Create Container AsyncRequest Object
   const containerasynRequestReq = {
     IsCheckOnly : ischeck,
@@ -40,9 +46,25 @@ export async function createDeployRequest(containerId: string, ischeck: boolean,
         case 'Completed':
         break;
         case 'Failed':
+        // this.ux.table(containerAsyncRequestRes.DeployDetails.componentFailures);
+        console.table(containerAsyncRequestRes.DeployDetails.componentFailures);
+        const errors = [] as CompileErrors[];
+        const tableColumnData = {
+          columns: [
+              { key: 'lineNumber', label: 'Line' },
+              { key: 'columnNumber', label: 'Column' },
+              { key: 'problem', label: 'Error Description' }
+          ]
+        };
         for (const error of containerAsyncRequestRes.DeployDetails.componentFailures) {
-          console.log(chalk.redBright('Line:' + error.lineNumber + ' Column:' + error.columnNumber + ' Error Description:' + error.problem + '\r\n'));
+          const errorLog = {} as CompileErrors;
+          error.columnNumber = error.columnNumber;
+          error.lineNumber = error.lineNumber ;
+          error.problem = error.problem;
+          errors.push(errorLog);
+          // console.table(chalk.redBright('Line:' + error.lineNumber + ' Column:' + error.columnNumber + ' Error Description:' + error.problem + '\r\n'));
         }
+        this.ux.table(errors, tableColumnData);
         break;
         case 'Error':
         console.log(chalk.redBright(JSON.stringify(containerAsyncRequestRes.DeployDetails.componentFailures)));
