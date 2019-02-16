@@ -24,7 +24,7 @@ export default class TriggerDeploy extends SfdxCommand {
 
   protected static flagsConfig = {
     // flag with a value (-n, --name=VALUE)
-    filepath: flags.string({char: 'p', description: 'file path' , required: true})
+    filepath: flags.directory({char: 'p', description: 'file path' , required: true})
   };
 
   // Comment this out if your command does not require an org username

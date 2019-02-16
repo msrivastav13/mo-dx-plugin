@@ -213,7 +213,7 @@ export default class LWCDeploy extends SfdxCommand {
             lwcResourceToInsert.LightningComponentBundleId = bundleId;
             lwcResourceToInsert.FilePath = getFilepath( _fileOrDirName, filename);
             lwcResourceToInsert.Format = (filename.split('.'))[(filename.split('.').length - 1)];
-            lwcResourceToInsert.Source = files[filePath.indexOf(lwcMatch.FilePath)];
+            lwcResourceToInsert.Source = files[filePath.indexOf(getFilepath( _fileOrDirName, filename))];
             lwcResourcesToCreate.push(lwcResourceToInsert);
           }
         });
