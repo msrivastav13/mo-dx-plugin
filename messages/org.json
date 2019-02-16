@@ -1,14 +1,10 @@
 {
-  "commandDescription": "Prints a greeting and your org id(s)!",
-  "nameFlagDescription": "name to print",
-  "forceFlagDescription": "example boolean flag",
-  "errorNoOrgResults": "No results found for the organization '%s'.",
-  "auraDeploy": "Deploy aura bundles without source tracking",
-  "apexDeploy": "Deploy apex class without source tracking ",
-  "vfDeploy": "Deploy visualforce page without source tracking",
-  "vfComponentDeploy": "Deploy visualforce components without source tracking",
-  "triggerDeploy": "Deploy apex triggers without source tracking",
-  "lwcDeploy": "Deploy lwc without source tracking",
-  "retrieveDxSource": "Retrieves Dx Source from Unmanaged/Managed package",
+  "auraDeploy": "Deploy aura bundles using tooling api",
+  "apexDeploy": "Deploy apex class using tooling api",
+  "vfDeploy": "Deploy visualforce page using tooling api",
+  "vfComponentDeploy": "Deploy visualforce components using tooling api",
+  "triggerDeploy": "Deploy apex triggers using tooling api",
+  "lwcDeploy": "Deploy lwc wusing tooling api",
+  "retrieveDxSource": "Retrieves Source is DX format from Unmanaged/Managed package",
   "retrieveSource": "Retrieves Source from Unmanaged/Managed package in Metadata API format"
 }

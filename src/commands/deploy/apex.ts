@@ -97,7 +97,7 @@ export default class ApexDeploy extends SfdxCommand {
       if (typeof deployResult.error !== 'undefined') {
         console.log(chalk.bold.redBright(deployResult.error));
       }
-      this.ux.stopSpinner(chalk.bold.redBright('Apex Class Update Failed..'));
+      this.ux.stopSpinner(chalk.bold.redBright('Apex Class Update Failed'));
     }
     return deployResult;
   }

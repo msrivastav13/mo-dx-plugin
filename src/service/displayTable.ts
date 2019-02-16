@@ -18,7 +18,6 @@ export function display(deployResult: DeployResult, ux: UX) {
       errorLog.lineNumber = (error.lineNumber);
       errorLog.problem = chalk.bold(error.problem);
       errors.push(errorLog);
-      // console.table(chalk.redBright('Line:' + error.lineNumber + ' Column:' + error.columnNumber + ' Error Description:' + error.problem + '\r\n'));
     }
     ux.table(errors, tableColumnData);
 }
