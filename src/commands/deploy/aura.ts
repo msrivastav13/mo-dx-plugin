@@ -34,7 +34,7 @@ export default class AuraDeploy extends SfdxCommand {
 
   public async run(): Promise<AnyJson> {
 
-    this.ux.startSpinner(chalk.bold.yellowBright('Saving ....'));
+    this.ux.startSpinner(chalk.bold.yellowBright('Saving'));
 
     const conn = this.org.getConnection();
 

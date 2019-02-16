@@ -36,7 +36,7 @@ export default class VfDeploy extends SfdxCommand {
 
   public async run(): Promise<AnyJson> {
 
-    this.ux.startSpinner(chalk.bold.yellowBright('Saving ....'));
+    this.ux.startSpinner(chalk.bold.yellowBright('Saving'));
 
     interface ApexPage {
       Name: string;
