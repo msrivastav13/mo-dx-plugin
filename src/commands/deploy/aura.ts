@@ -3,7 +3,7 @@ import {AnyJson} from '@salesforce/ts-types';
 import chalk from 'chalk';
 import fs = require('fs-extra');
 import {SobjectResult} from '../../models/sObjectResult';
-import {displaylog} from '../../service/displayTable';
+import {displaylog} from '../../service/displayError';
 import {getNameSpacePrefix} from '../../service/getNamespacePrefix';
 
 // Initialize Messages with the current plugin directory

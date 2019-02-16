@@ -4,7 +4,7 @@ import chalk from 'chalk';
 import fs = require('fs-extra');
 import {SobjectResult} from '../../models/sObjectResult';
 import {Deploy, DeployResult} from '../../service/deploy';
-import {display} from '../../service/displayTable';
+import {display} from '../../service/displayError';
 import {getFileName} from '../../service/getFileName';
 import {getNameSpacePrefix} from '../../service/getNamespacePrefix';
 
