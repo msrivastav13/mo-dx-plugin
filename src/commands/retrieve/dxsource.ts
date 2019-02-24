@@ -1,8 +1,9 @@
-import {core, flags, SfdxCommand} from '@salesforce/command';
-import {AnyJson} from '@salesforce/ts-types';
+import { core, flags, SfdxCommand } from '@salesforce/command';
+import { AnyJson } from '@salesforce/ts-types';
 import * as AdmZip from 'adm-zip';
 import chalk from 'chalk';
 import * as child from 'child_process';
+import fs = require('fs-extra');
 import * as util from 'util';
 
 // Initialize Messages with the current plugin directory
@@ -19,21 +20,32 @@ const manifestDir = 'manifest';
 const exec = util.promisify(child.exec);
 
 export default class DxSource extends SfdxCommand {
-
   public static description = messages.getMessage('retrieveDxSource');
 
   public static examples = [
-  '$ sfdx retrieve:dxsource -n <package/changeset>',
-  '$ sfdx retrieve:dxsource -n <package/changeset> -m "true"',
-  '$ sfdx retrieve:dxsource -n <package/changeset> -p <[pathName]>',
-  '$ sfdx retrieve:dxsource -u myOrg@example.com -n <package/changeset> -p <[pathName]>'
+    '$ sfdx retrieve:dxsource -n <package/changeset>',
+    '$ sfdx retrieve:dxsource -n <package/changeset> -m true',
+    '$ sfdx retrieve:dxsource -n <package/changeset> -p <[pathName]>',
+    '$ sfdx retrieve:dxsource -u myOrg@example.com -n <package/changeset> -p <[pathName]>'
   ];
 
   protected static flagsConfig = {
     // flag with a value (-n, --name=VALUE)
-    packagename: flags.string({required: true, char: 'n', description: 'the name of the package you want to retrieve' }),
-    pathname: flags.string({char: 'p', default: 'force-app', description: 'where to convert the result to.defaults to force-app' }),
-    retainmetadata : flags.string({char: 'm', description: 'If set retain the metadata folder in mdapiout directory and do not clean'})
+    packagename: flags.string({
+      required: true,
+      char: 'n',
+      description: 'the name of the package you want to retrieve'
+    }),
+    pathname: flags.string({
+      char: 'p',
+      default: 'force-app',
+      description: 'where to convert the result to.defaults to force-app'
+    }),
+    retainmetadata: flags.string({
+      char: 'm',
+      description:
+        'If set retain the metadata folder in mdapiout directory and do not clean'
+    })
   };
 
   // Comment this out if your command does not require an org username
@@ -44,15 +56,20 @@ export default class DxSource extends SfdxCommand {
 
   public async run(): Promise<AnyJson> {
     const target = this.flags.pathname;
-    const defaultusername = this.flags.targetusername ? this.flags.targetusername : this.org.getUsername();
+    const defaultusername = this.flags.targetusername
+      ? this.flags.targetusername
+      : this.org.getUsername();
     let errored = false;
 
     this.ux.startSpinner(chalk.yellowBright('Retrieving Metadata...'));
 
-    // Return an object to be displayed with --json
-    const retrieveCommand = `sfdx force:mdapi:retrieve -s -p "${this.flags.packagename}" -u ${defaultusername}  -r ./${tmpDir} -w 30 --json`;
+    const retrieveCommand = `sfdx force:mdapi:retrieve -s -p '${
+      this.flags.packagename
+    }' -u ${defaultusername}  -r ./${tmpDir} -w 30 --json`;
     try {
-      await exec(retrieveCommand, { maxBuffer: 1000000 * 1024 });
+      await exec(retrieveCommand, {
+        maxBuffer: 1000000 * 1024
+      });
     } catch (exception) {
       errored = true;
       this.ux.errorJson(exception);
@@ -60,8 +77,9 @@ export default class DxSource extends SfdxCommand {
     }
 
     if (!errored) {
-
-      this.ux.stopSpinner(chalk.greenBright('Retrieve Completed.  Unzipping...'));
+      this.ux.stopSpinner(
+        chalk.greenBright('Retrieve Completed.  Unzipping...')
+      );
       // unzip result to a temp folder mdapi
       if (process.platform.includes('darwin')) {
         await exec(`unzip -qqo ./${tmpDir}/unpackaged.zip -d ./${tmpDir}`); // Use standard MACOSX unzip
@@ -73,31 +91,55 @@ export default class DxSource extends SfdxCommand {
           zip.extractAllTo('./' + tmpDir, true);
         } catch (error) {
           console.error(chalk.redBright(error));
-          return ;
+          return;
         }
       }
 
       // Prepare folder and directory for DX Conversion
-      this.ux.startSpinner(chalk.yellowBright('Unzip Completed.  Converting To DX Source Format...'));
-
-      await exec(`rm -rf ./${manifestDir}/`);
-
-      await exec(`mkdir ./${manifestDir}`);
-
-      await exec(`cp -a ./${tmpDir}/package.xml ./${manifestDir}/`);
+      this.ux.startSpinner(
+        chalk.yellowBright(
+          'Unzip Completed.  Converting To DX Source Format...'
+        )
+      );
+      if (process.platform.includes('darwin')) {
+        await exec(`rm -rf ./${manifestDir}/`);
+        await exec(`mkdir ./${manifestDir}`);
+        await exec(`cp -a ./${tmpDir}/package.xml ./${manifestDir}/`);
+      } else {
+        try {
+          fs.removeSync(`./${manifestDir}/`);
+          fs.mkdirsSync(`./${manifestDir}`);
+          fs.copyFileSync(
+            `./${tmpDir}/package.xml`,
+            `./${manifestDir}/package.xml`
+          );
+        } catch (error) {
+          console.error(chalk.redBright(error));
+        }
+      }
       // DX Conversion
       try {
-        await exec(`sfdx force:mdapi:convert -r ./${tmpDir} -d ${target} --json`);
-        this.ux.stopSpinner(chalk.greenBright('Done Converting mdapi to DX format.....'));
+        await exec(
+          `sfdx force:mdapi:convert -r ./${tmpDir} -d ${target} --json`
+        );
+        this.ux.stopSpinner(
+          chalk.greenBright('Done Converting mdapi to DX format.....')
+        );
       } catch (err) {
         this.ux.errorJson(err);
         this.ux.error(chalk.redBright('Error from conversion'));
       }
       if (!this.flags.retainmetadata) {
-        this.ux.startSpinner(chalk.blueBright('Cleaning Unused Directory Started'));
-        await exec(`rm -rf ./${tmpDir}`);
+        this.ux.startSpinner(
+          chalk.blueBright('Cleaning Unused Directory Started')
+        );
+        if (process.platform.includes('darwin')) {
+          await exec(`rm -rf ./${tmpDir}`);
+        } else {
+          fs.removeSync(`./${tmpDir}`);
+        }
       }
-      this.ux.stopSpinner(chalk.greenBright('Finished..'));
+      this.ux.stopSpinner(chalk.greenBright('Finished.'));
     }
 
     return '';
