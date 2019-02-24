@@ -24,7 +24,7 @@ export default class DxSource extends SfdxCommand {
 
   public static examples = [
     '$ sfdx retrieve:dxsource -n <package/changeset>',
-    '$ sfdx retrieve:dxsource -n <package/changeset> -m true',
+    '$ sfdx retrieve:dxsource -n <package/changeset> -m "true"',
     '$ sfdx retrieve:dxsource -n <package/changeset> -p <[pathName]>',
     '$ sfdx retrieve:dxsource -u myOrg@example.com -n <package/changeset> -p <[pathName]>'
   ];
@@ -63,9 +63,9 @@ export default class DxSource extends SfdxCommand {
 
     this.ux.startSpinner(chalk.yellowBright('Retrieving Metadata...'));
 
-    const retrieveCommand = `sfdx force:mdapi:retrieve -s -p '${
+    const retrieveCommand = `sfdx force:mdapi:retrieve -s -p "${
       this.flags.packagename
-    }' -u ${defaultusername}  -r ./${tmpDir} -w 30 --json`;
+    }" -u ${defaultusername}  -r ./${tmpDir} -w 30 --json`;
     try {
       await exec(retrieveCommand, {
         maxBuffer: 1000000 * 1024

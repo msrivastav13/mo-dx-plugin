@@ -45,9 +45,9 @@ export default class Pkgsource extends SfdxCommand {
 
     this.ux.startSpinner(chalk.yellowBright('Retrieving Metadata...'));
 
-    const retrieveCommand = `sfdx force:mdapi:retrieve -s -p '${
+    const retrieveCommand = `sfdx force:mdapi:retrieve -s -p "${
       this.flags.packagename
-    }' -u ${defaultusername}  -r ./${tmpDir} -w -1 --json`;
+    }" -u ${defaultusername}  -r ./${tmpDir} -w -1 --json`;
 
     try {
       await exec(retrieveCommand, { maxBuffer: 1000000 * 1024 });
