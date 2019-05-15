@@ -65,11 +65,11 @@ export default class VfDeploy extends SfdxCommand {
       const deployAction = new Deploy('VfContainer', 'ApexPageMember' , pageId , filebody, conn);
       const deployResult = await deployAction.deployMetadata() as DeployResult;
       if (deployResult.success) {
-        this.ux.stopSpinner(chalk.bold.greenBright('Visualforce Page Successfully Updated'));
+        this.ux.stopSpinner(chalk.bold.greenBright('Visualforce Page Successfully Updated ✔'));
         return '';
       } else {
         display(deployResult, this.ux);
-        this.ux.stopSpinner(chalk.bold.redBright('Visualforce Page Update Failed'));
+        this.ux.stopSpinner(chalk.bold.redBright('Visualforce Page Update Failed ✖'));
         if ( typeof deployResult.error !== 'undefined' ) {
           displaylog(chalk.bold.redBright(deployResult.error), this.ux);
         }
@@ -86,17 +86,17 @@ export default class VfDeploy extends SfdxCommand {
         try {
           const vfSaveResult = await conn.tooling.sobject('ApexPage').create(vfPage) as SobjectResult;
           if ( vfSaveResult.success) {
-            this.ux.stopSpinner(chalk.bold.green('Visualforce Page Successfully Created'));
+            this.ux.stopSpinner(chalk.bold.green('Visualforce Page Successfully Created ✔'));
             return '';
           } else {
             for (const error of vfSaveResult.errors) {
               displaylog(chalk.redBright(error), this.ux);
             }
-            this.ux.stopSpinner(chalk.bold.red('Visualforce Page Creation Failed'));
+            this.ux.stopSpinner(chalk.bold.red('Visualforce Page Creation Failed ✖'));
           }
         } catch (ex) {
           displaylog(chalk.redBright(ex), this.ux);
-          this.ux.stopSpinner(chalk.bold.red('Visualforce Page Creation Failed'));
+          this.ux.stopSpinner(chalk.bold.red('Visualforce Page Creation Failed ✖'));
         }
       }
     }

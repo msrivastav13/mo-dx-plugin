@@ -65,11 +65,11 @@ export default class ApexComponentDeploy extends SfdxCommand {
       const deployAction = new Deploy('VfComponent', 'ApexComponentMember' , apexPageComponentId , filebody, conn);
       const deployResult = await deployAction.deployMetadata() as DeployResult;
       if (deployResult.success) {
-        this.ux.stopSpinner(chalk.bold.greenBright('Visualforce Component Successfully Updated'));
+        this.ux.stopSpinner(chalk.bold.greenBright('Visualforce Component Successfully Updated ✔'));
         return '';
       } else {
         display(deployResult, this.ux);
-        this.ux.stopSpinner(chalk.bold.redBright('Visualforce Component Update Failed'));
+        this.ux.stopSpinner(chalk.bold.redBright('Visualforce Component Update Failed ✖'));
         if ( typeof deployResult.error !== 'undefined' ) {
           displaylog(chalk.bold.redBright(deployResult.error), this.ux);
         }
@@ -86,17 +86,17 @@ export default class ApexComponentDeploy extends SfdxCommand {
         try {
           const vfComponentSaveResult = await conn.tooling.sobject('ApexComponent').create(vfComponent) as SobjectResult;
           if ( vfComponentSaveResult.success) {
-            this.ux.stopSpinner(chalk.bold.green('Visualforce Component Successfully Created'));
+            this.ux.stopSpinner(chalk.bold.green('Visualforce Component Successfully Created ✔'));
             return '';
           } else {
             for (const error of vfComponentSaveResult.errors) {
               displaylog(chalk.redBright(error), this.ux);
             }
-            this.ux.stopSpinner(chalk.bold.red('Visualforce Component Creation Failed'));
+            this.ux.stopSpinner(chalk.bold.red('Visualforce Component Creation Failed ✖'));
           }
         } catch (ex) {
           displaylog(ex, this.ux);
-          this.ux.stopSpinner(chalk.bold.red('Vf Component Save Failed'));
+          this.ux.stopSpinner(chalk.bold.red('Vf Component Save Failed ✖'));
         }
       }
     }

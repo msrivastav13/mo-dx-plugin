@@ -123,15 +123,15 @@ export default class LWCDeploy extends SfdxCommand {
         lwcResources = lwcResources.length > 0 ? lwcResources : [];
         try {
           await upsertLWCDefinition(lwcResources, fileBodyArray, lwcBundles[0].Id);
-          this.ux.stopSpinner(chalk.bold.greenBright('Lighnting Web Components Deployed SuccessFully'));
+          this.ux.stopSpinner(chalk.bold.greenBright('Lighnting Web Components Deployed SuccessFully ✔'));
           // console.log(auraDefinitionsResult);
         } catch (exception) {
-          this.ux.stopSpinner(chalk.bold.redBright('Failed'));
+          this.ux.stopSpinner(chalk.bold.redBright('Failed ✖'));
           displaylog(chalk.bold.redBright(exception), this.ux);
         }
       }
     } catch (exception) {
-      this.ux.stopSpinner(chalk.bold.redBright('Failed'));
+      this.ux.stopSpinner(chalk.bold.redBright('Failed ✖'));
       displaylog(chalk.bold.redBright(exception), this.ux);
     }
 

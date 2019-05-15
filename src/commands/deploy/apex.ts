@@ -71,15 +71,15 @@ export default class ApexDeploy extends SfdxCommand {
         try {
           const apexSaveResult = await conn.tooling.sobject('ApexClass').create(apexClass) as SobjectResult;
           if ( apexSaveResult.success) {
-            this.ux.stopSpinner(chalk.bold.green('Apex Class Successfully Created'));
+            this.ux.stopSpinner(chalk.bold.green('Apex Class Successfully Created ✔'));
           } else {
             this.ux.table(apexSaveResult.errors);
-            this.ux.stopSpinner(chalk.bold.red('Apex Class Creation Failed'));
+            this.ux.stopSpinner(chalk.bold.red('Apex Class Creation Failed ×'));
           }
           return apexSaveResult as any ; // tslint:disable-line:no-any
         } catch (ex) {
           displaylog(chalk.bold.red(ex), this.ux);
-          this.ux.stopSpinner(chalk.bold.red('Apex Class Creation Failed'));
+          this.ux.stopSpinner(chalk.bold.red('Apex Class Creation Failed ×'));
         }
       }
     }
@@ -89,7 +89,7 @@ export default class ApexDeploy extends SfdxCommand {
     const deployAction = new Deploy('ApexContainer', 'ApexClassMember', classId, filebody, conn);
     const deployResult = await deployAction.deployMetadata() as DeployResult;
     if (deployResult.success) {
-      this.ux.stopSpinner(chalk.bold.greenBright('Apex Class Successfully Updated'));
+      this.ux.stopSpinner(chalk.bold.greenBright('Apex Class Successfully Updated ✔'));
     } else {
       if (deployResult.queryResult.records.length > 0 && deployResult.queryResult.records[0].DeployDetails.componentFailures.length > 0) {
         display(deployResult, this.ux);
@@ -97,7 +97,7 @@ export default class ApexDeploy extends SfdxCommand {
       if (typeof deployResult.error !== 'undefined') {
         displaylog(chalk.bold.redBright(deployResult.error), this.ux);
       }
-      this.ux.stopSpinner(chalk.bold.redBright('Apex Class Update Failed'));
+      this.ux.stopSpinner(chalk.bold.redBright('Apex Class Update Failed ✖'));
     }
     return deployResult;
   }

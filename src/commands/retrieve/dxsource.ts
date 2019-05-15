@@ -78,7 +78,7 @@ export default class DxSource extends SfdxCommand {
 
     if (!errored) {
       this.ux.stopSpinner(
-        chalk.greenBright('Retrieve Completed.  Unzipping...')
+        chalk.greenBright('Retrieve Completed ✔.  Unzipping...')
       );
       // unzip result to a temp folder mdapi
       if (process.platform.includes('darwin')) {
@@ -98,7 +98,7 @@ export default class DxSource extends SfdxCommand {
       // Prepare folder and directory for DX Conversion
       this.ux.startSpinner(
         chalk.yellowBright(
-          'Unzip Completed.  Converting To DX Source Format...'
+          'Unzip Completed ✔.  Converting To DX Source Format...'
         )
       );
       if (process.platform.includes('darwin')) {
@@ -123,15 +123,15 @@ export default class DxSource extends SfdxCommand {
           `sfdx force:mdapi:convert -r ./${tmpDir} -d ${target} --json`
         );
         this.ux.stopSpinner(
-          chalk.greenBright('Done Converting mdapi to DX format.....')
+          chalk.greenBright('Done Converting mdapi to DX format ✔')
         );
       } catch (err) {
         this.ux.errorJson(err);
-        this.ux.error(chalk.redBright('Error from conversion'));
+        this.ux.error(chalk.redBright('Error from conversion ✖'));
       }
       if (!this.flags.retainmetadata) {
         this.ux.startSpinner(
-          chalk.blueBright('Cleaning Unused Directory Started')
+          chalk.blueBright('Cleaning Unused Directory Started ✔')
         );
         if (process.platform.includes('darwin')) {
           await exec(`rm -rf ./${tmpDir}`);
@@ -139,7 +139,7 @@ export default class DxSource extends SfdxCommand {
           fs.removeSync(`./${tmpDir}`);
         }
       }
-      this.ux.stopSpinner(chalk.greenBright('Finished.'));
+      this.ux.stopSpinner(chalk.greenBright('Finished ✔'));
     }
 
     return '';

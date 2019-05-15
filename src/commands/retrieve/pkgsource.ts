@@ -54,12 +54,12 @@ export default class Pkgsource extends SfdxCommand {
     } catch (exception) {
       errored = true;
       this.ux.errorJson(exception);
-      this.ux.stopSpinner(chalk.redBright('Retrieve Operation Failed.'));
+      this.ux.stopSpinner(chalk.redBright('Retrieve Operation Failed ✖'));
     }
 
     if (!errored) {
       this.ux.stopSpinner(
-        chalk.greenBright('Retrieve Completed.  Unzipping...')
+        chalk.greenBright('Retrieve Completed ✔.  Unzipping...')
       );
       // unzip result to a temp folder mdapi
       if (process.platform.includes('darwin')) {
@@ -70,14 +70,14 @@ export default class Pkgsource extends SfdxCommand {
           const zip = new AdmZip('./' + tmpDir + '/unpackaged.zip');
           await zip.extractAllTo('./' + tmpDir, true);
         } catch (error) {
-          console.error(chalk.redBright(error));
+          console.error(chalk.redBright(error + '✖'));
           return;
         }
       }
 
-      this.ux.startSpinner(chalk.yellowBright('Unzip Completed.'));
+      this.ux.startSpinner(chalk.yellowBright('Unzip Completed ✔'));
       await fs.unlink('./' + tmpDir + '/unpackaged.zip');
-      this.ux.stopSpinner(chalk.greenBright('Finished.'));
+      this.ux.stopSpinner(chalk.greenBright('Finished ✔'));
     }
 
     return '';
