@@ -52,9 +52,6 @@
   "oclif": {
     "commands": "./lib/commands",
     "topics": {
-      "hello": {
-        "description": "Commands to say hello.This is just kept to demonstrate hello world example."
-      },
       "deploy": {
         "description": "Commands to deploy apex,vf,trigger and aura bundle."
       },
