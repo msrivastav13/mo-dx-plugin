@@ -13,24 +13,31 @@ core.Messages.importMessagesDirectory(__dirname);
 // or any library that is using the messages framework can also be loaded this way.
 const messages = core.Messages.loadMessages('mo-dx-plugin', 'org');
 
-const tmpDir = 'src';
-
 const exec = util.promisify(child.exec);
 
 export default class Pkgsource extends SfdxCommand {
   public static description = messages.getMessage('retrieveSource');
 
-  public static examples = ['$ sfdx retrieve:pkgsource -n <package/changeset>'];
+  public static examples = [
+    '$ sfdx retrieve:pkgsource -n <package/changeset>',
+    '$ sfdx retrieve:pkgsource -n <package/changeset> -r <relative path where source is retrieved and unzipped>',
+    '$ sfdx retrieve:pkgsource -n <package/changeset> -r /changesets/src'
+  ];
 
   protected static flagsConfig = {
     // flag with a value (-n, --name=VALUE)
     packagename: flags.string({
       required: true,
       char: 'n',
-      description: 'the name of the package you want to retrieve	'
+      description: 'the name of the package you want to retrieve'
+    }),
+
+    retrievedir : flags.string({
+      required: false,
+      char: 'r',
+      description: 'directory path to retrieve'
     })
   };
-
   // Comment this out if your command does not require an org username
   protected static requiresUsername = true;
 
@@ -41,6 +48,7 @@ export default class Pkgsource extends SfdxCommand {
     const defaultusername = this.flags.targetusername
       ? this.flags.targetusername
       : this.org.getUsername();
+    const tmpDir = this.flags.retrievedir ? this.flags.retrievedir : 'src' ;
     let errored = false;
 
     this.ux.startSpinner(chalk.yellowBright('Retrieving Metadata...'));
