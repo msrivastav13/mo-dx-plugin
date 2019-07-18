@@ -1,6 +1,6 @@
 import * as child from 'child_process';
 import * as util from 'util';
-import {DescribeMetadataResult} from "../../models/describemetadataResult";
+import {DescribeMetadataResult} from '../../models/describemetadataResult';
 
 const exec = util.promisify(child.exec);
 
