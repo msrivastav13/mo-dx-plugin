@@ -7,8 +7,8 @@ const exec = util.promisify(child.exec);
 
 export class MetadataMember {
 
-  public metadatatype: string;
-  public username: string;
+  private metadatatype: string;
+  private username: string;
 
   constructor(metadatatype: string, username: string) {
     this.metadatatype = metadatatype;

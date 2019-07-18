@@ -1,7 +1,10 @@
 import { core, flags, SfdxCommand } from '@salesforce/command';
 import chalk from 'chalk';
+import {DescribeMetadataResult} from '../../models/describemetadataResult';
+import {DescribeMetadata} from '../../service/packagexmlbuilder/describeMetadata';
 import {MetadataMember} from '../../service/packagexmlbuilder/metadataMember';
 import {PackageXmlTemplate} from '../../service/packagexmlbuilder/packagexmlTemplate';
+import { integer } from '@oclif/parser/lib/flags';
 // Initialize Messages with the current plugin directory
 core.Messages.importMessagesDirectory(__dirname);
 
@@ -19,11 +22,18 @@ export default class PackageXML extends SfdxCommand {
     '$ sfdx generate:packagexml -m ApexClass:MyApexClass1,MyApexClass2'
   ];
 
+  public static args = [{name: 'all'}];
+
   protected static flagsConfig = {
     metadatatype : flags.string({
-      required: true,
+      required: false,
       char: 'm',
       description: 'the name of the metadata you want the package.xml for'
+    }),
+    version : flags.string({
+      required: false,
+      char: 'v',
+      description: 'overrides the version of the package.xml'
     })
   };
 
@@ -33,12 +43,15 @@ export default class PackageXML extends SfdxCommand {
   public async run(): Promise<string> {
     let packagexml: string ;
     const conn = this.org.getConnection();
-    const apiVersion = conn.getApiVersion();
+    const apiVersion = this.flags.version ? this.flags.version : conn.getApiVersion();
     const defaultusername = this.flags.targetusername
       ? this.flags.targetusername
       : this.org.getUsername();
     this.ux.startSpinner(chalk.yellowBright('Building package xml for ' + this.flags.metadatatype));
     packagexml = await this.createXML(this.flags.metadatatype, apiVersion, defaultusername);
+    console.log(this.args.all);
+    const describeMetadataResult = await new DescribeMetadata(defaultusername).describeMetadata() as DescribeMetadataResult;
+    console.log(JSON.stringify(describeMetadataResult));
     process.stdout.write(packagexml);
     this.ux.stopSpinner(chalk.greenBright('Package XML generated Successfully ✔'));
     return packagexml;
