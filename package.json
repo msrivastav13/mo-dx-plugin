@@ -1,10 +1,11 @@
 {
   "name": "mo-dx-plugin",
-  "version": "0.2.1",
+  "version": "0.2.12",
   "author": "Mohith Shrivastava",
   "bugs": "https://github.com/ForceProjects/mo-dx-plugin/issues",
   "dependencies": {
     "@oclif/command": "^1",
+    "@oclif/plugin-help": "^2",
     "@oclif/config": "^1",
     "@oclif/errors": "^1",
     "@salesforce/command": "^1.4.1",
