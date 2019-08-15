@@ -6,5 +6,6 @@
   "triggerDeploy": "Deploy apex triggers using tooling api",
   "lwcDeploy": "Deploy lwc wusing tooling api",
   "retrieveDxSource": "Retrieves Source is DX format from Unmanaged/Managed package",
-  "retrieveSource": "Retrieves Source from Unmanaged/Managed package in Metadata API format"
+  "retrieveSource": "Retrieves Source from Unmanaged/Managed package in Metadata API format",
+  "staticresourceDeploy" : "Deploy static resource using tooling api"
 }
