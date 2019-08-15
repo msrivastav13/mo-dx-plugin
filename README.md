@@ -34,6 +34,7 @@ If you are Visual Studio Code user then recommend installing the extension along
 * [`sfdx deploy:vfcomponent`](#sfdx-deployvfcomponent)
 * [`sfdx deploy:aura`](#sfdx-deployaura)
 * [`sfdx deploy:lwc`](#sfdx-deploylwc)
+* [`sfdx deploy:staticresource`](#sfdx-deploystaticresource)
 
 ## `sfdx retrieve:dxsource`
 
@@ -96,7 +97,7 @@ OPTIONS
   --p, --pathname=pathname                   (required) the file path of the apex class you want to save to salesforce. Note you can run pwd command on terminal to obtain the path easily.
 
 EXAMPLES
-  $ sfdx deploy:apex -p pathname // Default authorized org is used for the deploy .The pathname parameter must be enclosed in double quotes. Example if your path is /Users/mohith/Desktop/ForceProjects/TestApp/force-app/main/default/classes/Constants.cls then the command to save this class will be sfdx deploy:apex -p "/Users/mohith/Desktop/ForceProjects/TestApp/force-app/main/default/classes/Constants.cls"
+  $ sfdx deploy:apex -p <pathname> // Default authorized org is used for the deploy .The pathname parameter must be enclosed in double quotes. Example if your path is /Users/mohith/Desktop/ForceProjects/TestApp/force-app/main/default/classes/Constants.cls then the command to save this class will be sfdx deploy:apex -p "/Users/mohith/Desktop/ForceProjects/TestApp/force-app/main/default/classes/Constants.cls"
 ```
 
 _See code: [src/commands/deploy/apex.ts](https://github.com/msrivastav13/mo-dx-plugin/blob/master/src/commands/deploy/apex.ts)_
@@ -113,7 +114,7 @@ OPTIONS
   --p, --pathname=pathname                   (required) the file path of the apex trigger you want to save to salesforce. Note you can run pwd command on terminal to obtain the path easily
 
 EXAMPLES
-  $ sfdx deploy:trigger -p pathname // Default authorized org is used for the deploy
+  $ sfdx deploy:trigger -p <pathname> // Default authorized org is used for the deploy
 ```
 
 _See code: [src/commands/deploy/trigger.ts](https://github.com/msrivastav13/mo-dx-plugin/blob/master/src/commands/deploy/trigger.ts)_
@@ -130,7 +131,7 @@ OPTIONS
   --p, --pathname=pathname                   (required) the file path of the vf page you want to save to salesforce . Note you can run pwd command on terminal to obtain the path.
 
 EXAMPLES
-  $ sfdx deploy:vf -p pathname // Default authorized org is used for the deploy
+  $ sfdx deploy:vf -p <pathname> // Default authorized org is used for the deploy
 ```
 
 _See code: [src/commands/deploy/vf.ts](https://github.com/msrivastav13/mo-dx-plugin/blob/master/src/commands/deploy/vf.ts)_
@@ -147,7 +148,7 @@ OPTIONS
   --p, --pathname=pathname                   (required) the file path of the vf component you want to save
 
 EXAMPLES
-  $ sfdx deploy:vfcomponent -p pathname // file path used to save the component to Salesforce.
+  $ sfdx deploy:vfcomponent -p <pathname> // file path used to save the component to Salesforce.
 ```
 
 _See code: [src/commands/deploy/vfcomponent.ts](https://github.com/msrivastav13/mo-dx-plugin/blob/master/src/commands/deploy/vfcomponent.ts)_
@@ -166,7 +167,7 @@ OPTIONS
   --p, --pathname=pathname                   (required) the file path of the aura bundle you want to save to Salesforce.
 
 EXAMPLES
-  $ sfdx deploy:aura -p pathname // Default authorized org is used for the deploy
+  $ sfdx deploy:aura -p <pathname> // Default authorized org is used for the deploy
 ```
 
 _See code: [src/commands/deploy/aura.ts](https://github.com/msrivastav13/mo-dx-plugin/blob/master/src/commands/deploy/aura.ts)_
@@ -185,10 +186,33 @@ OPTIONS
   --p, --pathname=pathname                   (required) the file path of the lightning web components bundle you want to save to Salesforce.
 
 EXAMPLES
-  $ sfdx deploy:lwc -p pathname // Default authorized org is used for the deploy
+  $ sfdx deploy:lwc -p <pathname> // Default authorized org is used for the deploy
 ```
 
 _See code: [src/commands/deploy/lwc.ts](https://github.com/msrivastav13/mo-dx-plugin/blob/master/src/commands/deploy/lwc.ts)_
+
+## `sfdx deploy:staticresource`
+
+Deploys Static Resources to the Salesforce Org using Tooling API.
+
+Supports deploying sttaic resource folder (It zips it up) as well individual files in static resource folder.
+
+```
+USAGE
+  $ sfdx deploy:staticresource
+
+OPTIONS
+  --p, --pathname=pathname                   (required) the file path of the lightning web components bundle you want to save to Salesforce.
+
+EXAMPLES
+  $ sfdx deploy:staticresource -p <pathname> // Default authorized org is used for the deploy
+  $ sfdx deploy:staticresource -p <pathname> --resourcepath <name of the folder where you have app>' // Default authorized org is used for the deploy
+  $ sfdx deploy:staticresource -p <pathname> --resourcepath <name of the folder where you have app>' --cachecontrol public //makes the cache control of static resource public
+```
+
+_See code: [src/commands/deploy/staticresource.ts](https://github.com/msrivastav13/mo-dx-plugin/blob/master/src/commands/deploy/staticresource.ts)_
+
+
 
 ### Important Note When Using these Commands With Non-Scratch Org
 
