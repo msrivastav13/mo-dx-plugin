@@ -195,7 +195,7 @@ _See code: [src/commands/deploy/lwc.ts](https://github.com/msrivastav13/mo-dx-pl
 
 Deploys Static Resources to the Salesforce Org using Tooling API.
 
-Supports deploying sttaic resource folder (It zips it up) as well individual files in static resource folder.
+Supports deploying staticresource folder (It zips it up) as well individual files in staticresource folder.
 
 ```
 USAGE
