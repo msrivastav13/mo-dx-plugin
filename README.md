@@ -1,12 +1,12 @@
 # mo-dx-plugin
 
-A plugin for Salesforce DX CLI that provides ability to save Apex Classes, Apex Triggers, Visualforce Page, Visualforce Components and AuraBundle(Lightning Components) to Salesforce org (Scratch/Non-Scratch orgs) using Tooling API.
+A plugin for Salesforce DX CLI that provides ability to save Apex Classes, Apex Triggers, Visualforce Page, Visualforce Components ,AuraBundle(Lightning Components) and Static Resource to Salesforce org (Scratch/Non-Scratch orgs) using Tooling API.
 
-Plugin also provides a retrieve command that can retrieve metadata in salesforceDx source format from salesforce using unmanaged/managed package or changesets.
+Plugin also provides a retrieve command that can retrieve metadata in salesforceDx and traditional source format from salesforce unmanaged/managed package or changesets.
 
 The commands in this plugin are used within the **_DX Code Companion extension_** (https://marketplace.visualstudio.com/items?itemName=MohithShrivastava.dx-code-companion).
 
-If you are Visual Studio Code user then recommend installing the extension along with the  plugin to avoid having to remember the commands.
+If you are Visual Studio Code user then recommend installing the extension along with the plugin to avoid having to remember the commands.
 
 ## Setup
 
@@ -20,7 +20,7 @@ If you are Visual Studio Code user then recommend installing the extension along
 
 2. Clone the repository: `git clone git@github.com:msrivastav13/mo-dx-plugin.git`
 
-3. Install npm modules: `npm install`
+3. Install using yarn: `yarn install`
 
 4. Link the plugin: `sfdx plugins:link` .
 
@@ -216,4 +216,4 @@ _See code: [src/commands/deploy/staticresource.ts](https://github.com/msrivastav
 
 ### Important Note When Using these Commands With Non-Scratch Org
 
-**These commands do not maintain history and files are overriden on server .Make sure you have source control for the project setup so you do not loose anything**
+**These commands do not maintain history and files are overriden on server .Make sure you have source control for the project setup so you can recover code if you accidently overwrite anything**
