@@ -206,8 +206,8 @@ OPTIONS
 
 EXAMPLES
   $ sfdx deploy:staticresource -p <pathname> // Default authorized org is used for the deploy
-  $ sfdx deploy:staticresource -p <pathname> --resourcepath <name of the folder where you have app>' // Default authorized org is used for the deploy
-  $ sfdx deploy:staticresource -p <pathname> --resourcepath <name of the folder where you have app>' --cachecontrol public //makes the cache control of static resource public
+  $ sfdx deploy:staticresource -p <pathname> --resourcefolder <name of the folder where you have app>' // Default authorized org is used for the deploy
+  $ sfdx deploy:staticresource -p <pathname> --resourcefolder <name of the folder where you have app>' --cachecontrol public //makes the cache control of static resource public
 ```
 
 _See code: [src/commands/deploy/staticresource.ts](https://github.com/msrivastav13/mo-dx-plugin/blob/master/src/commands/deploy/staticresource.ts)_
