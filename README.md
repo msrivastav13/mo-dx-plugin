@@ -212,6 +212,30 @@ EXAMPLES
 
 _See code: [src/commands/deploy/staticresource.ts](https://github.com/msrivastav13/mo-dx-plugin/blob/master/src/commands/deploy/staticresource.ts)_
 
+## `sfdx metadata:rename`
+
+Renames a single metadata using the salesforce Metadata API. 
+
+Salesforce allows to rename some types of metadata (CRUD based) using the Metadata API.This commands provides sfdx version 
+
+```
+USAGE
+  $ sfdx metadata:rename
+
+OPTIONS
+  -t, --metadatatype=metadatatype                   (required) the type of the metadata (Ex CustomObject for customobject, CustomField for custom field)
+
+  -o, --oldfullname=oldfullname                         (required) Full API name of the current component that will be overriden with the new name
+
+  -n, --newfullname=newfullname             (required) Full API name that will override the existing component name
+
+EXAMPLES
+   '$ sfdx metadata:rename -t <metadatatype> -n <newname> -o <oldname>',
+    '$ sfdx metadata:rename -t CustomObject -n MyCustomObject1New__c -o MyCustomObject1__c' // here Custom Object MyCustomObject1__c is renamed to MyCustomObject1New__c
+```
+
+_See code: [src/commands/deploy/staticresource.ts](https://github.com/msrivastav13/mo-dx-plugin/blob/master/src/commands/metadata/rename.ts)_
+
 
 
 ### Important Note When Using these Commands With Non-Scratch Org
