@@ -35,6 +35,7 @@ If you are Visual Studio Code user then recommend installing the extension along
 * [`sfdx deploy:aura`](#sfdx-deployaura)
 * [`sfdx deploy:lwc`](#sfdx-deploylwc)
 * [`sfdx deploy:staticresource`](#sfdx-deploystaticresource)
+* [`sfdx metadata:rename`](#sfdx-metadatarename)
 
 ## `sfdx retrieve:dxsource`
 
@@ -234,7 +235,7 @@ EXAMPLES
     '$ sfdx metadata:rename -t CustomObject -n MyCustomObject1New__c -o MyCustomObject1__c' // here Custom Object MyCustomObject1__c is renamed to MyCustomObject1New__c
 ```
 
-_See code: [src/commands/deploy/staticresource.ts](https://github.com/msrivastav13/mo-dx-plugin/blob/master/src/commands/metadata/rename.ts)_
+_See code: [src/commands/metadata/rename.ts](https://github.com/msrivastav13/mo-dx-plugin/blob/master/src/commands/metadata/rename.ts)_
 
 
 
