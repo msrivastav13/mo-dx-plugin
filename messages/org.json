@@ -8,5 +8,6 @@
   "retrieveDxSource": "Retrieves Source is DX format from Unmanaged/Managed package",
   "retrieveSource": "Retrieves Source from Unmanaged/Managed package in Metadata API format",
   "staticresourceDeploy" : "Deploy static resource using tooling api",
-  "generatePackageXML": "Generates package XML manifest from metadata"
+  "generatePackageXML": "Generates package XML manifest from metadata",
+  "renamemetadata" : "Rename metadata using metadata api"
 }
