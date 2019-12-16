@@ -126,7 +126,7 @@ export default class StaticResourceDeploy extends SfdxCommand {
         await conn.tooling.sobject("StaticResource").create(staticresource);
       }
       this.ux.stopSpinner(
-        chalk.bold.greenBright("StaticResource Deployed SuccessFully ✔")
+        chalk.bold.greenBright("StaticResource Deployed Successfully ✔")
       );
     } catch (e) {
       this.ux.stopSpinner(
