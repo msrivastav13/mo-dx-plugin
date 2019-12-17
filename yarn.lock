@@ -366,15 +366,15 @@
     "@types/minimatch" "*"
     "@types/node" "*"
 
+"@types/jsforce@1.9.12":
+  version "1.9.12"
+  resolved "https://registry.yarnpkg.com/@types/jsforce/-/jsforce-1.9.12.tgz#b10309663576af5411eba47a49618430f763949f"
+  integrity sha512-UeamrieRKhg1580ZW67D6xYuN/dR78K1gVp2j4eTXmCGHof8NBgCk4CUojSf8P79yssS56vne5qgxXcMB2gKuQ==
+
 "@types/jsforce@1.9.2":
   version "1.9.2"
   resolved "https://registry.yarnpkg.com/@types/jsforce/-/jsforce-1.9.2.tgz#a321866dcb7c9c4c57a1d794d54ec52e3f07ff0b"
   integrity sha512-ZRRPNf/e44QnFI8VEsPxzrM/+Y5vx/HGsMI8qE4JvBHDkSfoFWAdZ93uW6Oh3sHmcoShexcoTH9gufihTgYBLQ==
-
-"@types/jsforce@1.9.8":
-  version "1.9.8"
-  resolved "https://registry.yarnpkg.com/@types/jsforce/-/jsforce-1.9.8.tgz#e28842860f689516b00e1bacfe81d5f016105641"
-  integrity sha512-VbJk6jEd7TgfzKc7xMe0l4/VnJyXynQH+Yc667pvXEgChnXqo7u8l0Dwua50Mdr/wLcfzom5OmHrNPGl03Rpgg==
 
 "@types/lodash@*", "@types/lodash@^4.14.13":
   version "4.14.149"
