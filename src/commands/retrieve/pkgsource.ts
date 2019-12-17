@@ -1,7 +1,7 @@
 import { core, flags, SfdxCommand } from '@salesforce/command';
 import { AnyJson } from '@salesforce/ts-types';
 import * as AdmZip from 'adm-zip';
-import chalk from 'chalk';
+import * as chalk from 'chalk';
 import * as child from 'child_process';
 import fs = require('fs-extra');
 import * as util from 'util';

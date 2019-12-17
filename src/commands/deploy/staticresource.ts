@@ -1,7 +1,7 @@
 import { core, flags, SfdxCommand } from "@salesforce/command";
 import { AnyJson } from "@salesforce/ts-types";
 import * as AdmZip from "adm-zip";
-import chalk from "chalk";
+import * as chalk from 'chalk';
 import fs = require("fs-extra");
 import * as Mime from "mime-types";
 import { displaylog } from "../../service/displayError";

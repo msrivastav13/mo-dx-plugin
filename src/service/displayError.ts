@@ -1,5 +1,5 @@
 import {UX} from '@salesforce/command';
-import chalk from 'chalk';
+import * as chalk from 'chalk';
 import { CompileErrors, ConsoleError } from '../types/errorLog';
 import { DeployResult } from './deploy';
 
