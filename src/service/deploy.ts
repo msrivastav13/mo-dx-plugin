@@ -1,4 +1,4 @@
-import {Connection} from '@salesforce/core';
+import {core} from '@salesforce/command';
 import {QueryResult} from '../models/queryResult';
 import {SobjectResult} from '../models/sObjectResult';
 import {createDeployRequest} from '../service/containerasyncRequest';
@@ -16,10 +16,10 @@ export class Deploy {
   public containerType: string;
   public classMember: string;
   public componentId: string;
-  public conn: Connection;
+  public conn: core.Connection;
   public componentBody: string;
 
-  constructor(containerType: string, classMember: string, componentId: string, componentBody: string, conn: Connection) {
+  constructor(containerType: string, classMember: string, componentId: string, componentBody: string, conn: core.Connection) {
     this.containerType = containerType;
     this.classMember = classMember;
     this.componentId = componentId;

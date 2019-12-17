@@ -1,10 +1,10 @@
-import {Connection} from '@salesforce/core';
+import {core} from '@salesforce/command';
 import {QueryResult} from '../models/queryResult';
 import {SobjectResult} from '../models/sObjectResult';
 import {delay} from './delay';
 import {executeToolingQuery} from './toolingQuery';
 
-export async function createDeployRequest(containerId: string, ischeck: boolean, conn: Connection): Promise<QueryResult> {
+export async function createDeployRequest(containerId: string, ischeck: boolean, conn: core.Connection): Promise<QueryResult> {
 
   interface ContainerAsyncRequest {
     IsCheckOnly: boolean;

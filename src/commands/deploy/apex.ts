@@ -1,6 +1,6 @@
 import { core, flags, SfdxCommand } from '@salesforce/command';
 import { AnyJson } from '@salesforce/ts-types';
-import chalk from 'chalk';
+import * as chalk from 'chalk';
 import fs = require('fs-extra');
 import { SobjectResult } from '../../models/sObjectResult';
 import { Deploy, DeployResult } from '../../service/deploy';
