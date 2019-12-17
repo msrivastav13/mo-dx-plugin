@@ -110,7 +110,7 @@ export default class AuraDeploy extends SfdxCommand {
         auraDefinitions = auraDefinitions.length > 0 ? auraDefinitions : [];
         try {
           await upsertAuraDefinition(auraDefinitions, fileBodyArray, auraDefinitionBundles[0].Id);
-          this.ux.stopSpinner(chalk.bold.greenBright('AuraBundle Deployed SuccessFully ✔'));
+          this.ux.stopSpinner(chalk.bold.greenBright('AuraBundle Deployed Successfully ✔'));
         } catch (exception) {
           this.ux.stopSpinner(chalk.bold.redBright('Aura Component Save Failed ✖'));
           displaylog(exception, this.ux);
