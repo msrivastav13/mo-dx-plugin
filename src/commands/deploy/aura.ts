@@ -148,10 +148,12 @@ export default class AuraDeploy extends SfdxCommand {
       );
     }
 
+     // There is a bug in the JSforce for bulk inserts so executing insert/updates in loop instead of array
+
     // function to update all the AuraDefinition
     async function upsertAuraDefinition(auraDefinitions: AuraDefinition[] , files: string[], bundleId: string) {
-        const auraDefinitionsToCreate: AuraDefinition[] = [];
-        const auraDefinitionsToUpdate: AuraDefinition[] = [];
+        // const auraDefinitionsToCreate: AuraDefinition[] = [];
+        // const auraDefinitionsToUpdate: AuraDefinition[] = [];
         const promiseArray = [];
         fileKey.forEach ( key => {
           const auraDef = auraDefinitions.find(auraDefinition => auraDefinition.DefType === key);
@@ -159,22 +161,24 @@ export default class AuraDeploy extends SfdxCommand {
             const definitionToUpdate = {} as AuraDefinition;
             definitionToUpdate.Id = auraDef.Id;
             definitionToUpdate.Source = files[fileKey.indexOf(auraDef.DefType)];
-            auraDefinitionsToUpdate.push(definitionToUpdate);
+            // auraDefinitionsToUpdate.push(definitionToUpdate);
+            promiseArray.push(conn.tooling.sobject('AuraDefinition').update(definitionToUpdate));
           } else {
             const definitionToInsert = {} as AuraDefinition;
             definitionToInsert.AuraDefinitionBundleId = bundleId;
             definitionToInsert.DefType = key;
             definitionToInsert.Format = getAuraFormat((validFiles[fileKey.indexOf(key)].split('.'))[1]);
             definitionToInsert.Source = files[fileKey.indexOf(key)];
-            auraDefinitionsToCreate.push(definitionToInsert);
+            // auraDefinitionsToCreate.push(definitionToInsert);
+            promiseArray.push(conn.tooling.sobject('AuraDefinition').create(definitionToInsert));
           }
         });
-        if (auraDefinitionsToUpdate.length > 0) {
+        /*if (auraDefinitionsToUpdate.length > 0) {
           promiseArray.push(conn.tooling.sobject('AuraDefinition').update(auraDefinitionsToUpdate));
         }
         if (auraDefinitionsToCreate.length > 0) {
           promiseArray.push(conn.tooling.sobject('AuraDefinition').create(auraDefinitionsToCreate));
-        }
+        }*/
         return Promise.all(promiseArray);
     }
 

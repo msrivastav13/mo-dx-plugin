@@ -198,9 +198,10 @@ export default class LWCDeploy extends SfdxCommand {
     }
 
     // function to update all the LightningComponentResource
+    // There is a bug in the JSforce for bulk inserts so executing insert/updates in loop instead of array
     async function upsertLWCDefinition(lwcResources: LightningComponentResource[] , files: string[], bundleId: string) {
-        const lwcResourcesToCreate: LightningComponentResource[] = [];
-        const lwcResourcesToUpdate: LightningComponentResource[] = [];
+        // const lwcResourcesToCreate: LightningComponentResource[] = [];
+        // const lwcResourcesToUpdate: LightningComponentResource[] = [];
         const promiseArray = [];
         validFiles.forEach ( filename => {
           const lwcMatch = lwcResources.find(lwc => lwc.FilePath === getFilepath( _fileOrDirName, filename));
@@ -208,22 +209,23 @@ export default class LWCDeploy extends SfdxCommand {
             const lwcResourceToUpdate = {} as LightningComponentResource;
             lwcResourceToUpdate.Id = lwcMatch.Id;
             lwcResourceToUpdate.Source = files[filePath.indexOf(lwcMatch.FilePath)];
-            lwcResourcesToUpdate.push(lwcResourceToUpdate);
+            promiseArray.push(conn.tooling.sobject('LightningComponentResource').update(lwcResourceToUpdate));
           } else {
             const lwcResourceToInsert = {} as LightningComponentResource;
             lwcResourceToInsert.LightningComponentBundleId = bundleId;
             lwcResourceToInsert.FilePath = getFilepath( _fileOrDirName, filename);
             lwcResourceToInsert.Format = (filename.split('.'))[(filename.split('.').length - 1)];
             lwcResourceToInsert.Source = files[filePath.indexOf(getFilepath( _fileOrDirName, filename))];
-            lwcResourcesToCreate.push(lwcResourceToInsert);
+            promiseArray.push(conn.tooling.sobject('LightningComponentResource').create(lwcResourceToInsert));
+            // lwcResourcesToCreate.push(lwcResourceToInsert);
           }
         });
-        if (lwcResourcesToUpdate.length > 0) {
+        /*if (lwcResourcesToUpdate.length > 0) {
           promiseArray.push(conn.tooling.sobject('LightningComponentResource').update(lwcResourcesToUpdate));
         }
         if (lwcResourcesToCreate.length > 0) {
           promiseArray.push(conn.tooling.sobject('LightningComponentResource').create(lwcResourcesToCreate));
-        }
+        }*/
         return Promise.all(promiseArray);
     }
 
