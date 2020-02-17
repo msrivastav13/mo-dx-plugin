@@ -27,7 +27,7 @@
     "@types/jsforce": "1.9.13",
     "@types/lodash": "^4.14.13",
     "@types/mime-types": "^2.1.0",
-    "@types/mocha": "^5",
+    "@types/mocha": "^7",
     "@types/node": "^10",
     "chai": "^4",
     "globby": "8",
