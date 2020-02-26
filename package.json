@@ -31,7 +31,7 @@
     "@types/node": "^10",
     "chai": "^4",
     "globby": "8",
-    "mocha": "^5",
+    "mocha": "^7",
     "nyc": "^14",
     "sinon": "5",
     "ts-node": "^7",
