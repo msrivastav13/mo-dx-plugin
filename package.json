@@ -28,7 +28,7 @@
     "@types/lodash": "^4.14.13",
     "@types/mime-types": "^2.1.0",
     "@types/mocha": "^5",
-    "@types/node": "^10",
+    "@types/node": "^14",
     "chai": "^4",
     "globby": "8",
     "mocha": "^5",
