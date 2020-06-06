@@ -18,12 +18,16 @@ export class Deploy {
   public componentId: string;
   public conn: core.Connection;
   public componentBody: string;
+  public className: string;
+  public content: string;
 
-  constructor(containerType: string, classMember: string, componentId: string, componentBody: string, conn: core.Connection) {
+  constructor(containerType: string, classMember: string, className: string, componentId: string, componentBody: string, metadataXML: string, conn: core.Connection) {
     this.containerType = containerType;
     this.classMember = classMember;
     this.componentId = componentId;
     this.componentBody = componentBody;
+    this.className = className;
+    this.content = metadataXML;
     this.conn = conn;
   }
 
@@ -36,7 +40,7 @@ export class Deploy {
     // console.log('Metadata Container' + JSON.stringify(metadataContainerResult.id));
     if (metadataContainerResult.success) {
       // Create ApexClassMember request
-      const apexClassMemberResult = await createMetadataMember(this.classMember, metadataContainerResult.id, this.componentBody, this.componentId, this.conn) as SobjectResult;
+      const apexClassMemberResult = await createMetadataMember(this.classMember, metadataContainerResult.id, this.componentBody, this.content, this.componentId, this.className, this.conn) as SobjectResult;
       // console.log('Metadata Member' + JSON.stringify(apexClassMemberResult));
       if (apexClassMemberResult.success) {
         // Create ContainerAsyncRequest request to deploy apex

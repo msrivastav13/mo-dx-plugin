@@ -1,12 +1,11 @@
-import {core, flags, SfdxCommand} from '@salesforce/command';
-import {AnyJson} from '@salesforce/ts-types';
+import { core, flags, SfdxCommand } from '@salesforce/command';
+import { AnyJson } from '@salesforce/ts-types';
 import * as chalk from 'chalk';
 import fs = require('fs-extra');
-import {SobjectResult} from '../../models/sObjectResult';
-import {Deploy, DeployResult} from '../../service/deploy';
-import {display} from '../../service/displayError';
-import {getFileName} from '../../service/getFileName';
-import {getNameSpacePrefix} from '../../service/getNamespacePrefix';
+import { Deploy, DeployResult } from '../../service/deploy';
+import { display } from '../../service/displayError';
+import { getFileName } from '../../service/getFileName';
+import { getNameSpacePrefix } from '../../service/getNamespacePrefix';
 
 // Initialize Messages with the current plugin directory
 core.Messages.importMessagesDirectory(__dirname);
@@ -14,6 +13,14 @@ core.Messages.importMessagesDirectory(__dirname);
 // Load the specific messages for this file. Messages from @salesforce/command, @salesforce/core,
 // or any library that is using the messages framework can also be loaded this way.
 const messages = core.Messages.loadMessages('mo-dx-plugin', 'org');
+
+interface ApexTrigger {
+  Body: string;
+  Name: string;
+  TableEnumOrId: string;
+  NamespacePrefix: string;
+  Id?: string;
+}
 
 export default class TriggerDeploy extends SfdxCommand {
 
@@ -38,36 +45,37 @@ export default class TriggerDeploy extends SfdxCommand {
 
     this.ux.startSpinner(chalk.bold.yellowBright('Saving'));
 
-    interface ApexTrigger {
-      Body: string;
-      Name: string;
-      TableEnumOrId: string;
-      NamespacePrefix: string;
-      Id?: string;
-    }
-
     const conn = this.org.getConnection();
 
     const namespacePrefix = await getNameSpacePrefix(conn);
 
     const filebody = await fs.readFile(this.flags.filepath, 'utf8');
-    const tableName = filebody.split(' ')[3];
 
+    const fileMetaXML = await fs.readFile(this.flags.filepath + '-meta.xml', 'utf8');
      // get the trigger Id using the trigger Name
     const triggerName = getFileName(this.flags.filepath, '.trigger');
+
     const apextrigger = await conn.tooling.sobject('Apextrigger').find({
       Name: triggerName,
       NameSpacePrefix : namespacePrefix
     }) as ApexTrigger [];
-    // logic to update apex class
+
+    let triggerId = null;
+
+    let mode = 'Created';
+
     if (apextrigger.length > 0) {
-      const triggerId = apextrigger[0].Id ;
-      const deployAction = new Deploy('TriggerContainer', 'ApexTriggerMember' , triggerId , filebody, conn);
-      const deployResult = await deployAction.deployMetadata() as DeployResult;
-      if (deployResult.success) {
-        this.ux.stopSpinner(chalk.bold.greenBright('Trigger Successfully Updated ✔'));
+      triggerId = apextrigger[0].Id ;
+      mode = 'Updated';
+    }
+
+    // logic to compile trigger
+    const deployAction = new Deploy('TriggerContainer', 'ApexTriggerMember' , triggerName, triggerId , filebody, fileMetaXML, conn);
+    const deployResult = await deployAction.deployMetadata() as DeployResult;
+    if (deployResult.success) {
+        this.ux.stopSpinner(chalk.bold.greenBright('Trigger Successfully ' + mode + ' ✔'));
         return '';
-      } else {
+    } else {
         if (deployResult.queryResult.records.length > 0 && deployResult.queryResult.records[0].DeployDetails.componentFailures.length > 0) {
           display(deployResult, this.ux);
         }
@@ -75,28 +83,6 @@ export default class TriggerDeploy extends SfdxCommand {
         if ( typeof deployResult.error !== 'undefined' ) {
           console.log(chalk.bold.redBright(deployResult.error));
         }
-      }
-    } else {
-        // logic to create an apex class
-          // Create Container AsyncRequest Object
-        const apexTrigger = {
-          Body: filebody,
-          Name: triggerName,
-          TableEnumOrId: tableName,
-          NamespacePrefix: namespacePrefix
-        } as ApexTrigger;
-        try {
-          const triggerResult = await conn.tooling.sobject('ApexTrigger').create(apexTrigger) as SobjectResult;
-          if ( triggerResult.success) {
-            this.ux.stopSpinner(chalk.bold.green('Trigger Successfully Created ✔'));
-            return '';
-          } else {
-            this.ux.table(triggerResult.errors);
-            this.ux.stopSpinner(chalk.bold.red('Trigger Creation Failed ✖'));
-          }
-        } catch (ex) {
-          this.ux.stopSpinner(chalk.bold.red(ex));
-        }
-      }
     }
+  }
 }

@@ -2,7 +2,6 @@ import {core, flags, SfdxCommand} from '@salesforce/command';
 import {AnyJson} from '@salesforce/ts-types';
 import * as chalk from 'chalk';
 import fs = require('fs-extra');
-import {SobjectResult} from '../../models/sObjectResult';
 import {Deploy, DeployResult} from '../../service/deploy';
 import {display, displaylog} from '../../service/displayError';
 import {getFileName} from '../../service/getFileName';
@@ -14,6 +13,14 @@ core.Messages.importMessagesDirectory(__dirname);
 // Load the specific messages for this file. Messages from @salesforce/command, @salesforce/core,
 // or any library that is using the messages framework can also be loaded this way.
 const messages = core.Messages.loadMessages('mo-dx-plugin', 'org');
+
+interface ApexComponent {
+  Name: string;
+  Markup: string;
+  NamespacePrefix: string;
+  Id: string;
+  Masterlabel: string;
+}
 
 export default class ApexComponentDeploy extends SfdxCommand {
 
@@ -38,66 +45,42 @@ export default class ApexComponentDeploy extends SfdxCommand {
 
     this.ux.startSpinner(chalk.bold.yellowBright('Saving'));
 
-    interface ApexComponent {
-      Name: string;
-      Markup: string;
-      NamespacePrefix: string;
-      Id: string;
-      Masterlabel: string;
-    }
-
     const conn = this.org.getConnection();
 
     const namespacePrefix = await getNameSpacePrefix(conn);
 
     const filebody = await fs.readFile(this.flags.filepath, 'utf8');
 
-     // get the apex class Id using the class Name
+    const fileMetaXML = await fs.readFile(this.flags.filepath + '-meta.xml', 'utf8');
+
+    // get the vf component name
     const vfComponentName = getFileName(this.flags.filepath, '.component');
+
     const apexVFComponents = await conn.tooling.sobject('ApexComponent').find({
       Name: vfComponentName,
       NameSpacePrefix : namespacePrefix
     }) as ApexComponent [];
 
-    // logic to update visualforce page
-    if (apexVFComponents.length > 0) {
-      const apexPageComponentId = apexVFComponents[0].Id ;
-      const deployAction = new Deploy('VfComponent', 'ApexComponentMember' , apexPageComponentId , filebody, conn);
-      const deployResult = await deployAction.deployMetadata() as DeployResult;
-      if (deployResult.success) {
-        this.ux.stopSpinner(chalk.bold.greenBright('Visualforce Component Successfully Updated ✔'));
-        return '';
-      } else {
-        display(deployResult, this.ux);
-        this.ux.stopSpinner(chalk.bold.redBright('Visualforce Component Update Failed ✖'));
-        if ( typeof deployResult.error !== 'undefined' ) {
-          displaylog(chalk.bold.redBright(deployResult.error), this.ux);
-        }
-      }
-    } else {
-        // logic to create an VF page
-          // Create Container AsyncRequest Object
-        const vfComponent = {
-          Name: vfComponentName,
-          Markup: filebody,
-          Masterlabel: vfComponentName + 'Label'
-        } as ApexComponent;
+    let apexPageComponentId = null;
 
-        try {
-          const vfComponentSaveResult = await conn.tooling.sobject('ApexComponent').create(vfComponent) as SobjectResult;
-          if ( vfComponentSaveResult.success) {
-            this.ux.stopSpinner(chalk.bold.green('Visualforce Component Successfully Created ✔'));
-            return '';
-          } else {
-            for (const error of vfComponentSaveResult.errors) {
-              displaylog(chalk.redBright(error), this.ux);
-            }
-            this.ux.stopSpinner(chalk.bold.red('Visualforce Component Creation Failed ✖'));
-          }
-        } catch (ex) {
-          displaylog(ex, this.ux);
-          this.ux.stopSpinner(chalk.bold.red('Vf Component Save Failed ✖'));
-        }
+    let mode = 'Created';
+
+    if (apexVFComponents.length > 0) {
+      apexPageComponentId = apexVFComponents[0].Id;
+      mode = 'Updated';
+    }
+    // logic to compile and save  visualforce component
+    const deployAction = new Deploy('VfComponent', 'ApexComponentMember' , vfComponentName, apexPageComponentId , filebody, fileMetaXML, conn);
+    const deployResult = await deployAction.deployMetadata() as DeployResult;
+    if (deployResult.success) {
+      this.ux.stopSpinner(chalk.bold.greenBright('Visualforce Component Successfully ' + mode + ' ✔'));
+      return '';
+    } else {
+      display(deployResult, this.ux);
+      this.ux.stopSpinner(chalk.bold.redBright('Visualforce Component Update Failed ✖'));
+      if ( typeof deployResult.error !== 'undefined' ) {
+        displaylog(chalk.bold.redBright(deployResult.error), this.ux);
       }
     }
+  }
 }

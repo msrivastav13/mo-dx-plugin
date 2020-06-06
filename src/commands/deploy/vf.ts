@@ -2,7 +2,6 @@ import {core, flags, SfdxCommand} from '@salesforce/command';
 import {AnyJson} from '@salesforce/ts-types';
 import * as chalk from 'chalk';
 import fs = require('fs-extra');
-import {SobjectResult} from '../../models/sObjectResult';
 import {Deploy, DeployResult} from '../../service/deploy';
 import {display, displaylog} from '../../service/displayError';
 import {getFileName} from '../../service/getFileName';
@@ -14,6 +13,14 @@ core.Messages.importMessagesDirectory(__dirname);
 // Load the specific messages for this file. Messages from @salesforce/command, @salesforce/core,
 // or any library that is using the messages framework can also be loaded this way.
 const messages = core.Messages.loadMessages('mo-dx-plugin', 'org');
+
+interface ApexPage {
+  Name: string;
+  Markup: string;
+  NamespacePrefix: string;
+  Id: string;
+  Masterlabel: string;
+}
 
 export default class VfDeploy extends SfdxCommand {
 
@@ -38,19 +45,13 @@ export default class VfDeploy extends SfdxCommand {
 
     this.ux.startSpinner(chalk.bold.yellowBright('Saving'));
 
-    interface ApexPage {
-      Name: string;
-      Markup: string;
-      NamespacePrefix: string;
-      Id: string;
-      Masterlabel: string;
-    }
-
     const conn = this.org.getConnection();
 
     const namespacePrefix = await getNameSpacePrefix(conn);
 
     const filebody = await fs.readFile(this.flags.filepath, 'utf8');
+
+    const fileMetaXML = await fs.readFile(this.flags.filepath + '-meta.xml', 'utf8');
 
      // get the apex class Id using the class Name
     const pageName = getFileName(this.flags.filepath, '.page');
@@ -59,45 +60,26 @@ export default class VfDeploy extends SfdxCommand {
       NameSpacePrefix : namespacePrefix
     }) as ApexPage [];
 
-    // logic to update visualforce page
-    if (apexpages.length > 0) {
-      const pageId = apexpages[0].Id ;
-      const deployAction = new Deploy('VfContainer', 'ApexPageMember' , pageId , filebody, conn);
-      const deployResult = await deployAction.deployMetadata() as DeployResult;
-      if (deployResult.success) {
-        this.ux.stopSpinner(chalk.bold.greenBright('Visualforce Page Successfully Updated ✔'));
-        return '';
-      } else {
-        display(deployResult, this.ux);
-        this.ux.stopSpinner(chalk.bold.redBright('Visualforce Page Update Failed ✖'));
-        if ( typeof deployResult.error !== 'undefined' ) {
-          displaylog(chalk.bold.redBright(deployResult.error), this.ux);
-        }
-      }
-    } else {
-        // logic to create an VF page
-          // Create Container AsyncRequest Object
-        const vfPage = {
-          Name: pageName,
-          Markup: filebody,
-          Masterlabel: pageName + 'Label'
-        } as ApexPage;
+    let pageId = null;
 
-        try {
-          const vfSaveResult = await conn.tooling.sobject('ApexPage').create(vfPage) as SobjectResult;
-          if ( vfSaveResult.success) {
-            this.ux.stopSpinner(chalk.bold.green('Visualforce Page Successfully Created ✔'));
-            return '';
-          } else {
-            for (const error of vfSaveResult.errors) {
-              displaylog(chalk.redBright(error), this.ux);
-            }
-            this.ux.stopSpinner(chalk.bold.red('Visualforce Page Creation Failed ✖'));
-          }
-        } catch (ex) {
-          displaylog(chalk.redBright(ex), this.ux);
-          this.ux.stopSpinner(chalk.bold.red('Visualforce Page Creation Failed ✖'));
-        }
+    let mode = 'Created';
+
+    if (apexpages.length > 0) {
+      pageId = apexpages[0].Id ;
+      mode = 'Updated';
+    }
+    // Compile and save visualforce page to server
+    const deployAction = new Deploy('VfContainer', 'ApexPageMember' , pageName, pageId , filebody, fileMetaXML, conn);
+    const deployResult = await deployAction.deployMetadata() as DeployResult;
+    if (deployResult.success) {
+      this.ux.stopSpinner(chalk.bold.greenBright('Visualforce Page Successfully ' + mode + ' ✔'));
+      return '';
+    } else {
+      display(deployResult, this.ux);
+      this.ux.stopSpinner(chalk.bold.redBright('Visualforce Page Update Failed ✖'));
+      if ( typeof deployResult.error !== 'undefined' ) {
+        displaylog(chalk.bold.redBright(deployResult.error), this.ux);
       }
     }
+  }
 }

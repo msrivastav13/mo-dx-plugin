@@ -14,6 +14,7 @@
     "fs-extra": "^8.1.0",
     "lodash": "^4.17.13",
     "mime-types": "^2.1.24",
+    "xmldom-sfdx-encoding": "^0.1.29",
     "tslib": "^1.9.3"
   },
   "devDependencies": {
@@ -35,7 +36,7 @@
     "nyc": "^14",
     "sinon": "5",
     "ts-node": "^7",
-    "typescript": "~3.3.3"
+    "typescript": "3"
   },
   "engines": {
     "node": ">=8.0.0"
