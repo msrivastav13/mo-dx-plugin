@@ -37,14 +37,14 @@ function createMetadataField(xmlMetadata: string) {
     const apiVersion = document.getElementsByTagName('apiVersion')[0]
       .textContent;
     const statusNode = document.getElementsByTagName('status')[0];
-    const packageNode = document.getElementsByTagName('packageVersions')[0];
+    // const packageNode = document.getElementsByTagName('packageVersions')[0];
     const descriptionNode = document.getElementsByTagName('description')[0];
     const labelNode = document.getElementsByTagName('label')[0];
 
     const metadataField = {
       apiVersion,
       ...(statusNode ? { status: statusNode.textContent } : {}),
-      ...(packageNode ? { packageVersions: packageNode.textContent } : {}),
+      // ...(packageNode ? { packageVersions: packageNode.textContent } : {}),
       ...(descriptionNode
         ? { description: descriptionNode.textContent }
         : {}),
