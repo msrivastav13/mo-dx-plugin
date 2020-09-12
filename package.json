@@ -10,7 +10,7 @@
     "@salesforce/command": "^3.0.3",
     "@salesforce/ts-types": "^1.0.1",
     "adm-zip": "^0.4.13",
-    "chalk": "^3.0.0",
+    "chalk": "^4.1.0",
     "fs-extra": "^9.0.1",
     "lodash": "^4.17.13",
     "mime-types": "^2.1.24",
