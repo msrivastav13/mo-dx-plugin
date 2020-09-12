@@ -39,9 +39,14 @@ export default class ApexDeploy extends SfdxCommand {
   // Set this to true if your command requires a project workspace; 'requiresProject' is false by default
   protected static requiresProject = true;
 
+  private startTime: number ;
+
+  private endTime: number;
+
   public async run(): Promise<AnyJson> {
 
     this.ux.startSpinner(chalk.bold.yellowBright('Saving'));
+    this.startTime = new Date().getTime();
 
     const conn = this.org.getConnection();
 
@@ -77,7 +82,9 @@ export default class ApexDeploy extends SfdxCommand {
     const deployAction = new Deploy('ApexContainer', 'ApexClassMember', className, classId, filebody, metadataXML, conn);
     const deployResult = await deployAction.deployMetadata() as DeployResult;
     if (deployResult.success) {
-      this.ux.stopSpinner(chalk.bold.greenBright('Apex Class Successfully ' + mode + ' ✔'));
+      this.endTime = new Date().getTime();
+      const executionTime = (this.endTime - this.startTime) / 1000;
+      this.ux.stopSpinner(chalk.bold.greenBright(`Apex Class Successfully ${mode} ✔.Command execution time: ${executionTime} seconds`));
     } else {
       if (deployResult.queryResult.records.length > 0 && deployResult.queryResult.records[0].DeployDetails.componentFailures.length > 0) {
         display(deployResult, this.ux);

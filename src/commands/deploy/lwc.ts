@@ -32,9 +32,14 @@ export default class LWCDeploy extends SfdxCommand {
   // Set this to true if your command requires a project workspace; 'requiresProject' is false by default
   protected static requiresProject = true;
 
+  private startTime: number ;
+
+  private endTime: number;
+
   public async run(): Promise<AnyJson> {
 
     this.ux.startSpinner(chalk.bold.yellowBright('Saving'));
+    this.startTime = new Date().getTime();
 
     const conn = this.org.getConnection();
 
@@ -123,7 +128,9 @@ export default class LWCDeploy extends SfdxCommand {
         lwcResources = lwcResources.length > 0 ? lwcResources : [];
         try {
           await upsertLWCDefinition(lwcResources, fileBodyArray, lwcBundles[0].Id);
-          this.ux.stopSpinner(chalk.bold.greenBright('Lighnting Web Components Deployed Successfully ✔'));
+          this.endTime = new Date().getTime();
+          const executionTime = (this.endTime - this.startTime) / 1000;
+          this.ux.stopSpinner(chalk.bold.greenBright(`Lighnting Web Components Deployed Successfully ✔.Command execution time: ${executionTime} seconds`));
           // console.log(auraDefinitionsResult);
         } catch (exception) {
           this.ux.stopSpinner(chalk.bold.redBright('Failed ✖'));
