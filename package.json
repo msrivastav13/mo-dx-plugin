@@ -25,7 +25,7 @@
     "@types/adm-zip": "^0.4.31",
     "@types/chai": "^4",
     "@types/fs-extra": "^9.0.1",
-    "@types/jsforce": "1.9.13",
+    "@types/jsforce": "1.9.23",
     "@types/lodash": "^4.14.13",
     "@types/mime-types": "^2.1.0",
     "@types/mocha": "^5",
