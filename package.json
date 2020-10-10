@@ -15,7 +15,7 @@
     "lodash": "^4.17.13",
     "mime-types": "^2.1.24",
     "xmldom-sfdx-encoding": "^0.1.29",
-    "tslib": "^1.9.3"
+    "tslib": "^2.0.3"
   },
   "devDependencies": {
     "@oclif/dev-cli": "^1.21.0",
