@@ -301,10 +301,10 @@
   resolved "https://registry.yarnpkg.com/@salesforce/schemas/-/schemas-1.0.1.tgz#d1db56759d2b22a7688e1821aec564e979237ad2"
   integrity sha512-78pP1GB/DbIS8nSWGL0GpQ27g02drrEo0vzYdRipGYAIXHMzlh1gqEsq0pOiIQlPm1MxWyEqbmf4GG5qSVsd0Q==
 
-"@salesforce/ts-types@^1.0.0", "@salesforce/ts-types@^1.0.1", "@salesforce/ts-types@^1.2.0", "@salesforce/ts-types@^1.4.2":
-  version "1.4.2"
-  resolved "https://registry.yarnpkg.com/@salesforce/ts-types/-/ts-types-1.4.2.tgz#aa451c6dfcf69f614ffa5adf6567029f2d5bed5c"
-  integrity sha512-JxLK/XBv64Nq8llDCJYXn+lR4MNONatCeI+wu/7ac+NiHdsj7xCGjtZ743H0/mxRnsVqEnZzpSJDrxo2OHVbzw==
+"@salesforce/ts-types@^1.0.0", "@salesforce/ts-types@^1.2.0", "@salesforce/ts-types@^1.4.2", "@salesforce/ts-types@^1.5.3":
+  version "1.5.3"
+  resolved "https://registry.yarnpkg.com/@salesforce/ts-types/-/ts-types-1.5.3.tgz#186876adf57c8ef91d9c6f90180bce7215164d97"
+  integrity sha512-/3bhxY0JSDjA1qaUTLFzDj72OJdtlto+CCsMymo1RUYw6/Bcyc2JcA4KFbPFBMciZxqKMd989TKNGcUbTUBqPQ==
   dependencies:
     tslib "^1.10.0"
 
