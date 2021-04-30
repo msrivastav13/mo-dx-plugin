@@ -22,7 +22,7 @@
     "@oclif/plugin-help": "^2",
     "@oclif/test": "^1",
     "@salesforce/dev-config": "2.0.0",
-    "@types/adm-zip": "^0.4.31",
+    "@types/adm-zip": "^0.4.34",
     "@types/chai": "^4",
     "@types/fs-extra": "^9.0.1",
     "@types/jsforce": "1.9.13",
