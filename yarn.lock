@@ -430,10 +430,10 @@
   resolved "https://registry.yarnpkg.com/@types/sinonjs__fake-timers/-/sinonjs__fake-timers-6.0.1.tgz#681df970358c82836b42f989188d133e218c458e"
   integrity sha512-yYezQwGWty8ziyYLdZjwxyMb0CZR49h8JALHGrxjQHWlqGgc8kLdHEgWrgL0uZ29DMvEVBDnHU2Wg36zKSIUtA==
 
-adm-zip@^0.4.13:
-  version "0.4.16"
-  resolved "https://registry.yarnpkg.com/adm-zip/-/adm-zip-0.4.16.tgz#cf4c508fdffab02c269cbc7f471a875f05570365"
-  integrity sha512-TFi4HBKSGfIKsK5YCkKaaFG2m4PEDyViZmEwof3MTIgzimHLto6muaHVpbrljdIvIrFZzEq/p4nafOeLcYegrg==
+adm-zip@^0.5.7:
+  version "0.5.7"
+  resolved "https://registry.yarnpkg.com/adm-zip/-/adm-zip-0.5.7.tgz#86d73d2c9b7766024e47f736b31af71e253b6d8d"
+  integrity sha512-QLEo3eoC2B0i3+g/G5nNzKbGoVOjW2ingZ4TXl7/YeDM+FAl3SiHSNnokTZLFEuVHBn5CbZ42KJcIIsRji1EgQ==
 
 ajv@^6.12.3:
   version "6.12.4"
