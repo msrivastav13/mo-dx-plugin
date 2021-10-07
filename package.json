@@ -9,7 +9,7 @@
     "@oclif/errors": "^1.2.2",
     "@salesforce/command": "^3.0.3",
     "@salesforce/ts-types": "^1.0.1",
-    "adm-zip": "^0.4.13",
+    "adm-zip": "^0.5.9",
     "chalk": "^4.1.0",
     "fs-extra": "^9.0.1",
     "lodash": "^4.17.13",
