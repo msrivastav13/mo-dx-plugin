@@ -19,7 +19,7 @@
   },
   "devDependencies": {
     "@oclif/dev-cli": "^1.21.0",
-    "@oclif/plugin-help": "^2",
+    "@oclif/plugin-help": "^3",
     "@oclif/test": "^1",
     "@salesforce/dev-config": "2.0.0",
     "@types/adm-zip": "^0.4.31",
