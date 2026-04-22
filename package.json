@@ -12,7 +12,7 @@
     "adm-zip": "^0.4.13",
     "chalk": "^4.1.0",
     "fs-extra": "^9.0.1",
-    "lodash": "^4.17.13",
+    "lodash": "^4.18.1",
     "mime-types": "^2.1.24",
     "xmldom-sfdx-encoding": "^0.1.29",
     "tslib": "^1.9.3"
@@ -26,7 +26,7 @@
     "@types/chai": "^4",
     "@types/fs-extra": "^9.0.1",
     "@types/jsforce": "1.9.13",
-    "@types/lodash": "^4.14.13",
+    "@types/lodash": "^4.17.24",
     "@types/mime-types": "^2.1.0",
     "@types/mocha": "^5",
     "@types/node": "^14.10.1",
