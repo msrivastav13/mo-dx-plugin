@@ -1,36 +1,20 @@
-import {UX} from '@salesforce/command';
-import * as chalk from 'chalk';
-import { CompileErrors, ConsoleError } from '../types/errorLog';
-import { DeployResult } from './deploy';
+import chalk from 'chalk';
+import { DeployResult } from './deploy.js';
 
-export function display(deployResult: DeployResult, ux: UX) {
-    const errors = [] as CompileErrors[];
-    const tableColumnData = {
-      columns: [
-        { key: 'lineNumber', label: chalk.redBright.bold('Line')},
-        { key: 'columnNumber', label: chalk.redBright.bold('Column') },
-        { key: 'problem', label: chalk.redBright.bold('Error Description') }
-      ]
-    };
-    for (const error of deployResult.queryResult.records[0].DeployDetails.componentFailures) {
-      const errorLog = {} as CompileErrors;
-      errorLog.columnNumber = error.columnNumber;
-      errorLog.lineNumber = (error.lineNumber);
-      errorLog.problem = chalk.bold(error.problem);
-      errors.push(errorLog);
-    }
-    ux.table(errors, tableColumnData);
+interface CommandContext {
+  log(msg: string): void;
 }
 
-export function displaylog(error: string, ux: UX) {
-  const consoleErrors = [] as ConsoleError[];
-  const tableColumnData = {
-    columns: [
-      { key: 'errorMsg', label: chalk.redBright.bold('Error Description')}
-    ]
-  };
-  const consoleError = {} as ConsoleError;
-  consoleError.errorMsg = chalk.redBright(error);
-  consoleErrors.push(consoleError);
-  ux.table(consoleErrors, tableColumnData);
+export function display(deployResult: DeployResult, cmd: CommandContext) {
+    for (const error of deployResult.queryResult.records[0].DeployDetails.componentFailures) {
+      cmd.log(
+        `${chalk.redBright.bold('Line')}: ${error.lineNumber}  ` +
+        `${chalk.redBright.bold('Column')}: ${error.columnNumber}  ` +
+        `${chalk.redBright.bold('Error')}: ${chalk.bold(error.problem)}`
+      );
+    }
+}
+
+export function displaylog(error: string, cmd: CommandContext) {
+  cmd.log(chalk.redBright(error));
 }

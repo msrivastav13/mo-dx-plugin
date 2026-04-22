@@ -1,8 +1,9 @@
-import {core} from '@salesforce/command';
-// tslint:disable-next-line: no-var-requires
+import {Connection} from '@salesforce/core';
+import { createRequire } from 'node:module';
+const require = createRequire(import.meta.url);
 const DOMParser = require('xmldom-sfdx-encoding').DOMParser;
 
-export async function createMetadataMember(name: string, containerId: string, body: string, xmlMetadata: string, entityId: string, className: string, conn: core.Connection): Promise<object> {
+export async function createMetadataMember(name: string, containerId: string, body: string, xmlMetadata: string, entityId: string, className: string, conn: Connection): Promise<object> {
 
   interface MetadataMember {
     MetadataContainerId: string;

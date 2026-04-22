@@ -1,6 +1,6 @@
 import * as child from 'child_process';
 import * as util from 'util';
-import {DescribeMetadataResult} from '../../models/describemetadataResult';
+import {DescribeMetadataResult} from '../../models/describemetadataResult.js';
 
 const exec = util.promisify(child.exec);
 
@@ -22,7 +22,7 @@ export class DescribeMetadata {
       const metadatalist = JSON.parse(jsonResult).result as DescribeMetadataResult;
       return metadatalist;
     } catch (exception) {
-      process.stdout.write(exception);
+      process.stdout.write(String(exception));
     }
   }
 

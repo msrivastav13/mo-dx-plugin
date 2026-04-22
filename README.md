@@ -1,244 +1,248 @@
 # mo-dx-plugin
 
-A plugin for Salesforce DX CLI that provides ability to save Apex Classes, Apex Triggers, Visualforce Page, Visualforce Components ,AuraBundle(Lightning Components) and Static Resource to Salesforce org (Scratch/Non-Scratch orgs) using Tooling API.
+A plugin for Salesforce CLI (`sf`) that provides the ability to save Apex Classes, Apex Triggers, Visualforce Pages, Visualforce Components, Aura Bundles (Lightning Components), Lightning Web Components, and Static Resources to any Salesforce org (scratch or non-scratch) using the Tooling API.
 
-Plugin also provides a retrieve command that can retrieve metadata in salesforceDx and traditional source format from salesforce unmanaged/managed package or changesets.
+The plugin also provides retrieve commands that can pull metadata in Salesforce DX or traditional source format from unmanaged/managed packages or changesets.
 
-The commands in this plugin are used within the **_DX Code Companion extension_** (https://marketplace.visualstudio.com/items?itemName=MohithShrivastava.dx-code-companion).
+These commands are used within the [DX Code Companion](https://marketplace.visualstudio.com/items?itemName=MohithShrivastava.dx-code-companion) VS Code extension. If you use VS Code, installing the extension alongside this plugin is recommended.
 
-If you are Visual Studio Code user then recommend installing the extension along with the plugin to avoid having to remember the commands.
+## Requirements
 
-## Setup
+- **Node.js >= 20**
+- **Salesforce CLI (`sf`) v2+**
 
-### **Install as plugin (Recommended approach for Installing)**
+## Installation
 
- Install plugin using command : `sfdx plugins:install mo-dx-plugin`
+### Install as plugin (recommended)
 
+```sh
+sf plugins install mo-dx-plugin
+```
 
-### **Install from source(Preferred approach for debugging and enhancing the plugin)**
-1. Install the SDFX CLI.
+### Install from source
 
-2. Clone the repository: `git clone git@github.com:msrivastav13/mo-dx-plugin.git`
+```sh
+git clone git@github.com:msrivastav13/mo-dx-plugin.git
+cd mo-dx-plugin
+npm install
+npm run prepack
+sf plugins link .
+```
 
-3. Install using yarn: `yarn install`
+> **Note:** This is an ESM plugin. After any source changes you must run `npm run prepack` (or `tsc`) before using it via `sf plugins link`. During active development you can use `./bin/dev.js` which auto-transpiles.
 
-4. Link the plugin: `sfdx plugins:link` .
+## Upgrading from 0.x
 
-### **Commands**
+See [CHANGELOG.md](./CHANGELOG.md) for full details. The key changes for existing users:
 
-* [`sfdx retrieve:dxsource`](#sfdx-retrievedxsource)
-* [`sfdx retrieve:pkgsource`](#sfdx-retrievepkgsource)
-* [`sfdx deploy:apex`](#sfdx-deployapex)
-* [`sfdx deploy:trigger`](#sfdx-deploytrigger)
-* [`sfdx deploy:vf`](#sfdx-deployvf)
-* [`sfdx deploy:vfcomponent`](#sfdx-deployvfcomponent)
-* [`sfdx deploy:aura`](#sfdx-deployaura)
-* [`sfdx deploy:lwc`](#sfdx-deploylwc)
-* [`sfdx deploy:staticresource`](#sfdx-deploystaticresource)
-* [`sfdx metadata:rename`](#sfdx-metadatarename)
+- **Node.js 20+ is now required.** Versions below 20 are no longer supported.
+- **Use `sf` instead of `sfdx`.** All commands still work the same way, but the CLI binary is `sf`. Example: `sf deploy:apex -p <path>`.
+- **Install command changed.** Use `sf plugins install` instead of `sfdx plugins:install`.
+- **`--targetusername` / `-u` is now `--target-org` / `-o`.** Update any scripts or extensions that pass the old flag name.
+- **All 10 commands work identically otherwise.** Same command names, same output.
 
-## `sfdx retrieve:dxsource`
+## Commands
 
-Retrieves soure code from Managed/Unmamaged package or Changesets.This command works for only Non-scratch orgs .If you are trying to convert a traditional project in Managed/Unmanaged package , this command can help convert the sourcecode to DX format.
+- [`sf deploy:apex`](#sf-deployapex)
+- [`sf deploy:trigger`](#sf-deploytrigger)
+- [`sf deploy:vf`](#sf-deployvf)
+- [`sf deploy:vfcomponent`](#sf-deployvfcomponent)
+- [`sf deploy:aura`](#sf-deployaura)
+- [`sf deploy:lwc`](#sf-deploylwc)
+- [`sf deploy:staticresource`](#sf-deploystaticresource)
+- [`sf retrieve:dxsource`](#sf-retrievedxsource)
+- [`sf retrieve:pkgsource`](#sf-retrievepkgsource)
+- [`sf metadata:rename`](#sf-metadatarename)
+
+---
+
+### `sf deploy:apex`
+
+Deploy an Apex class to a Salesforce org using the Tooling API. Creates the class if it does not exist; updates it if it does.
 
 ```
 USAGE
-  $ sfdx retrieve:dxsource
+  $ sf deploy:apex -p <filepath> [-u <username>] [--json]
 
 OPTIONS
-  -n, --packagename=packagename                   (required) the name of the package you want to retrieve.The package parameter value must be enclosed in double quotes.Example if you have a package named HR App the command would be sfdx retrieve:dxsource -n "HR App"
-
-  -p, --pathname=pathname                         [default: force-app] where to convert the result to...defaults to
-                                                  force-app
-
-  -u, --targetusername=targetusername             username or alias for the target org; overrides default target org
-
-  -m, --retainmetadata                            provide a random string to retain the mdapiout folder that has source code in mdapi format
-
-  --apiversion=apiversion                         override the api version used for api requests made by this command
-
-  --json                                          format output as json
-
-  --loglevel=(trace|debug|info|warn|error|fatal)  logging level for this command invocation
+  -p, --filepath    (required) Path to the .cls file
+  -u, --targetusername  Username or alias for the target org
 
 EXAMPLES
-  $ sfdx retrieve:dxsource -n <package/changeset> // Default authorized org is used as username or org alias
-  $ sfdx retrieve:dxsource -u myOrg@example.com -n <package/changeset> -p <[pathName]>
+  $ sf deploy:apex -p force-app/main/default/classes/MyClass.cls
 ```
 
-_See code: [src/commands/retrieve/dxsource.ts](https://github.com/msrivastav13/mo-dx-plugin/blob/master/src/commands/retrieve/dxsource.ts)_
+### `sf deploy:trigger`
 
-## `sfdx retrieve:pkgsource`
-
-Retrieves soure code from Managed/Unmamaged package or Changesets.This command works for only Non-scratch orgs.This retrieves metadata in traditional source format.
+Deploy an Apex trigger using the Tooling API.
 
 ```
 USAGE
-  $ sfdx retrieve:pkgsource
+  $ sf deploy:trigger -p <filepath> [-u <username>] [--json]
 
 OPTIONS
-  -n, --packagename=packagename                   (required) the name of the package you want to retrieve.The package parameter value must be enclosed in double quotes.Example if you have a package named HR App the command would be sfdx retrieve:pkgsource -n "HR App"
+  -p, --filepath    (required) Path to the .trigger file
+  -u, --targetusername  Username or alias for the target org
 
 EXAMPLES
-  $ sfdx retrieve:pkgsource -n <package/changeset> // Default authorized org is used as username or org alias
+  $ sf deploy:trigger -p force-app/main/default/triggers/AccountTrigger.trigger
 ```
 
-_See code: [src/commands/retrieve/pkgsource.ts](https://github.com/msrivastav13/mo-dx-plugin/blob/master/src/commands/retrieve/pkgsource.ts)_
+### `sf deploy:vf`
 
-
-## `sfdx deploy:apex`
-
-Deploys apex code to the Salesforce Org using Tooling API.
+Deploy a Visualforce page using the Tooling API.
 
 ```
 USAGE
-  $ sfdx deploy:apex
+  $ sf deploy:vf -p <filepath> [-u <username>] [--json]
 
 OPTIONS
-  --p, --pathname=pathname                   (required) the file path of the apex class you want to save to salesforce. Note you can run pwd command on terminal to obtain the path easily.
+  -p, --filepath    (required) Path to the .page file
+  -u, --targetusername  Username or alias for the target org
 
 EXAMPLES
-  $ sfdx deploy:apex -p <pathname> // Default authorized org is used for the deploy .The pathname parameter must be enclosed in double quotes. Example if your path is /Users/mohith/Desktop/ForceProjects/TestApp/force-app/main/default/classes/Constants.cls then the command to save this class will be sfdx deploy:apex -p "/Users/mohith/Desktop/ForceProjects/TestApp/force-app/main/default/classes/Constants.cls"
+  $ sf deploy:vf -p force-app/main/default/pages/MyPage.page
 ```
 
-_See code: [src/commands/deploy/apex.ts](https://github.com/msrivastav13/mo-dx-plugin/blob/master/src/commands/deploy/apex.ts)_
+### `sf deploy:vfcomponent`
 
-## `sfdx deploy:trigger`
-
-Deploys apex trigger code to the Salesforce Org using Tooling API.
+Deploy a Visualforce component using the Tooling API.
 
 ```
 USAGE
-  $ sfdx deploy:trigger
+  $ sf deploy:vfcomponent -p <filepath> [-u <username>] [--json]
 
 OPTIONS
-  --p, --pathname=pathname                   (required) the file path of the apex trigger you want to save to salesforce. Note you can run pwd command on terminal to obtain the path easily
+  -p, --filepath    (required) Path to the .component file
+  -u, --targetusername  Username or alias for the target org
 
 EXAMPLES
-  $ sfdx deploy:trigger -p <pathname> // Default authorized org is used for the deploy
+  $ sf deploy:vfcomponent -p force-app/main/default/components/MyComp.component
 ```
 
-_See code: [src/commands/deploy/trigger.ts](https://github.com/msrivastav13/mo-dx-plugin/blob/master/src/commands/deploy/trigger.ts)_
+### `sf deploy:aura`
 
-## `sfdx deploy:vf`
-
-Deploys visualforce page to the Salesforce Org using Tooling API.
+Deploy an Aura lightning bundle using the Tooling API. Supports deploying an entire bundle (pass the directory path) or individual files within a bundle.
 
 ```
 USAGE
-  $ sfdx deploy:vf
+  $ sf deploy:aura -p <filepath> [-u <username>] [--json]
 
 OPTIONS
-  --p, --pathname=pathname                   (required) the file path of the vf page you want to save to salesforce . Note you can run pwd command on terminal to obtain the path.
+  -p, --filepath    (required) Path to the aura bundle directory or a file within it
+  -u, --targetusername  Username or alias for the target org
 
 EXAMPLES
-  $ sfdx deploy:vf -p <pathname> // Default authorized org is used for the deploy
+  $ sf deploy:aura -p force-app/main/default/aura/MyComponent
+  $ sf deploy:aura -p force-app/main/default/aura/MyComponent/MyComponentController.js
 ```
 
-_See code: [src/commands/deploy/vf.ts](https://github.com/msrivastav13/mo-dx-plugin/blob/master/src/commands/deploy/vf.ts)_
+### `sf deploy:lwc`
 
-## `sfdx deploy:vfcomponent`
-
-Deploys visualforce components to the Salesforce Org using Tooling API.
+Deploy a Lightning Web Component bundle using the Tooling API. Supports deploying an entire bundle or individual files.
 
 ```
 USAGE
-  $ sfdx deploy:vfcomponent
+  $ sf deploy:lwc -p <filepath> [-u <username>] [--json]
 
 OPTIONS
-  --p, --pathname=pathname                   (required) the file path of the vf component you want to save
+  -p, --filepath    (required) Path to the LWC bundle directory or a file within it
+  -u, --targetusername  Username or alias for the target org
 
 EXAMPLES
-  $ sfdx deploy:vfcomponent -p <pathname> // file path used to save the component to Salesforce.
+  $ sf deploy:lwc -p force-app/main/default/lwc/myComponent
+  $ sf deploy:lwc -p force-app/main/default/lwc/myComponent/myComponent.js
 ```
 
-_See code: [src/commands/deploy/vfcomponent.ts](https://github.com/msrivastav13/mo-dx-plugin/blob/master/src/commands/deploy/vfcomponent.ts)_
+### `sf deploy:staticresource`
 
-## `sfdx deploy:aura`
-
-Deploys aura lightning bundle to the Salesforce Org using Tooling API.
-
-Supports deploying whole aura bundle as well individual files .To deploy the AuraBundle provide the directory path in path(p) parameter
+Deploy a static resource using the Tooling API. Supports individual files and bundled folders (automatically zipped).
 
 ```
 USAGE
-  $ sfdx deploy:aura
+  $ sf deploy:staticresource -p <filepath> [-u <username>] [-r <folder>] [-c <cachecontrol>] [--json]
 
 OPTIONS
-  --p, --pathname=pathname                   (required) the file path of the aura bundle you want to save to Salesforce.
+  -p, --filepath        (required) Path to the static resource file or folder
+  -r, --resourcefolder  [default: staticresources] Folder name containing static resources
+  -c, --cachecontrol    [default: private] Cache control setting (private or public)
+  -u, --targetusername  Username or alias for the target org
 
 EXAMPLES
-  $ sfdx deploy:aura -p <pathname> // Default authorized org is used for the deploy
+  $ sf deploy:staticresource -p force-app/main/default/staticresources/myApp
+  $ sf deploy:staticresource -p force-app/main/default/staticresources/style.css --cachecontrol public
 ```
 
-_See code: [src/commands/deploy/aura.ts](https://github.com/msrivastav13/mo-dx-plugin/blob/master/src/commands/deploy/aura.ts)_
+### `sf retrieve:dxsource`
 
-## `sfdx deploy:lwc`
-
-Deploys lighnting web component bundle to the Salesforce Org using Tooling API.
-
-Supports deploying lwc bundle as well individual files in lwc bundle .To deploy the Lightning Bundle as a whole provide the directory path in path(p) parameter
+Retrieve metadata from an unmanaged/managed package or changeset and convert it to Salesforce DX source format.
 
 ```
 USAGE
-  $ sfdx deploy:lwc
+  $ sf retrieve:dxsource -n <name> [-u <username>] [-p <path>] [-m <string>] [--json]
 
 OPTIONS
-  --p, --pathname=pathname                   (required) the file path of the lightning web components bundle you want to save to Salesforce.
+  -n, --packagename     (required) Name of the package or changeset to retrieve
+  -p, --pathname        [default: force-app] Output directory for DX conversion
+  -m, --retainmetadata  If set, retains the raw mdapi output in the mdapiout directory
+  -u, --targetusername  Username or alias for the target org
 
 EXAMPLES
-  $ sfdx deploy:lwc -p <pathname> // Default authorized org is used for the deploy
+  $ sf retrieve:dxsource -n "My Package"
+  $ sf retrieve:dxsource -u myOrg@example.com -n "My Changeset" -p src
 ```
 
-_See code: [src/commands/deploy/lwc.ts](https://github.com/msrivastav13/mo-dx-plugin/blob/master/src/commands/deploy/lwc.ts)_
+### `sf retrieve:pkgsource`
 
-## `sfdx deploy:staticresource`
-
-Deploys Static Resources to the Salesforce Org using Tooling API.
-
-Supports deploying staticresource folder (It zips it up) as well individual files in staticresource folder.
+Retrieve metadata from an unmanaged/managed package or changeset in traditional Metadata API format.
 
 ```
 USAGE
-  $ sfdx deploy:staticresource
+  $ sf retrieve:pkgsource -n <name> [-u <username>] [-r <dir>] [--json]
 
 OPTIONS
-  --p, --pathname=pathname                   (required) the file path of the lightning web components bundle you want to save to Salesforce.
+  -n, --packagename     (required) Name of the package or changeset to retrieve
+  -r, --retrievedir     Directory to retrieve into (defaults to src)
+  -u, --targetusername  Username or alias for the target org
 
 EXAMPLES
-  $ sfdx deploy:staticresource -p <pathname> // Default authorized org is used for the deploy
-  $ sfdx deploy:staticresource -p <pathname> --resourcefolder <name of the folder where you have app>' // Default authorized org is used for the deploy
-  $ sfdx deploy:staticresource -p <pathname> --resourcefolder <name of the folder where you have app>' --cachecontrol public //makes the cache control of static resource public
+  $ sf retrieve:pkgsource -n "My Package"
+  $ sf retrieve:pkgsource -n "My Package" -r changesets/src
 ```
 
-_See code: [src/commands/deploy/staticresource.ts](https://github.com/msrivastav13/mo-dx-plugin/blob/master/src/commands/deploy/staticresource.ts)_
+### `sf metadata:rename`
 
-## `sfdx metadata:rename`
-
-Renames a single metadata using the salesforce Metadata API. 
-
-Salesforce allows to rename some types of metadata (CRUD based) using the Metadata API.This commands provides sfdx version 
+Rename a metadata component using the Metadata API.
 
 ```
 USAGE
-  $ sfdx metadata:rename
+  $ sf metadata:rename -t <type> -o <oldname> -n <newname> [-u <username>] [--json]
 
 OPTIONS
-  -t, --metadatatype=metadatatype                   (required) the type of the metadata (Ex CustomObject for customobject, CustomField for custom field)
-
-  -o, --oldfullname=oldfullname                         (required) Full API name of the current component that will be overriden with the new name
-
-  -n, --newfullname=newfullname             (required) Full API name that will override the existing component name
+  -t, --metadatatype    (required) Metadata type (e.g. CustomObject, CustomField)
+  -o, --oldfullname     (required) Current API name of the component
+  -n, --newfullname     (required) New API name for the component
+  -u, --targetusername  Username or alias for the target org
 
 EXAMPLES
-   '$ sfdx metadata:rename -t <metadatatype> -n <newname> -o <oldname>',
-    '$ sfdx metadata:rename -t CustomObject -n MyCustomObject1New__c -o MyCustomObject1__c' // here Custom Object MyCustomObject1__c is renamed to MyCustomObject1New__c
+  $ sf metadata:rename -t CustomObject -o MyObject__c -n RenamedObject__c
 ```
 
-_See code: [src/commands/metadata/rename.ts](https://github.com/msrivastav13/mo-dx-plugin/blob/master/src/commands/metadata/rename.ts)_
+---
 
+## Important Note
 
+These commands do not maintain history. Files are overwritten on the server. Make sure you have source control set up for your project so you can recover code if needed.
 
-### Important Note When Using these Commands With Non-Scratch Org
+## Development
 
-**These commands do not maintain history and files are overriden on server .Make sure you have source control for the project setup so you can recover code if you accidently overwrite anything**
+```sh
+npm install
+npm run prepack     # compile TypeScript + generate oclif manifest
+npm test            # run unit tests (mocha + chai + sinon)
+./bin/dev.js        # run commands from source (auto-transpiles)
+```
+
+## License
+
+MIT

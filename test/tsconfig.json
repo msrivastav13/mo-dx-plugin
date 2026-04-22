@@ -1,4 +1,7 @@
 {
-  "extends": "../tsconfig"
+  "extends": "../node_modules/@salesforce/dev-config/tsconfig-test-strict-esm",
+  "compilerOptions": {
+    "skipLibCheck": true,
+    "strictNullChecks": false
+  }
 }
-

@@ -1,18 +1,15 @@
-import {core, flags, SfdxCommand} from '@salesforce/command';
-import {AnyJson} from '@salesforce/ts-types';
-import * as chalk from 'chalk';
-import fs = require('fs-extra');
-import {Deploy, DeployResult} from '../../service/deploy';
-import {display, displaylog} from '../../service/displayError';
-import {getFileName} from '../../service/getFileName';
-import {getNameSpacePrefix} from '../../service/getNamespacePrefix';
+import { SfCommand, Flags, requiredOrgFlagWithDeprecations, orgApiVersionFlagWithDeprecations, loglevel } from '@salesforce/sf-plugins-core';
+import { Messages } from '@salesforce/core';
+import chalk from 'chalk';
+import fs from 'fs-extra';
+import {Deploy, DeployResult} from '../../service/deploy.js';
+import {display, displaylog} from '../../service/displayError.js';
+import {getFileName} from '../../service/getFileName.js';
+import {getNameSpacePrefix} from '../../service/getNamespacePrefix.js';
 
-// Initialize Messages with the current plugin directory
-core.Messages.importMessagesDirectory(__dirname);
+Messages.importMessagesDirectoryFromMetaUrl(import.meta.url);
 
-// Load the specific messages for this file. Messages from @salesforce/command, @salesforce/core,
-// or any library that is using the messages framework can also be loaded this way.
-const messages = core.Messages.loadMessages('mo-dx-plugin', 'org');
+const messages = Messages.loadMessages('mo-dx-plugin', 'org');
 
 interface ApexPage {
   Name: string;
@@ -22,7 +19,7 @@ interface ApexPage {
   Masterlabel: string;
 }
 
-export default class VfDeploy extends SfdxCommand {
+export default class VfDeploy extends SfCommand<any> {
 
   public static description = messages.getMessage('vfDeploy');
 
@@ -30,36 +27,37 @@ export default class VfDeploy extends SfdxCommand {
   '$ sfdx deploy:vf -p filepath'
   ];
 
-  protected static flagsConfig = {
+  public static readonly flags = {
+    'target-org': requiredOrgFlagWithDeprecations,
+    'api-version': orgApiVersionFlagWithDeprecations,
+    loglevel,
     // flag with a value (-n, --name=VALUE)
-    filepath: flags.string({char: 'p', description: 'file path' , required: true})
+    filepath: Flags.string({char: 'p', description: 'file path' , required: true})
   };
 
-  // Comment this out if your command does not require an org username
-  protected static requiresUsername = true;
-
   // Set this to true if your command requires a project workspace; 'requiresProject' is false by default
-  protected static requiresProject = true;
+  public static readonly requiresProject = true;
 
   private startTime: number ;
 
   private endTime: number;
 
-  public async run(): Promise<AnyJson> {
+  public async run(): Promise<any> {
+    const { flags } = await this.parse(VfDeploy);
 
-    this.ux.startSpinner(chalk.bold.yellowBright('Saving'));
+    this.spinner.start(chalk.bold.yellowBright('Saving'));
     this.startTime = new Date().getTime();
 
-    const conn = this.org.getConnection();
+    const conn = flags['target-org'].getConnection(flags['api-version']);
 
     const namespacePrefix = await getNameSpacePrefix(conn);
 
-    const filebody = await fs.readFile(this.flags.filepath, 'utf8');
+    const filebody = await fs.readFile(flags.filepath, 'utf8');
 
-    const fileMetaXML = await fs.readFile(this.flags.filepath + '-meta.xml', 'utf8');
+    const fileMetaXML = await fs.readFile(flags.filepath + '-meta.xml', 'utf8');
 
      // get the apex class Id using the class Name
-    const pageName = getFileName(this.flags.filepath, '.page');
+    const pageName = getFileName(flags.filepath, '.page');
     const apexpages = await conn.tooling.sobject('ApexPage').find({
       Name: pageName,
       NameSpacePrefix : namespacePrefix
@@ -79,13 +77,13 @@ export default class VfDeploy extends SfdxCommand {
     if (deployResult.success) {
       this.endTime = new Date().getTime();
       const executionTime = (this.endTime - this.startTime) / 1000;
-      this.ux.stopSpinner(chalk.bold.greenBright(`Visualforce Page Successfully ${mode} ✔Command execution time: ${executionTime} seconds`));
+      this.spinner.stop(chalk.bold.greenBright(`Visualforce Page Successfully ${mode} ✔Command execution time: ${executionTime} seconds`));
       return '';
     } else {
-      display(deployResult, this.ux);
-      this.ux.stopSpinner(chalk.bold.redBright('Visualforce Page Update Failed ✖'));
+      display(deployResult, this);
+      this.spinner.stop(chalk.bold.redBright('Visualforce Page Update Failed ✖'));
       if ( typeof deployResult.error !== 'undefined' ) {
-        displaylog(chalk.bold.redBright(deployResult.error), this.ux);
+        displaylog(chalk.bold.redBright(deployResult.error), this);
       }
     }
   }

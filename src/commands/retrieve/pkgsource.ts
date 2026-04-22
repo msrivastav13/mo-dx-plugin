@@ -1,21 +1,18 @@
-import { core, flags, SfdxCommand } from '@salesforce/command';
-import { AnyJson } from '@salesforce/ts-types';
-import * as AdmZip from 'adm-zip';
-import * as chalk from 'chalk';
+import { SfCommand, Flags, requiredOrgFlagWithDeprecations, orgApiVersionFlagWithDeprecations, loglevel } from '@salesforce/sf-plugins-core';
+import { Messages } from '@salesforce/core';
+import AdmZip from 'adm-zip';
+import chalk from 'chalk';
 import * as child from 'child_process';
-import fs = require('fs-extra');
+import fs from 'fs-extra';
 import * as util from 'util';
 
-// Initialize Messages with the current plugin directory
-core.Messages.importMessagesDirectory(__dirname);
+Messages.importMessagesDirectoryFromMetaUrl(import.meta.url);
 
-// Load the specific messages for this file. Messages from @salesforce/command, @salesforce/core,
-// or any library that is using the messages framework can also be loaded this way.
-const messages = core.Messages.loadMessages('mo-dx-plugin', 'org');
+const messages = Messages.loadMessages('mo-dx-plugin', 'org');
 
 const exec = util.promisify(child.exec);
 
-export default class Pkgsource extends SfdxCommand {
+export default class Pkgsource extends SfCommand<any> {
   public static description = messages.getMessage('retrieveSource');
 
   public static examples = [
@@ -24,49 +21,50 @@ export default class Pkgsource extends SfdxCommand {
     '$ sfdx retrieve:pkgsource -n <package/changeset> -r /changesets/src'
   ];
 
-  protected static flagsConfig = {
+  public static readonly flags = {
+    'target-org': requiredOrgFlagWithDeprecations,
+    'api-version': orgApiVersionFlagWithDeprecations,
+    loglevel,
     // flag with a value (-n, --name=VALUE)
-    packagename: flags.string({
+    packagename: Flags.string({
       required: true,
       char: 'n',
       description: 'the name of the package you want to retrieve'
     }),
 
-    retrievedir : flags.string({
+    retrievedir : Flags.string({
       required: false,
       char: 'r',
       description: 'directory path to retrieve'
     })
   };
-  // Comment this out if your command does not require an org username
-  protected static requiresUsername = true;
 
   // Set this to true if your command requires a project workspace; 'requiresProject' is false by default
-  protected static requiresProject = true;
+  public static readonly requiresProject = true;
 
-  public async run(): Promise<AnyJson> {
-    const defaultusername = this.flags.targetusername
-      ? this.flags.targetusername
-      : this.org.getUsername();
-    const tmpDir = this.flags.retrievedir ? this.flags.retrievedir : 'src' ;
+  public async run(): Promise<any> {
+    const { flags } = await this.parse(Pkgsource);
+
+    const defaultusername = flags['target-org'].getUsername();
+    const tmpDir = flags.retrievedir ? flags.retrievedir : 'src' ;
     let errored = false;
 
-    this.ux.startSpinner(chalk.yellowBright('Retrieving Metadata...'));
+    this.spinner.start(chalk.yellowBright('Retrieving Metadata...'));
 
     const retrieveCommand = `sfdx force:mdapi:retrieve -s -p "${
-      this.flags.packagename
+      flags.packagename
     }" -u ${defaultusername}  -r ./${tmpDir} -w -1 --json`;
 
     try {
       await exec(retrieveCommand, { maxBuffer: 1000000 * 1024 });
     } catch (exception) {
       errored = true;
-      this.ux.errorJson(exception);
-      this.ux.stopSpinner(chalk.redBright('Retrieve Operation Failed ✖'));
+      this.logJson(exception as object);
+      this.spinner.stop(chalk.redBright('Retrieve Operation Failed ✖'));
     }
 
     if (!errored) {
-      this.ux.stopSpinner(
+      this.spinner.stop(
         chalk.greenBright('Retrieve Completed ✔.  Unzipping...')
       );
       // unzip result to a temp folder mdapi
@@ -83,9 +81,9 @@ export default class Pkgsource extends SfdxCommand {
         }
       }
 
-      this.ux.startSpinner(chalk.yellowBright('Unzip Completed ✔'));
+      this.spinner.start(chalk.yellowBright('Unzip Completed ✔'));
       await fs.unlink('./' + tmpDir + '/unpackaged.zip');
-      this.ux.stopSpinner(chalk.greenBright('Finished ✔'));
+      this.spinner.stop(chalk.greenBright('Finished ✔'));
     }
 
     return '';

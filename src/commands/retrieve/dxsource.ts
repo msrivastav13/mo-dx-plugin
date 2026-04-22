@@ -1,17 +1,14 @@
-import { core, flags, SfdxCommand } from '@salesforce/command';
-import { AnyJson } from '@salesforce/ts-types';
-import * as AdmZip from 'adm-zip';
-import * as chalk from 'chalk';
+import { SfCommand, Flags, requiredOrgFlagWithDeprecations, orgApiVersionFlagWithDeprecations, loglevel } from '@salesforce/sf-plugins-core';
+import { Messages } from '@salesforce/core';
+import AdmZip from 'adm-zip';
+import chalk from 'chalk';
 import * as child from 'child_process';
-import fs = require('fs-extra');
+import fs from 'fs-extra';
 import * as util from 'util';
 
-// Initialize Messages with the current plugin directory
-core.Messages.importMessagesDirectory(__dirname);
+Messages.importMessagesDirectoryFromMetaUrl(import.meta.url);
 
-// Load the specific messages for this file. Messages from @salesforce/command, @salesforce/core,
-// or any library that is using the messages framework can also be loaded this way.
-const messages = core.Messages.loadMessages('mo-dx-plugin', 'org');
+const messages = Messages.loadMessages('mo-dx-plugin', 'org');
 
 const tmpDir = 'mdapiout';
 
@@ -19,7 +16,7 @@ const manifestDir = 'manifest';
 
 const exec = util.promisify(child.exec);
 
-export default class DxSource extends SfdxCommand {
+export default class DxSource extends SfCommand<any> {
   public static description = messages.getMessage('retrieveDxSource');
 
   public static examples = [
@@ -29,42 +26,42 @@ export default class DxSource extends SfdxCommand {
     '$ sfdx retrieve:dxsource -u myOrg@example.com -n <package/changeset> -p <[pathName]>'
   ];
 
-  protected static flagsConfig = {
+  public static readonly flags = {
+    'target-org': requiredOrgFlagWithDeprecations,
+    'api-version': orgApiVersionFlagWithDeprecations,
+    loglevel,
     // flag with a value (-n, --name=VALUE)
-    packagename: flags.string({
+    packagename: Flags.string({
       required: true,
       char: 'n',
       description: 'the name of the package you want to retrieve'
     }),
-    pathname: flags.string({
+    pathname: Flags.string({
       char: 'p',
       default: 'force-app',
       description: 'where to convert the result to.defaults to force-app'
     }),
-    retainmetadata: flags.string({
+    retainmetadata: Flags.string({
       char: 'm',
       description:
         'If set retain the metadata folder in mdapiout directory and do not clean'
     })
   };
 
-  // Comment this out if your command does not require an org username
-  protected static requiresUsername = true;
-
   // Set this to true if your command requires a project workspace; 'requiresProject' is false by default
-  protected static requiresProject = true;
+  public static readonly requiresProject = true;
 
-  public async run(): Promise<AnyJson> {
-    const target = this.flags.pathname;
-    const defaultusername = this.flags.targetusername
-      ? this.flags.targetusername
-      : this.org.getUsername();
+  public async run(): Promise<any> {
+    const { flags } = await this.parse(DxSource);
+
+    const target = flags.pathname;
+    const defaultusername = flags['target-org'].getUsername();
     let errored = false;
 
-    this.ux.startSpinner(chalk.yellowBright('Retrieving Metadata...'));
+    this.spinner.start(chalk.yellowBright('Retrieving Metadata...'));
 
     const retrieveCommand = `sfdx force:mdapi:retrieve -s -p "${
-      this.flags.packagename
+      flags.packagename
     }" -u ${defaultusername}  -r ./${tmpDir} -w 30 --json`;
     try {
       await exec(retrieveCommand, {
@@ -72,12 +69,12 @@ export default class DxSource extends SfdxCommand {
       });
     } catch (exception) {
       errored = true;
-      this.ux.errorJson(exception);
-      this.ux.stopSpinner(chalk.redBright('Retrieve Operation Failed.'));
+      this.logJson(exception as object);
+      this.spinner.stop(chalk.redBright('Retrieve Operation Failed.'));
     }
 
     if (!errored) {
-      this.ux.stopSpinner(
+      this.spinner.stop(
         chalk.greenBright('Retrieve Completed ✔.  Unzipping...')
       );
       // unzip result to a temp folder mdapi
@@ -96,7 +93,7 @@ export default class DxSource extends SfdxCommand {
       }
 
       // Prepare folder and directory for DX Conversion
-      this.ux.startSpinner(
+      this.spinner.start(
         chalk.yellowBright(
           'Unzip Completed ✔.  Converting To DX Source Format...'
         )
@@ -122,15 +119,15 @@ export default class DxSource extends SfdxCommand {
         await exec(
           `sfdx force:mdapi:convert -r ./${tmpDir} -d ${target} --json`
         );
-        this.ux.stopSpinner(
+        this.spinner.stop(
           chalk.greenBright('Done Converting mdapi to DX format ✔')
         );
       } catch (err) {
-        this.ux.errorJson(err);
-        this.ux.error(chalk.redBright('Error from conversion ✖'));
+        this.logJson(err as object);
+        this.error(chalk.redBright('Error from conversion ✖'));
       }
-      if (!this.flags.retainmetadata) {
-        this.ux.startSpinner(
+      if (!flags.retainmetadata) {
+        this.spinner.start(
           chalk.blueBright('Cleaning Unused Directory Started ✔')
         );
         if (process.platform.includes('darwin')) {
@@ -139,7 +136,7 @@ export default class DxSource extends SfdxCommand {
           fs.removeSync(`./${tmpDir}`);
         }
       }
-      this.ux.stopSpinner(chalk.greenBright('Finished ✔'));
+      this.spinner.stop(chalk.greenBright('Finished ✔'));
     }
 
     return '';

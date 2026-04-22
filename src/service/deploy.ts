@@ -1,9 +1,9 @@
-import {core} from '@salesforce/command';
-import {QueryResult} from '../models/queryResult';
-import {SobjectResult} from '../models/sObjectResult';
-import {createDeployRequest} from '../service/containerasyncRequest';
-import {createMetadataContainer} from '../service/createmetadataContainer';
-import {createMetadataMember} from '../service/createmetadataMember';
+import {Connection} from '@salesforce/core';
+import {QueryResult} from '../models/queryResult.js';
+import {SobjectResult} from '../models/sObjectResult.js';
+import {createDeployRequest} from '../service/containerasyncRequest.js';
+import {createMetadataContainer} from '../service/createmetadataContainer.js';
+import {createMetadataMember} from '../service/createmetadataMember.js';
 
 export interface DeployResult {
   success: boolean;
@@ -16,12 +16,12 @@ export class Deploy {
   public containerType: string;
   public classMember: string;
   public componentId: string;
-  public conn: core.Connection;
+  public conn: Connection;
   public componentBody: string;
   public className: string;
   public content: string;
 
-  constructor(containerType: string, classMember: string, className: string, componentId: string, componentBody: string, metadataXML: string, conn: core.Connection) {
+  constructor(containerType: string, classMember: string, className: string, componentId: string, componentBody: string, metadataXML: string, conn: Connection) {
     this.containerType = containerType;
     this.classMember = classMember;
     this.componentId = componentId;

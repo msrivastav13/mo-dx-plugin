@@ -1,19 +1,16 @@
-import {core, flags, SfdxCommand} from '@salesforce/command';
-import {AnyJson} from '@salesforce/ts-types';
-import * as chalk from 'chalk';
-import fs = require('fs-extra');
-import {SobjectResult} from '../../models/sObjectResult';
-import {displaylog} from '../../service/displayError';
-import {getNameSpacePrefix} from '../../service/getNamespacePrefix';
+import { SfCommand, Flags, requiredOrgFlagWithDeprecations, orgApiVersionFlagWithDeprecations, loglevel } from '@salesforce/sf-plugins-core';
+import { Messages } from '@salesforce/core';
+import chalk from 'chalk';
+import fs from 'fs-extra';
+import {SobjectResult} from '../../models/sObjectResult.js';
+import {displaylog} from '../../service/displayError.js';
+import {getNameSpacePrefix} from '../../service/getNamespacePrefix.js';
 
-// Initialize Messages with the current plugin directory
-core.Messages.importMessagesDirectory(__dirname);
+Messages.importMessagesDirectoryFromMetaUrl(import.meta.url);
 
-// Load the specific messages for this file. Messages from @salesforce/command, @salesforce/core,
-// or any library that is using the messages framework can also be loaded this way.
-const messages = core.Messages.loadMessages('mo-dx-plugin', 'org');
+const messages = Messages.loadMessages('mo-dx-plugin', 'org');
 
-export default class AuraDeploy extends SfdxCommand {
+export default class AuraDeploy extends SfCommand<any> {
 
   public static description = messages.getMessage('auraDeploy');
 
@@ -21,27 +18,28 @@ export default class AuraDeploy extends SfdxCommand {
   '$ sfdx deploy:aura -p filepath'
   ];
 
-  protected static flagsConfig = {
+  public static readonly flags = {
+    'target-org': requiredOrgFlagWithDeprecations,
+    'api-version': orgApiVersionFlagWithDeprecations,
+    loglevel,
     // flag with a value (-n, --name=VALUE)
-    filepath: flags.string({ char: 'p', description: 'file path', required: true })
+    filepath: Flags.string({ char: 'p', description: 'file path', required: true })
   };
 
-  // Comment this out if your command does not require an org username
-  protected static requiresUsername = true;
-
   // Set this to true if your command requires a project workspace; 'requiresProject' is false by default
-  protected static requiresProject = true;
+  public static readonly requiresProject = true;
 
   private startTime: number ;
 
   private endTime: number;
 
-  public async run(): Promise<AnyJson> {
+  public async run(): Promise<any> {
+    const { flags } = await this.parse(AuraDeploy);
 
-    this.ux.startSpinner(chalk.bold.yellowBright('Saving'));
+    this.spinner.start(chalk.bold.yellowBright('Saving'));
     this.startTime = new Date().getTime();
 
-    const conn = this.org.getConnection();
+    const conn = flags['target-org'].getConnection(flags['api-version']);
 
     const namespacePrefix = await getNameSpacePrefix(conn);
 
@@ -65,7 +63,7 @@ export default class AuraDeploy extends SfdxCommand {
       Id: string;
     }
 
-    const _path = this.flags.filepath;
+    const _path = flags.filepath;
     const _lastindex = _path.lastIndexOf('/');
     let _fileOrDirName = _path.substring(_lastindex + 1);
     let isDirectory: boolean = false;
@@ -98,34 +96,34 @@ export default class AuraDeploy extends SfdxCommand {
       const fileBodyArray = await getFileBodyMap(validFiles);
       fileKey = getFileKey(validFiles);
       let auraDefinitionBundles = [] as AuraDefinitionBundle[];
-      auraDefinitionBundles = await getAuraDefinitionBundle(_fileOrDirName) as AuraDefinitionBundle[];
+      auraDefinitionBundles = await getAuraDefinitionBundle(_fileOrDirName) as unknown as AuraDefinitionBundle[];
       if (auraDefinitionBundles.length === 0) {
-        const newauraDefinitionBundle = await createAuraDefinitionBundle(_fileOrDirName) as SobjectResult;
+        const newauraDefinitionBundle = await createAuraDefinitionBundle(_fileOrDirName) as unknown as SobjectResult;
         if (newauraDefinitionBundle.success) {
           const auraDefinitionBundleVar = {} as AuraDefinitionBundle;
           auraDefinitionBundleVar.Id = newauraDefinitionBundle.id;
           auraDefinitionBundles.push(auraDefinitionBundleVar);
         } else {
-          displaylog(JSON.stringify(newauraDefinitionBundle.errors), this.ux);
-          displaylog(chalk.bold.redBright('Aura Component Save Failed'), this.ux);
+          displaylog(JSON.stringify(newauraDefinitionBundle.errors), this);
+          displaylog(chalk.bold.redBright('Aura Component Save Failed'), this);
         }
       }
       if (auraDefinitionBundles.length > 0) {
-        let auraDefinitions = await getAuraDefinitions(auraDefinitionBundles[0].Id) as AuraDefinition[];
+        let auraDefinitions = await getAuraDefinitions(auraDefinitionBundles[0].Id) as unknown as AuraDefinition[];
         auraDefinitions = auraDefinitions.length > 0 ? auraDefinitions : [];
         try {
           await upsertAuraDefinition(auraDefinitions, fileBodyArray, auraDefinitionBundles[0].Id);
           this.endTime = new Date().getTime();
           const executionTime = (this.endTime - this.startTime) / 1000;
-          this.ux.stopSpinner(chalk.bold.greenBright(`AuraBundle Deployed Successfully ✔.Command execution time: ${executionTime} seconds`));
+          this.spinner.stop(chalk.bold.greenBright(`AuraBundle Deployed Successfully ✔.Command execution time: ${executionTime} seconds`));
         } catch (exception) {
-          this.ux.stopSpinner(chalk.bold.redBright('Aura Component Save Failed ✖'));
-          displaylog(exception, this.ux);
+          this.spinner.stop(chalk.bold.redBright('Aura Component Save Failed ✖'));
+          displaylog(String(exception), this);
         }
       }
     } catch (exception) {
-      this.ux.stopSpinner(chalk.bold.redBright('Aura Component Save Failed ✖'));
-      displaylog(exception, this.ux);
+      this.spinner.stop(chalk.bold.redBright('Aura Component Save Failed ✖'));
+      displaylog(String(exception), this);
     }
 
     // function to create AuraDefinitionBundle

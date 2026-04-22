@@ -1,7 +1,7 @@
-import {core} from '@salesforce/command';
-import {QueryResult} from '../models/queryResult';
+import {Connection} from '@salesforce/core';
+import {QueryResult} from '../models/queryResult.js';
 
-export async function getNameSpacePrefix(conn: core.Connection) {
+export async function getNameSpacePrefix(conn: Connection) {
   const query = 'Select NamespacePrefix from Organization';
   const organization = await conn.query(query) as QueryResult;
   if (organization.totalSize > 0) {

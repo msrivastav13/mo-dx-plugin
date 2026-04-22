@@ -1,10 +1,10 @@
-import {core} from '@salesforce/command';
-import {QueryResult} from '../models/queryResult';
-import {SobjectResult} from '../models/sObjectResult';
-import {delay} from './delay';
-import {executeToolingQuery} from './toolingQuery';
+import {Connection} from '@salesforce/core';
+import {QueryResult} from '../models/queryResult.js';
+import {SobjectResult} from '../models/sObjectResult.js';
+import {delay} from './delay.js';
+import {executeToolingQuery} from './toolingQuery.js';
 
-export async function createDeployRequest(containerId: string, ischeck: boolean, conn: core.Connection): Promise<QueryResult> {
+export async function createDeployRequest(containerId: string, ischeck: boolean, conn: Connection): Promise<QueryResult> {
 
   interface ContainerAsyncRequest {
     IsCheckOnly: boolean;
@@ -17,7 +17,7 @@ export async function createDeployRequest(containerId: string, ischeck: boolean,
     MetadataContainerId : containerId
   } as ContainerAsyncRequest;
 
-  const containerAsyncResult = await conn.tooling.sobject('ContainerAsyncRequest').create(containerasynRequestReq) as SobjectResult;
+  const containerAsyncResult = await conn.tooling.sobject('ContainerAsyncRequest').create(containerasynRequestReq) as unknown as SobjectResult;
   let containerRequestResponse = {} as QueryResult;
 
   if (containerAsyncResult.success) {

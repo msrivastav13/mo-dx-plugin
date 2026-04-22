@@ -1,5 +1,5 @@
-import {core} from '@salesforce/command';
+import {Connection} from '@salesforce/core';
 
-export async function executeToolingQuery(queryString: string, conn: core.Connection): Promise<object> {
+export async function executeToolingQuery(queryString: string, conn: Connection): Promise<object> {
   return await conn.tooling.query(queryString);
 }

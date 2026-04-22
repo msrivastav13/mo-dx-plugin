@@ -1,14 +1,12 @@
-import { core, flags, SfdxCommand } from '@salesforce/command';
-import { AnyJson } from '@salesforce/ts-types';
-import * as chalk from 'chalk';
-import { SaveResult } from 'jsforce';
+import { SfCommand, Flags, requiredOrgFlagWithDeprecations, orgApiVersionFlagWithDeprecations, loglevel } from '@salesforce/sf-plugins-core';
+import { Messages } from '@salesforce/core';
+import chalk from 'chalk';
 
-// Initialize Messages with the current plugin directory
-core.Messages.importMessagesDirectory(__dirname);
+Messages.importMessagesDirectoryFromMetaUrl(import.meta.url);
 
-const messages = core.Messages.loadMessages('mo-dx-plugin', 'org');
+const messages = Messages.loadMessages('mo-dx-plugin', 'org');
 
-export default class RenameMetadata extends SfdxCommand {
+export default class RenameMetadata extends SfCommand<any> {
 
   public static description = messages.getMessage('renamemetadata');
 
@@ -17,19 +15,22 @@ export default class RenameMetadata extends SfdxCommand {
     '$ sfdx metadata:rename -t CustomObject -n MyCustomObject1New__c -o MyCustomObject1__c'
   ];
 
-  protected static flagsConfig = {
+  public static readonly flags = {
+    'target-org': requiredOrgFlagWithDeprecations,
+    'api-version': orgApiVersionFlagWithDeprecations,
+    loglevel,
     // flag with a value (-n, --name=VALUE)
-    metadatatype: flags.string({
+    metadatatype: Flags.string({
       required: true,
       char: 't',
       description: 'type of the metadata. Examples are CustomObject, Profile'
     }),
-    newfullname: flags.string({
+    newfullname: Flags.string({
       char: 'n',
       required: true,
       description: 'new name of the metadata element'
     }),
-    oldfullname: flags.string({
+    oldfullname: Flags.string({
       char: 'o',
       required: true,
       description:
@@ -37,33 +38,31 @@ export default class RenameMetadata extends SfdxCommand {
     })
   };
 
-  // Comment this out if your command does not require an org username
-  protected static requiresUsername = true;
-
   // Set this to true if your command requires a project workspace; 'requiresProject' is false by default
-  protected static requiresProject = true;
+  public static readonly requiresProject = true;
 
-  public async run(): Promise<AnyJson> {
+  public async run(): Promise<any> {
+    const { flags } = await this.parse(RenameMetadata);
 
-    const conn = this.org.getConnection();
-    let result: Promise<SaveResult>;
+    const conn = flags['target-org'].getConnection(flags['api-version']);
+    let result: Promise<any>; // tslint:disable-line:no-any
     try {
-      result = conn.metadata.rename(this.flags.metadatatype, this.flags.oldfullname, this.flags.newfullname);
+      result = conn.metadata.rename(flags.metadatatype, flags.oldfullname, flags.newfullname) as any; // tslint:disable-line:no-any
       result
         .then(
           res => {
             if (res.success) {
-              console.log(chalk.bold.greenBright(this.flags.metadatatype + ' ' + this.flags.oldfullname + ' is successfully Renamed to ' + this.flags.newfullname + ' ✔'));
+              this.log(chalk.bold.greenBright(flags.metadatatype + ' ' + flags.oldfullname + ' is successfully Renamed to ' + flags.newfullname + ' ✔'));
             }
           }
         )
         .catch(
           error => {
-            console.log('ERROR--' + chalk.bold.redBright(error));
+            this.log('ERROR--' + chalk.bold.redBright(error));
           }
         );
     } catch (ex) {
-      console.log('ERROR--' + chalk.bold.redBright(ex));
+      this.log('ERROR--' + chalk.bold.redBright(ex));
     }
     return JSON.stringify(result);
   }

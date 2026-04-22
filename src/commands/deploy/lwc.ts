@@ -1,19 +1,16 @@
-import {core, flags, SfdxCommand} from '@salesforce/command';
-import {AnyJson} from '@salesforce/ts-types';
-import * as chalk from 'chalk';
-import fs = require('fs-extra');
-import {SobjectResult} from '../../models/sObjectResult';
-import {displaylog} from '../../service/displayError';
-import {getNameSpacePrefix} from '../../service/getNamespacePrefix';
+import { SfCommand, Flags, requiredOrgFlagWithDeprecations, orgApiVersionFlagWithDeprecations, loglevel } from '@salesforce/sf-plugins-core';
+import { Messages } from '@salesforce/core';
+import chalk from 'chalk';
+import fs from 'fs-extra';
+import {SobjectResult} from '../../models/sObjectResult.js';
+import {displaylog} from '../../service/displayError.js';
+import {getNameSpacePrefix} from '../../service/getNamespacePrefix.js';
 
-// Initialize Messages with the current plugin directory
-core.Messages.importMessagesDirectory(__dirname);
+Messages.importMessagesDirectoryFromMetaUrl(import.meta.url);
 
-// Load the specific messages for this file. Messages from @salesforce/command, @salesforce/core,
-// or any library that is using the messages framework can also be loaded this way.
-const messages = core.Messages.loadMessages('mo-dx-plugin', 'org');
+const messages = Messages.loadMessages('mo-dx-plugin', 'org');
 
-export default class LWCDeploy extends SfdxCommand {
+export default class LWCDeploy extends SfCommand<any> {
 
   public static description = messages.getMessage('lwcDeploy');
 
@@ -21,27 +18,28 @@ export default class LWCDeploy extends SfdxCommand {
   '$ sfdx deploy:lwc -p filepath'
   ];
 
-  protected static flagsConfig = {
+  public static readonly flags = {
+    'target-org': requiredOrgFlagWithDeprecations,
+    'api-version': orgApiVersionFlagWithDeprecations,
+    loglevel,
     // flag with a value (-n, --name=VALUE)
-    filepath: flags.string({char: 'p', description: 'file path' })
+    filepath: Flags.string({char: 'p', description: 'file path' })
   };
 
-  // Comment this out if your command does not require an org username
-  protected static requiresUsername = true;
-
   // Set this to true if your command requires a project workspace; 'requiresProject' is false by default
-  protected static requiresProject = true;
+  public static readonly requiresProject = true;
 
   private startTime: number ;
 
   private endTime: number;
 
-  public async run(): Promise<AnyJson> {
+  public async run(): Promise<any> {
+    const { flags } = await this.parse(LWCDeploy);
 
-    this.ux.startSpinner(chalk.bold.yellowBright('Saving'));
+    this.spinner.start(chalk.bold.yellowBright('Saving'));
     this.startTime = new Date().getTime();
 
-    const conn = this.org.getConnection();
+    const conn = flags['target-org'].getConnection(flags['api-version']);
 
     const namespacePrefix = await getNameSpacePrefix(conn);
 
@@ -88,7 +86,7 @@ export default class LWCDeploy extends SfdxCommand {
       source: string;
     }
 
-    let _path = this.flags.filepath;
+    let _path = flags.filepath;
     let _fileOrDirName = _path.substring(_path.lastIndexOf('/') + 1);
     let isDirectory: boolean = false;
 
@@ -112,34 +110,34 @@ export default class LWCDeploy extends SfdxCommand {
     try {
       const fileBodyArray = await getFileBodyMap(validFiles);
       let lwcBundles = [] as LightningComponentBundle[];
-      lwcBundles = await getLWCDefinitionBundle(_fileOrDirName) as LightningComponentBundle[];
+      lwcBundles = await getLWCDefinitionBundle(_fileOrDirName) as unknown as LightningComponentBundle[];
       if (lwcBundles.length === 0) {
-        const newLWCBundle = await createLWCBundle(_fileOrDirName, fileBodyArray) as SobjectResult;
+        const newLWCBundle = await createLWCBundle(_fileOrDirName, fileBodyArray) as unknown as SobjectResult;
         if (newLWCBundle.success) {
           const lwcBundleVar = {} as LightningComponentBundle;
           lwcBundleVar.Id = newLWCBundle.id;
           lwcBundles.push(lwcBundleVar);
         } else {
-          displaylog(chalk.bold.redBright(JSON.stringify(newLWCBundle.errors)), this.ux);
+          displaylog(chalk.bold.redBright(JSON.stringify(newLWCBundle.errors)), this);
         }
       }
       if (lwcBundles.length > 0) {
-        let lwcResources = await getLWCResources(lwcBundles[0].Id) as LightningComponentResource[];
+        let lwcResources = await getLWCResources(lwcBundles[0].Id) as unknown as LightningComponentResource[];
         lwcResources = lwcResources.length > 0 ? lwcResources : [];
         try {
           await upsertLWCDefinition(lwcResources, fileBodyArray, lwcBundles[0].Id);
           this.endTime = new Date().getTime();
           const executionTime = (this.endTime - this.startTime) / 1000;
-          this.ux.stopSpinner(chalk.bold.greenBright(`Lighnting Web Components Deployed Successfully ✔.Command execution time: ${executionTime} seconds`));
+          this.spinner.stop(chalk.bold.greenBright(`Lighnting Web Components Deployed Successfully ✔.Command execution time: ${executionTime} seconds`));
           // console.log(auraDefinitionsResult);
         } catch (exception) {
-          this.ux.stopSpinner(chalk.bold.redBright('Failed ✖'));
-          displaylog(chalk.bold.redBright(exception), this.ux);
+          this.spinner.stop(chalk.bold.redBright('Failed ✖'));
+          displaylog(chalk.bold.redBright(exception), this);
         }
       }
     } catch (exception) {
-      this.ux.stopSpinner(chalk.bold.redBright('Failed ✖'));
-      displaylog(chalk.bold.redBright(exception), this.ux);
+      this.spinner.stop(chalk.bold.redBright('Failed ✖'));
+      displaylog(chalk.bold.redBright(exception), this);
     }
 
     // function to create LightningComponentBundle

@@ -1,0 +1,9 @@
+watch-extensions:
+  - ts
+recursive: true
+reporter: spec
+timeout: 50000
+node-option:
+  - "loader=ts-node/esm"
+  - "no-experimental-strip-types"
+  - "no-warnings"

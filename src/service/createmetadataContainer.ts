@@ -1,6 +1,6 @@
-import {core} from '@salesforce/command';
+import {Connection} from '@salesforce/core';
 
-export async function createMetadataContainer(name: string, conn: core.Connection): Promise<object> {
+export async function createMetadataContainer(name: string, conn: Connection): Promise<object> {
 
   interface MetadataContainer {
     Name: string;

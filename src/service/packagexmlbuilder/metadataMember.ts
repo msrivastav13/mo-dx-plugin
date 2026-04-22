@@ -1,7 +1,7 @@
 import * as child from 'child_process';
 import * as util from 'util';
-import {MetadataResult} from '../../models/metadataResult';
-import {PackageXmlTemplate} from './packagexmlTemplate';
+import {MetadataResult} from '../../models/metadataResult.js';
+import {PackageXmlTemplate} from './packagexmlTemplate.js';
 
 const exec = util.promisify(child.exec);
 
@@ -36,7 +36,7 @@ export class MetadataMember {
         const metadatalist = JSON.parse(jsonResult).result as MetadataResult[];
         return metadatalist;
       } catch (exception) {
-        process.stdout.write(exception);
+        process.stdout.write(String(exception));
       }
   }
 }
