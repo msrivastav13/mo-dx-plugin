@@ -5,6 +5,7 @@ import fs from 'fs-extra';
 import {SobjectResult} from '../../models/sObjectResult.js';
 import {displaylog} from '../../service/displayError.js';
 import {getNameSpacePrefix} from '../../service/getNamespacePrefix.js';
+import {readBundleFiles} from '../../service/readBundleFiles.js';
 
 Messages.importMessagesDirectoryFromMetaUrl(import.meta.url);
 
@@ -95,7 +96,7 @@ export default class LWCDeploy extends SfCommand<any> {
 
     // This is when user provided the directory path
     if (_fileOrDirName === _fileOrDirName.split('.')[0]) {
-      validFiles = await fs.readdir(_path);
+      validFiles = await readBundleFiles(_path);
       isDirectory = true;
       filePath = validFiles.map( file => getFilepath(_fileOrDirName, file));
     } else {
@@ -160,7 +161,7 @@ export default class LWCDeploy extends SfCommand<any> {
         // overrwite and get all files in the bundle
         isDirectory = true;
         _path = _path.substring(0, _path.lastIndexOf('/'));
-        validFiles = await fs.readdir(_path);
+        validFiles = await readBundleFiles(_path);
         files = await getFileBodyMap(validFiles);
         _fileOrDirName = _path.substring(_path.lastIndexOf('/') + 1);
         filePath = validFiles.map( file => getFilepath(_fileOrDirName, file));
