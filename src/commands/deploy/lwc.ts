@@ -6,6 +6,7 @@ import {SobjectResult} from '../../models/sObjectResult.js';
 import {displaylog} from '../../service/displayError.js';
 import {getNameSpacePrefix} from '../../service/getNamespacePrefix.js';
 import {readBundleFiles} from '../../service/readBundleFiles.js';
+import {isToolingSchemaRefBug, metadataFallbackDeploy} from '../../service/metadataDeployLwc.js';
 
 Messages.importMessagesDirectoryFromMetaUrl(import.meta.url);
 
@@ -108,8 +109,14 @@ export default class LWCDeploy extends SfCommand<any> {
       filePath.push(getFilepath( _fileOrDirName, fileNameWithPath));
     }
 
+    const stopWithSuccess = () => {
+      this.endTime = new Date().getTime();
+      const executionTime = (this.endTime - this.startTime) / 1000;
+      this.spinner.stop(chalk.bold.greenBright(`Lighnting Web Components Deployed Successfully ✔.Command execution time: ${executionTime} seconds`));
+    };
+
     try {
-      const fileBodyArray = await getFileBodyMap(validFiles);
+      let fileBodyArray = await getFileBodyMap(validFiles);
       let lwcBundles = [] as LightningComponentBundle[];
       lwcBundles = await getLWCDefinitionBundle(_fileOrDirName) as unknown as LightningComponentBundle[];
       if (lwcBundles.length === 0) {
@@ -118,6 +125,9 @@ export default class LWCDeploy extends SfCommand<any> {
           const lwcBundleVar = {} as LightningComponentBundle;
           lwcBundleVar.Id = newLWCBundle.id;
           lwcBundles.push(lwcBundleVar);
+          // createLWCBundle may have expanded validFiles/filePath to the full directory;
+          // re-read so fileBodyArray stays in sync with validFiles.
+          fileBodyArray = await getFileBodyMap(validFiles);
         } else {
           displaylog(chalk.bold.redBright(JSON.stringify(newLWCBundle.errors)), this);
         }
@@ -127,13 +137,36 @@ export default class LWCDeploy extends SfCommand<any> {
         lwcResources = lwcResources.length > 0 ? lwcResources : [];
         try {
           await upsertLWCDefinition(lwcResources, fileBodyArray, lwcBundles[0].Id);
-          this.endTime = new Date().getTime();
-          const executionTime = (this.endTime - this.startTime) / 1000;
-          this.spinner.stop(chalk.bold.greenBright(`Lighnting Web Components Deployed Successfully ✔.Command execution time: ${executionTime} seconds`));
+          stopWithSuccess();
           // console.log(auraDefinitionsResult);
         } catch (exception) {
-          this.spinner.stop(chalk.bold.redBright('Failed ✖'));
-          displaylog(chalk.bold.redBright(exception), this);
+          if (isToolingSchemaRefBug(exception)) {
+            this.debug(`Tooling API rejected with schema-ref bug — retrying bundle "${_fileOrDirName}" via Metadata API`);
+            try {
+              const result = await metadataFallbackDeploy({
+                conn,
+                isDirectory,
+                validFiles,
+                filePath,
+                fileBodyArray,
+                lwcBundleId: lwcBundles[0].Id,
+                bundleName: _fileOrDirName,
+                apiVersion,
+              });
+              if (result.success) {
+                stopWithSuccess();
+              } else {
+                this.spinner.stop(chalk.bold.redBright('Failed ✖'));
+                displaylog(chalk.bold.redBright(result.message), this);
+              }
+            } catch (metaEx) {
+              this.spinner.stop(chalk.bold.redBright('Failed ✖'));
+              displaylog(chalk.bold.redBright(metaEx), this);
+            }
+          } else {
+            this.spinner.stop(chalk.bold.redBright('Failed ✖'));
+            displaylog(chalk.bold.redBright(exception), this);
+          }
         }
       }
     } catch (exception) {

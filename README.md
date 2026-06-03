@@ -232,7 +232,14 @@ EXAMPLES
 
 ## Important Note
 
+### Tracking changes against your org
+
 These commands do not maintain history. Files are overwritten on the server. Make sure you have source control set up for your project so you can recover code if needed.
+
+
+### Metadata Api Fallback
+
+ When the Tooling API rejects a save because the bundle imports a custom field via `@salesforce/schema/` (a Tooling API Salesforce bug, see [#434](https://github.com/msrivastav13/mo-dx-plugin/issues/434)), `deploy:lwc`  automatically retries through the Metadata API. The save takes a few seconds longer and will surface success or errors from the Metadata API.
 
 ## Development
 
