@@ -6,6 +6,7 @@ import {SobjectResult} from '../../models/sObjectResult.js';
 import {displaylog} from '../../service/displayError.js';
 import {getNameSpacePrefix} from '../../service/getNamespacePrefix.js';
 import {readBundleFiles} from '../../service/readBundleFiles.js';
+import {normalizeFilePath} from '../../service/normalizeFilePath.js';
 
 Messages.importMessagesDirectoryFromMetaUrl(import.meta.url);
 
@@ -87,7 +88,9 @@ export default class LWCDeploy extends SfCommand<any> {
       source: string;
     }
 
-    let _path = flags.filepath;
+    // Strip any trailing slash so a directory path like `lwc/ccdxSample/`
+    // still yields the bundle name `ccdxSample` rather than an empty string (issue #433).
+    let _path = normalizeFilePath(flags.filepath);
     let _fileOrDirName = _path.substring(_path.lastIndexOf('/') + 1);
     let isDirectory: boolean = false;
 
