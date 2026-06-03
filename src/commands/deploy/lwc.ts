@@ -6,7 +6,7 @@ import {SobjectResult} from '../../models/sObjectResult.js';
 import {displaylog} from '../../service/displayError.js';
 import {getNameSpacePrefix} from '../../service/getNamespacePrefix.js';
 import {readBundleFiles} from '../../service/readBundleFiles.js';
-import {isToolingSchemaRefBug, metadataFallbackDeploy} from '../../service/metadataDeployLwc.js';
+import {isToolingSchemaRefBug, metadataFallbackDeploy, FallbackOptions} from '../../service/metadataDeployLwc.js';
 
 Messages.importMessagesDirectoryFromMetaUrl(import.meta.url);
 
@@ -115,21 +115,62 @@ export default class LWCDeploy extends SfCommand<any> {
       this.spinner.stop(chalk.bold.greenBright(`Lighnting Web Components Deployed Successfully ✔.Command execution time: ${executionTime} seconds`));
     };
 
+    // Runs the Metadata API fallback and maps its outcome onto the spinner.
+    // Shared by the create and update schema-ref-bug paths.
+    const runMetadataFallback = async (options: FallbackOptions): Promise<void> => {
+      try {
+        const result = await metadataFallbackDeploy(options);
+        if (result.success) {
+          stopWithSuccess();
+        } else {
+          this.spinner.stop(chalk.bold.redBright('Failed ✖'));
+          displaylog(chalk.bold.redBright(result.message), this);
+        }
+      } catch (metaEx) {
+        this.spinner.stop(chalk.bold.redBright('Failed ✖'));
+        displaylog(chalk.bold.redBright(metaEx), this);
+      }
+    };
+
     try {
       let fileBodyArray = await getFileBodyMap(validFiles);
       let lwcBundles = [] as LightningComponentBundle[];
       lwcBundles = await getLWCDefinitionBundle(_fileOrDirName) as unknown as LightningComponentBundle[];
       if (lwcBundles.length === 0) {
-        const newLWCBundle = await createLWCBundle(_fileOrDirName, fileBodyArray) as unknown as SobjectResult;
-        if (newLWCBundle.success) {
-          const lwcBundleVar = {} as LightningComponentBundle;
-          lwcBundleVar.Id = newLWCBundle.id;
-          lwcBundles.push(lwcBundleVar);
-          // createLWCBundle may have expanded validFiles/filePath to the full directory;
-          // re-read so fileBodyArray stays in sync with validFiles.
-          fileBodyArray = await getFileBodyMap(validFiles);
-        } else {
-          displaylog(chalk.bold.redBright(JSON.stringify(newLWCBundle.errors)), this);
+        try {
+          const newLWCBundle = await createLWCBundle(_fileOrDirName, fileBodyArray) as unknown as SobjectResult;
+          if (newLWCBundle.success) {
+            const lwcBundleVar = {} as LightningComponentBundle;
+            lwcBundleVar.Id = newLWCBundle.id;
+            lwcBundles.push(lwcBundleVar);
+            // createLWCBundle may have expanded validFiles/filePath to the full directory;
+            // re-read so fileBodyArray stays in sync with validFiles.
+            fileBodyArray = await getFileBodyMap(validFiles);
+          } else {
+            displaylog(chalk.bold.redBright(JSON.stringify(newLWCBundle.errors)), this);
+          }
+        } catch (createException) {
+          if (isToolingSchemaRefBug(createException)) {
+            this.debug(`Tooling API rejected bundle creation with schema-ref bug — creating bundle "${_fileOrDirName}" via Metadata API`);
+            // createLWCBundle has already expanded to the full directory and filtered XML out
+            // of validFiles. Re-read the complete bundle from disk (including js-meta.xml, which
+            // the Metadata API requires) so the deploy creates a valid bundle. The Metadata API
+            // upserts, so a non-existent bundle is created rather than updated.
+            const bundleFiles = await readBundleFiles(_path);
+            await runMetadataFallback({
+              conn,
+              isDirectory: true,
+              validFiles: bundleFiles,
+              filePath: bundleFiles.map(file => getFilepath(_fileOrDirName, file)),
+              fileBodyArray: await getFileBodyMap(bundleFiles),
+              lwcBundleId: '',
+              bundleName: _fileOrDirName,
+              apiVersion,
+            });
+            // Bundle creation was handled via the Metadata API; skip the Tooling upsert below.
+            return '';
+          }
+          throw createException;
         }
       }
       if (lwcBundles.length > 0) {
@@ -142,27 +183,16 @@ export default class LWCDeploy extends SfCommand<any> {
         } catch (exception) {
           if (isToolingSchemaRefBug(exception)) {
             this.debug(`Tooling API rejected with schema-ref bug — retrying bundle "${_fileOrDirName}" via Metadata API`);
-            try {
-              const result = await metadataFallbackDeploy({
-                conn,
-                isDirectory,
-                validFiles,
-                filePath,
-                fileBodyArray,
-                lwcBundleId: lwcBundles[0].Id,
-                bundleName: _fileOrDirName,
-                apiVersion,
-              });
-              if (result.success) {
-                stopWithSuccess();
-              } else {
-                this.spinner.stop(chalk.bold.redBright('Failed ✖'));
-                displaylog(chalk.bold.redBright(result.message), this);
-              }
-            } catch (metaEx) {
-              this.spinner.stop(chalk.bold.redBright('Failed ✖'));
-              displaylog(chalk.bold.redBright(metaEx), this);
-            }
+            await runMetadataFallback({
+              conn,
+              isDirectory,
+              validFiles,
+              filePath,
+              fileBodyArray,
+              lwcBundleId: lwcBundles[0].Id,
+              bundleName: _fileOrDirName,
+              apiVersion,
+            });
           } else {
             this.spinner.stop(chalk.bold.redBright('Failed ✖'));
             displaylog(chalk.bold.redBright(exception), this);
@@ -199,7 +229,11 @@ export default class LWCDeploy extends SfCommand<any> {
         _fileOrDirName = _path.substring(_path.lastIndexOf('/') + 1);
         filePath = validFiles.map( file => getFilepath(_fileOrDirName, file));
       }
-      // Filter all the xml files as those are not supported yet
+      // Filter all the xml files as those are not supported yet.
+      // Note: this drops <bundle>.js-meta.xml from validFiles, so a Metadata API
+      // fallback triggered on this create-then-upsert path would be missing the
+      // meta file. metadataFallbackDeploy guards against that and asks the user
+      // to re-run against the full bundle directory.
       validFiles = validFiles.filter( file => {
         if (file.substring(file.lastIndexOf('.') + 1) !== 'xml') {
           return file;

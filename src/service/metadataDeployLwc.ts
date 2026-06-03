@@ -69,16 +69,37 @@ export async function metadataFallbackDeploy(options: FallbackOptions): Promise<
       .sobject('LightningComponentResource')
       .find({ LightningComponentBundleId: lwcBundleId }, ['FilePath', 'Source']) as Array<{ FilePath: string; Source: string }>;
     for (const r of orgResources) {
-      fileMap.set(r.FilePath, r.Source);
+      // Source can come back null for some resource rows; coalesce so the zip
+      // step below fails (if at all) with a Metadata API error rather than a
+      // raw Buffer.from(null) TypeError.
+      fileMap.set(r.FilePath, r.Source ?? '');
     }
     fileMap.set(filePath[0], fileBodyArray[0]);
   }
 
-  const zip = new AdmZip();
-  for (const [fp, source] of fileMap.entries()) {
+  // Validate every resource path before anything else — security first.
+  for (const fp of fileMap.keys()) {
     if (!fp.startsWith('lwc/') || fp.includes('..')) {
       throw new Error(`Unsafe file path in bundle: ${fp}`);
     }
+  }
+
+  // A LightningComponentBundle Metadata deploy is invalid without its
+  // js-meta.xml. It is reliably absent only on the create-then-fallback path,
+  // where createLWCBundle filters all *.xml out of validFiles before the
+  // failing Tooling upsert. Bail here with an actionable message rather than
+  // building an incomplete (and possibly index-misaligned) zip that the
+  // Metadata API would reject with a confusing secondary error.
+  const metaXmlKey = `lwc/${bundleName}/${bundleName}.js-meta.xml`;
+  if (!fileMap.has(metaXmlKey)) {
+    return {
+      success: false,
+      message: `Could not assemble a complete bundle for the Metadata API fallback (missing ${bundleName}.js-meta.xml). This can happen when a new bundle is created from a single file. Please re-run the deploy against the full bundle directory.`,
+    };
+  }
+
+  const zip = new AdmZip();
+  for (const [fp, source] of fileMap.entries()) {
     zip.addFile(fp, Buffer.from(source, 'utf8'));
   }
   zip.addFile('package.xml', Buffer.from(buildLwcPackageXml(bundleName, apiVersion), 'utf8'));

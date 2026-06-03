@@ -27,6 +27,26 @@ describe('isToolingSchemaRefBug', () => {
     ).to.be.true;
   });
 
+  // Observed against a real org (API 66): the jsforce path surfaces the schema-ref bug
+  // as AURA_COMPILE_ERROR, NOT FIELD_INTEGRITY_EXCEPTION (which is the raw-REST form). The
+  // message regex — not the errorCode — is what distinguishes it.
+  it('returns true for the real AURA_COMPILE_ERROR schema-ref bug shape', () => {
+    const err = Object.assign(
+      new Error('Invalid reference CustomObject__c.CustomField__c of type sobjectField in file ccdxSample.js'),
+      { errorCode: 'AURA_COMPILE_ERROR', name: 'AURA_COMPILE_ERROR' }
+    );
+    expect(isToolingSchemaRefBug(err)).to.be.true;
+  });
+
+  // Same errorCode as the bug, but a genuine compile error — must NOT trigger the fallback.
+  it('returns false for a genuine AURA_COMPILE_ERROR parse error (LWC1503)', () => {
+    const err = Object.assign(
+      new Error('ccdxSample.js [Line: 5, Col: 2] (markup://c:ccdxSample) -- LWC1503: Parsing error: Missing semicolon. (5:2)'),
+      { errorCode: 'AURA_COMPILE_ERROR', name: 'AURA_COMPILE_ERROR' }
+    );
+    expect(isToolingSchemaRefBug(err)).to.be.false;
+  });
+
   it('returns false for unrelated non-Error values', () => {
     expect(isToolingSchemaRefBug('Something went wrong')).to.be.false;
     expect(isToolingSchemaRefBug(null)).to.be.false;
@@ -115,6 +135,58 @@ describe('metadataFallbackDeploy', () => {
     sinon.assert.calledWith(checkDeployStatusStub, 'deployId001', true);
   });
 
+  it('test 4b — incomplete bundle: bails with re-run guidance when js-meta.xml is absent, never deploys', async () => {
+    const { conn, deployStub } = buildConn();
+
+    // Simulates the create-then-fallback path, where createLWCBundle has
+    // filtered *.xml (including js-meta.xml) out of validFiles.
+    const result = await metadataFallbackDeploy({
+      conn,
+      isDirectory: true,
+      validFiles: ['ccdxSample.js', 'ccdxSample.html'],
+      filePath: ['lwc/ccdxSample/ccdxSample.js', 'lwc/ccdxSample/ccdxSample.html'],
+      fileBodyArray: ['js content', '<template></template>'],
+      lwcBundleId: 'bundleId001',
+      bundleName: 'ccdxSample',
+      apiVersion: '60.0',
+      timeoutMs: 5_000,
+      pollIntervalMs: 0,
+    });
+
+    expect(result.success).to.be.false;
+    expect(result.message).to.include('missing ccdxSample.js-meta.xml');
+    expect(result.message).to.include('full bundle directory');
+    // Guard must short-circuit before any deploy is attempted.
+    sinon.assert.notCalled(deployStub);
+  });
+
+  it('test 4c — creation: directory deploy with no bundle Id creates the bundle (no org query)', async () => {
+    const { conn, deployStub, findStub } = buildConn();
+
+    // Mirrors the create-fallback: full bundle re-read from disk (incl. meta), empty lwcBundleId.
+    const result = await metadataFallbackDeploy({
+      conn,
+      isDirectory: true,
+      validFiles: ['ccdxSample.js', 'ccdxSample.html', 'ccdxSample.js-meta.xml'],
+      filePath: ['lwc/ccdxSample/ccdxSample.js', 'lwc/ccdxSample/ccdxSample.html', 'lwc/ccdxSample/ccdxSample.js-meta.xml'],
+      fileBodyArray: ['js content', '<template></template>', '<LightningComponentBundle/>'],
+      lwcBundleId: '',
+      bundleName: 'ccdxSample',
+      apiVersion: '60.0',
+      timeoutMs: 5_000,
+      pollIntervalMs: 0,
+    });
+
+    expect(result.success).to.be.true;
+    // Directory mode must not query org resources (that branch is single-file only).
+    sinon.assert.notCalled(findStub);
+    // The deployed zip is a complete, valid bundle.
+    const [zipBuffer] = deployStub.firstCall.args;
+    const entries = new AdmZip(zipBuffer).getEntries().map(e => e.entryName);
+    expect(entries).to.include('lwc/ccdxSample/ccdxSample.js-meta.xml');
+    expect(entries).to.include('package.xml');
+  });
+
   it('test 5 — single file: fetches org resources and overlays changed file', async () => {
     const orgResources = [
       { FilePath: 'lwc/ccdxSample/ccdxSample.js', Source: 'original js' },
@@ -146,6 +218,35 @@ describe('metadataFallbackDeploy', () => {
     expect(jsEntry.getData().toString('utf8')).to.equal('updated js content');
     const htmlEntry = zip.getEntry('lwc/ccdxSample/ccdxSample.html');
     expect(htmlEntry.getData().toString('utf8')).to.equal('<template/>');
+  });
+
+  it('test 5b — single file: null org resource Source is coalesced, no Buffer TypeError', async () => {
+    const orgResources = [
+      { FilePath: 'lwc/ccdxSample/ccdxSample.js', Source: 'original js' },
+      // e.g. an empty/binary resource row that comes back with a null Source
+      { FilePath: 'lwc/ccdxSample/ccdxSample.css', Source: null as unknown as string },
+      { FilePath: 'lwc/ccdxSample/ccdxSample.js-meta.xml', Source: '<LightningComponentBundle/>' },
+    ];
+    const { conn, deployStub } = buildConn({ findResult: orgResources });
+
+    const result = await metadataFallbackDeploy({
+      conn,
+      isDirectory: false,
+      validFiles: ['ccdxSample.js'],
+      filePath: ['lwc/ccdxSample/ccdxSample.js'],
+      fileBodyArray: ['updated js content'],
+      lwcBundleId: 'bundleId001',
+      bundleName: 'ccdxSample',
+      apiVersion: '60.0',
+      timeoutMs: 5_000,
+      pollIntervalMs: 0,
+    });
+
+    expect(result.success).to.be.true;
+    const [zipBuffer] = deployStub.firstCall.args;
+    const zip = new AdmZip(zipBuffer);
+    const cssEntry = zip.getEntry('lwc/ccdxSample/ccdxSample.css');
+    expect(cssEntry.getData().toString('utf8')).to.equal('');
   });
 
   it('test 6 — both fail: returns Metadata failure message (not original Tooling message)', async () => {
