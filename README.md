@@ -43,16 +43,28 @@ See [CHANGELOG.md](./CHANGELOG.md) for full details. The key changes for existin
 
 ## Commands
 
-- [`sf deploy:apex`](#sf-deployapex)
-- [`sf deploy:trigger`](#sf-deploytrigger)
-- [`sf deploy:vf`](#sf-deployvf)
-- [`sf deploy:vfcomponent`](#sf-deployvfcomponent)
-- [`sf deploy:aura`](#sf-deployaura)
-- [`sf deploy:lwc`](#sf-deploylwc)
-- [`sf deploy:staticresource`](#sf-deploystaticresource)
-- [`sf retrieve:dxsource`](#sf-retrievedxsource)
-- [`sf retrieve:pkgsource`](#sf-retrievepkgsource)
-- [`sf metadata:rename`](#sf-metadatarename)
+- [mo-dx-plugin](#mo-dx-plugin)
+  - [Requirements](#requirements)
+  - [Installation](#installation)
+    - [Install as plugin (recommended)](#install-as-plugin-recommended)
+    - [Install from source](#install-from-source)
+  - [Upgrading from 0.x](#upgrading-from-0x)
+  - [Commands](#commands)
+    - [`sf deploy:apex`](#sf-deployapex)
+    - [`sf deploy:trigger`](#sf-deploytrigger)
+    - [`sf deploy:vf`](#sf-deployvf)
+    - [`sf deploy:vfcomponent`](#sf-deployvfcomponent)
+    - [`sf deploy:aura`](#sf-deployaura)
+    - [`sf deploy:lwc`](#sf-deploylwc)
+    - [`sf deploy:staticresource`](#sf-deploystaticresource)
+    - [`sf retrieve:dxsource`](#sf-retrievedxsource)
+    - [`sf retrieve:pkgsource`](#sf-retrievepkgsource)
+    - [`sf metadata:rename`](#sf-metadatarename)
+  - [Important Notes](#important-notes)
+    - [Tracking changes against your org](#tracking-changes-against-your-org)
+    - [Metadata API Fallback](#metadata-api-fallback)
+  - [Development](#development)
+  - [License](#license)
 
 ---
 
@@ -230,9 +242,16 @@ EXAMPLES
 
 ---
 
-## Important Note
+## Important Notes
+
+### Tracking changes against your org
 
 These commands do not maintain history. Files are overwritten on the server. Make sure you have source control set up for your project so you can recover code if needed.
+
+
+### Metadata API Fallback
+
+ When the Tooling API rejects a save because the bundle imports a custom field via `@salesforce/schema/` (a Tooling API Salesforce bug, see [#434](https://github.com/msrivastav13/mo-dx-plugin/issues/434)), `deploy:lwc` automatically retries through the Metadata API. This applies whether you are creating a new bundle or updating an existing one. The save takes a few seconds longer and will surface success or errors from the Metadata API.
 
 ## Development
 
