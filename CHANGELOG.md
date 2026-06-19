@@ -1,5 +1,27 @@
 # Changelog
 
+## 1.2.0 (2026-06-19)
+
+A maintenance release focused on security, dependency currency, and a `metadata:rename` bug fix.
+
+### Bug Fixes
+
+- **`metadata:rename` now detects the default org again ([#443](https://github.com/msrivastav13/mo-dx-plugin/issues/443)).** The `-o` short flag was claimed by both `--target-org` and `--oldfullname`, so `sf metadata rename -t Skill -o A -n B` routed `-o A` to `--target-org` and failed with `No authorization information found for A`. `--oldfullname` now uses `-d`, freeing `-o` for `--target-org` (which auto-detects the default org when omitted, as in 0.3.2).
+
+  > ⚠️ If you script `metadata:rename`, change `-o <oldname>` to `-d <oldname>`.
+
+### Security
+
+- **Patched all known dependency vulnerabilities (13 → 0).** Added `overrides` for `form-data@^4.0.6` (high), `uuid@^11.1.1`, and `js-yaml@^4.2.0`, and refreshed the lockfile to pick up fixes for `@babel/core`, `brace-expansion`, `fast-uri`, `fast-xml-builder`, `fast-xml-parser`, and `ws`.
+
+### Dependencies
+
+- Bumped `@salesforce/core` to `^8.31.1`.
+
+### Documentation
+
+- All command examples now use the modern `sf` executable instead of the deprecated `sfdx`.
+
 ## 1.0.0 (2026-04-22)
 
 This is a major release that modernizes the entire plugin infrastructure. All 10 commands work identically to before -- no command names have changed. The `--targetusername` flag has been replaced by `--target-org` (with `-o` shorthand) to align with the modern Salesforce CLI convention.
