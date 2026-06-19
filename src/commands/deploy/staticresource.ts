@@ -15,9 +15,9 @@ export default class StaticResourceDeploy extends SfCommand<any> {
   public static description = messages.getMessage("staticresourceDeploy");
 
   public static examples = [
-    "$ sfdx deploy:staticresource -p <filepath>",
-    "$ sfdx deploy:staticresource -p <filepath> --cachecontrol public",
-    "$ sfdx deploy:staticresource -p <filepath> --cachecontrol public --resourcefolder <name of the folder where you have single page app>"
+    "$ sf deploy:staticresource -p <filepath>",
+    "$ sf deploy:staticresource -p <filepath> --cachecontrol public",
+    "$ sf deploy:staticresource -p <filepath> --cachecontrol public --resourcefolder <name of the folder where you have single page app>"
   ];
 
   public static readonly flags = {

@@ -24,7 +24,7 @@ export default class TriggerDeploy extends SfCommand<any> {
   public static description = messages.getMessage('triggerDeploy');
 
   public static examples = [
-  '$ sfdx deploy:trigger -p filepath'
+  '$ sf deploy:trigger -p filepath'
   ];
 
   public static readonly flags = {

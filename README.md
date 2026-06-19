@@ -228,16 +228,16 @@ Rename a metadata component using the Metadata API.
 
 ```
 USAGE
-  $ sf metadata:rename -t <type> -o <oldname> -n <newname> [-u <username>] [--json]
+  $ sf metadata:rename -t <type> -d <oldname> -n <newname> [-o <username>] [--json]
 
 OPTIONS
-  -t, --metadatatype    (required) Metadata type (e.g. CustomObject, CustomField)
-  -o, --oldfullname     (required) Current API name of the component
-  -n, --newfullname     (required) New API name for the component
-  -u, --targetusername  Username or alias for the target org
+  -t, --metadatatype  (required) Metadata type (e.g. CustomObject, CustomField)
+  -d, --oldfullname   (required) Current API name of the component
+  -n, --newfullname   (required) New API name for the component
+  -o, --target-org    Username or alias for the target org; defaults to the configured default org
 
 EXAMPLES
-  $ sf metadata:rename -t CustomObject -o MyObject__c -n RenamedObject__c
+  $ sf metadata:rename -t CustomObject -d MyObject__c -n RenamedObject__c
 ```
 
 ---

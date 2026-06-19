@@ -18,7 +18,7 @@ export default class LWCDeploy extends SfCommand<any> {
   public static description = messages.getMessage('lwcDeploy');
 
   public static examples = [
-  '$ sfdx deploy:lwc -p filepath'
+  '$ sf deploy:lwc -p filepath'
   ];
 
   public static readonly flags = {
