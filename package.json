@@ -4,7 +4,7 @@
   "author": "Mohith Shrivastava",
   "bugs": "https://github.com/ForceProjects/mo-dx-plugin/issues",
   "dependencies": {
-    "@salesforce/core": "^8.28.3",
+    "@salesforce/core": "^8.31.1",
     "@salesforce/sf-plugins-core": "^12.2.6",
     "adm-zip": "^0.5.17",
     "chalk": "^4.1.2",
