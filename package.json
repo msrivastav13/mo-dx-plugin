@@ -1,6 +1,6 @@
 {
   "name": "mo-dx-plugin",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "author": "Mohith Shrivastava",
   "bugs": "https://github.com/ForceProjects/mo-dx-plugin/issues",
   "dependencies": {
