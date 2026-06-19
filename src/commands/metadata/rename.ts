@@ -11,8 +11,8 @@ export default class RenameMetadata extends SfCommand<any> {
   public static description = messages.getMessage('renamemetadata');
 
   public static examples = [
-    '$ sfdx metadata:rename -t <metadatatype> -n <newname> -d <oldname>',
-    '$ sfdx metadata:rename -t CustomObject -n MyCustomObject1New__c -d MyCustomObject1__c'
+    '$ sf metadata:rename -t <metadatatype> -n <newname> -d <oldname>',
+    '$ sf metadata:rename -t CustomObject -n MyCustomObject1New__c -d MyCustomObject1__c'
   ];
 
   public static readonly flags = {

@@ -20,10 +20,10 @@ export default class DxSource extends SfCommand<any> {
   public static description = messages.getMessage('retrieveDxSource');
 
   public static examples = [
-    '$ sfdx retrieve:dxsource -n <package/changeset>',
-    '$ sfdx retrieve:dxsource -n <package/changeset> -m "true"',
-    '$ sfdx retrieve:dxsource -n <package/changeset> -p <[pathName]>',
-    '$ sfdx retrieve:dxsource -u myOrg@example.com -n <package/changeset> -p <[pathName]>'
+    '$ sf retrieve:dxsource -n <package/changeset>',
+    '$ sf retrieve:dxsource -n <package/changeset> -m "true"',
+    '$ sf retrieve:dxsource -n <package/changeset> -p <[pathName]>',
+    '$ sf retrieve:dxsource -o myOrg@example.com -n <package/changeset> -p <[pathName]>'
   ];
 
   public static readonly flags = {

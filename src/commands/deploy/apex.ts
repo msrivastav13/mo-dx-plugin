@@ -22,7 +22,7 @@ export default class ApexDeploy extends SfCommand<any> {
   public static description = messages.getMessage('apexDeploy');
 
   public static examples = [
-  '$ sfdx deploy:apex -p filepath'
+  '$ sf deploy:apex -p filepath'
   ];
 
   public static readonly flags = {

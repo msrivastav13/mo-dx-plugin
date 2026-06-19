@@ -16,9 +16,9 @@ export default class Pkgsource extends SfCommand<any> {
   public static description = messages.getMessage('retrieveSource');
 
   public static examples = [
-    '$ sfdx retrieve:pkgsource -n <package/changeset>',
-    '$ sfdx retrieve:pkgsource -n <package/changeset> -r <relative path where source is retrieved and unzipped>',
-    '$ sfdx retrieve:pkgsource -n <package/changeset> -r /changesets/src'
+    '$ sf retrieve:pkgsource -n <package/changeset>',
+    '$ sf retrieve:pkgsource -n <package/changeset> -r <relative path where source is retrieved and unzipped>',
+    '$ sf retrieve:pkgsource -n <package/changeset> -r /changesets/src'
   ];
 
   public static readonly flags = {

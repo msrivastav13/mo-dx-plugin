@@ -24,7 +24,7 @@ export default class ApexComponentDeploy extends SfCommand<any> {
   public static description = messages.getMessage('vfComponentDeploy');
 
   public static examples = [
-  '$ sfdx deploy:vfcomponent -p filepath'
+  '$ sf deploy:vfcomponent -p filepath'
   ];
 
   public static readonly flags = {
