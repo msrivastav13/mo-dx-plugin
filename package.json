@@ -7,7 +7,7 @@
     "@salesforce/core": "^8.31.1",
     "@salesforce/sf-plugins-core": "^12.2.6",
     "adm-zip": "^0.5.17",
-    "chalk": "^4.1.2",
+    "chalk": "^5.6.2",
     "fs-extra": "^11.3.4",
     "mime-types": "^2.1.35",
     "tslib": "^2.8.1",
