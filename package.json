@@ -6,7 +6,7 @@
   "dependencies": {
     "@salesforce/core": "^8.31.1",
     "@salesforce/sf-plugins-core": "^12.2.6",
-    "adm-zip": "^0.5.17",
+    "adm-zip": "^0.6.0",
     "chalk": "^4.1.2",
     "fs-extra": "^11.3.4",
     "mime-types": "^2.1.35",
