@@ -2,15 +2,20 @@
 
 ## Unreleased
 
+### Bug Fixes
+
+- **`deploy:*` and `metadata:rename` now exit 1 when they fail.** Compile errors, Tooling/Metadata API errors, and failed renames used to print a `✖`/`ERROR--` message and still exit 0, so scripts, CI, and agents treated failures as successes. The printed output is unchanged. Under `--json` the `status` is now `1` too.
+- `deploy:apex`, `deploy:trigger`, `deploy:vf` and `deploy:vfcomponent` no longer crash with a `TypeError` when the failure happens before compilation (e.g. metadata container/member creation). The underlying error, or the request's `ErrorMsg`, is shown instead.
+- `metadata:rename` now waits for the rename to finish before the command returns, and reports `success: false` results that were previously silent.
+- `retrieve:dxsource` and `retrieve:pkgsource` work again with the current `sf` CLI. They relied on `sfdx force:mdapi:retrieve`/`force:mdapi:convert`, which no longer exist. Failed retrieves now exit non-zero instead of 0. `retrieve:pkgsource` now waits up to 30 minutes, the same as `retrieve:dxsource`, instead of indefinitely.
+
+
 ### Security
 
 - **Fixed command injection in `retrieve:dxsource` and `retrieve:pkgsource`.** Both commands built shell strings from `--packagename`, `--retrievedir`, `--pathname` and the org username and ran them with `child_process.exec`, so a crafted value (e.g. `-n 'x"; touch /tmp/pwned; echo "'`) ran arbitrary commands on the developer's machine. They now call the Metadata API `retrieve` directly, extract the zip with `adm-zip` on every platform (no more `unzip`/`rm`/`cp` shell-outs on macOS), and run `project convert mdapi` in-process. No user input reaches a shell. The unused `packagexmlbuilder` modules that shelled out the same way were removed.
 - **Patched all known dependency vulnerabilities (11 → 0)**, including `websocket-driver` (critical), `fast-uri`, `http-cache-semantics`, `js-yaml`, `browserslist` and `brace-expansion` (high). `adm-zip` is bumped to `^0.6.1` (high: symlink-following and SUID-preserving extraction, decompression bombs), which bundles its own types, so `@types/adm-zip` is dropped.
 - **Replaced the unmaintained `xmldom-sfdx-encoding`** (a 2022 fork of `xmldom` 0.1.x) with the maintained `@xmldom/xmldom` for parsing `-meta.xml` files.
 
-### Bug Fixes
-
-- `retrieve:dxsource` and `retrieve:pkgsource` work again with the current `sf` CLI. They relied on `sfdx force:mdapi:retrieve`/`force:mdapi:convert`, which no longer exist. Failed retrieves now exit non-zero instead of 0. `retrieve:pkgsource` now waits up to 30 minutes, the same as `retrieve:dxsource`, instead of indefinitely.
 
 ## 1.2.0 (2026-06-19)
 

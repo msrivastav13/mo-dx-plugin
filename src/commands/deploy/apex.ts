@@ -3,7 +3,7 @@ import { Connection, Messages } from '@salesforce/core';
 import chalk from 'chalk';
 import fs from 'fs-extra';
 import { Deploy, DeployResult } from '../../service/deploy.js';
-import {display, displaylog} from '../../service/displayError.js';
+import { reportDeployFailure } from '../../service/displayError.js';
 import { getFileName } from '../../service/getFileName.js';
 import { getNameSpacePrefix } from '../../service/getNamespacePrefix.js';
 
@@ -84,13 +84,7 @@ export default class ApexDeploy extends SfCommand<any> {
       const executionTime = (this.endTime - this.startTime) / 1000;
       this.spinner.stop(chalk.bold.greenBright(`Apex Class Successfully ${mode} ✔.Command execution time: ${executionTime} seconds`));
     } else {
-      if (deployResult.queryResult.records.length > 0 && deployResult.queryResult.records[0].DeployDetails.componentFailures.length > 0) {
-        display(deployResult, this);
-      }
-      if (typeof deployResult.error !== 'undefined') {
-        displaylog(chalk.bold.redBright(deployResult.error), this);
-      }
-      this.spinner.stop(chalk.bold.redBright('Apex Class Update Failed ✖'));
+      reportDeployFailure(deployResult, this, 'Apex Class Update Failed ✖');
     }
     return deployResult;
   }

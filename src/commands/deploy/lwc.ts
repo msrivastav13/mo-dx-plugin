@@ -3,7 +3,7 @@ import { Messages } from '@salesforce/core';
 import chalk from 'chalk';
 import fs from 'fs-extra';
 import {SobjectResult} from '../../models/sObjectResult.js';
-import {displaylog} from '../../service/displayError.js';
+import {displaylog, stopWithFailure} from '../../service/displayError.js';
 import {getNameSpacePrefix} from '../../service/getNamespacePrefix.js';
 import {readBundleFiles} from '../../service/readBundleFiles.js';
 import {isToolingSchemaRefBug, metadataFallbackDeploy, FallbackOptions} from '../../service/metadataDeployLwc.js';
@@ -126,11 +126,11 @@ export default class LWCDeploy extends SfCommand<any> {
         if (result.success) {
           stopWithSuccess();
         } else {
-          this.spinner.stop(chalk.bold.redBright('Failed ✖'));
+          stopWithFailure(this, 'Failed ✖');
           displaylog(chalk.bold.redBright(result.message), this);
         }
       } catch (metaEx) {
-        this.spinner.stop(chalk.bold.redBright('Failed ✖'));
+        stopWithFailure(this, 'Failed ✖');
         displaylog(chalk.bold.redBright(metaEx), this);
       }
     };
@@ -150,6 +150,7 @@ export default class LWCDeploy extends SfCommand<any> {
             // re-read so fileBodyArray stays in sync with validFiles.
             fileBodyArray = await getFileBodyMap(validFiles);
           } else {
+            stopWithFailure(this, 'Failed ✖');
             displaylog(chalk.bold.redBright(JSON.stringify(newLWCBundle.errors)), this);
           }
         } catch (createException) {
@@ -197,13 +198,13 @@ export default class LWCDeploy extends SfCommand<any> {
               apiVersion,
             });
           } else {
-            this.spinner.stop(chalk.bold.redBright('Failed ✖'));
+            stopWithFailure(this, 'Failed ✖');
             displaylog(chalk.bold.redBright(exception), this);
           }
         }
       }
     } catch (exception) {
-      this.spinner.stop(chalk.bold.redBright('Failed ✖'));
+      stopWithFailure(this, 'Failed ✖');
       displaylog(chalk.bold.redBright(exception), this);
     }
 

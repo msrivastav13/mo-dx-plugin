@@ -3,7 +3,7 @@ import { Messages } from '@salesforce/core';
 import chalk from 'chalk';
 import fs from 'fs-extra';
 import {Deploy, DeployResult} from '../../service/deploy.js';
-import {display, displaylog} from '../../service/displayError.js';
+import { reportDeployFailure } from '../../service/displayError.js';
 import {getFileName} from '../../service/getFileName.js';
 import {getNameSpacePrefix} from '../../service/getNamespacePrefix.js';
 
@@ -81,11 +81,7 @@ export default class ApexComponentDeploy extends SfCommand<any> {
       this.spinner.stop(chalk.bold.greenBright(`Visualforce Component Successfully ${mode} ✔. Command execution time: ${executionTime} seconds`));
       return '';
     } else {
-      display(deployResult, this);
-      this.spinner.stop(chalk.bold.redBright('Visualforce Component Update Failed ✖'));
-      if ( typeof deployResult.error !== 'undefined' ) {
-        displaylog(chalk.bold.redBright(deployResult.error), this);
-      }
+      reportDeployFailure(deployResult, this, 'Visualforce Component Update Failed ✖');
     }
   }
 }
