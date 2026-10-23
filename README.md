@@ -249,6 +249,10 @@ EXAMPLES
 These commands do not maintain history. Files are overwritten on the server. Make sure you have source control set up for your project so you can recover code if needed.
 
 
+### Performance
+
+Compared with `sf project deploy start --source-dir` on the same component, LWC, Aura and static resource saves finish 1.4–2.3× faster. Apex and Visualforce saves take about the same time. Output is 25–33× smaller than `--json` output, which matters for coding agents. See [benchmarks/](./benchmarks/README.md) for the numbers, methodology, and when to use which.
+
 ### Metadata API Fallback
 
  When the Tooling API rejects a save because the bundle imports a custom field via `@salesforce/schema/` (a Tooling API Salesforce bug, see [#434](https://github.com/msrivastav13/mo-dx-plugin/issues/434)), `deploy:lwc` automatically retries through the Metadata API. This applies whether you are creating a new bundle or updating an existing one. The save takes a few seconds longer and will surface success or errors from the Metadata API.
