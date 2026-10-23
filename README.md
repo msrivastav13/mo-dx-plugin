@@ -31,6 +31,24 @@ sf plugins link .
 
 > **Note:** This is an ESM plugin. After any source changes you must run `npm run prepack` (or `tsc`) before using it via `sf plugins link`. During active development you can use `./bin/dev.js` which auto-transpiles.
 
+### Agent skills
+
+The [`skills/`](./skills) folder contains [Agent Skills](https://agentskills.io) that teach coding agents (Claude Code, Cursor, Codex, and others) how to use these commands safely. They cover picking the right command, always passing `-o`, and catching compile failures that still exit 0.
+
+| Skill | Covers |
+|---|---|
+| [`mo-dx-deploy`](./skills/mo-dx-deploy/SKILL.md) | `deploy:apex`, `deploy:trigger`, `deploy:vf`, `deploy:vfcomponent`, `deploy:aura`, `deploy:lwc`, `deploy:staticresource`, plus a `mo-deploy.sh` wrapper that exits non-zero on failure |
+| [`mo-dx-retrieve`](./skills/mo-dx-retrieve/SKILL.md) | `retrieve:dxsource`, `retrieve:pkgsource` |
+| [`mo-dx-rename`](./skills/mo-dx-rename/SKILL.md) | `metadata:rename` |
+
+Install them into your project with the [skills CLI](https://github.com/vercel-labs/skills):
+
+```sh
+npx skills add msrivastav13/mo-dx-plugin
+```
+
+Or copy a skill folder into `.claude/skills/` (Claude Code) or your agent's skills directory.
+
 ## Upgrading from 0.x
 
 See [CHANGELOG.md](./CHANGELOG.md) for full details. The key changes for existing users:

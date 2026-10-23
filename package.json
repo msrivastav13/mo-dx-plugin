@@ -6,19 +6,18 @@
   "dependencies": {
     "@salesforce/core": "^8.31.1",
     "@salesforce/sf-plugins-core": "^12.2.6",
-    "adm-zip": "^0.5.17",
+    "@xmldom/xmldom": "^0.9.12",
+    "adm-zip": "^0.6.1",
     "chalk": "^4.1.2",
     "fs-extra": "^11.3.4",
     "mime-types": "^2.1.35",
-    "tslib": "^2.8.1",
-    "xmldom-sfdx-encoding": "^0.1.30"
+    "tslib": "^2.8.1"
   },
   "devDependencies": {
     "@oclif/plugin-help": "^6.2.38",
     "@oclif/test": "^4.1.18",
     "@salesforce/dev-config": "^4.3.3",
     "@salesforce/ts-sinon": "^1.4.34",
-    "@types/adm-zip": "^0.5.8",
     "@types/chai": "^4.3.20",
     "@types/fs-extra": "^11.0.4",
     "@types/mime-types": "^2.1.4",

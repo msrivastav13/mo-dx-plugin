@@ -1,7 +1,5 @@
 import {Connection} from '@salesforce/core';
-import { createRequire } from 'node:module';
-const require = createRequire(import.meta.url);
-const DOMParser = require('xmldom-sfdx-encoding').DOMParser;
+import { DOMParser } from '@xmldom/xmldom';
 
 export async function createMetadataMember(name: string, containerId: string, body: string, xmlMetadata: string, entityId: string, className: string, conn: Connection): Promise<object> {
 
