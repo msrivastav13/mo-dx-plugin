@@ -1,0 +1,742 @@
+{
+  "scenario": "tracked-large",
+  "targetOrg": "mo-dx-bench",
+  "runs": 7,
+  "padding": 2000,
+  "sfVersion": "@salesforce/cli/2.155.7 darwin-arm64 node-v22.22.3",
+  "startedAt": "2026-10-23T16:01:54.861Z",
+  "success": [
+    {
+      "type": "Apex class",
+      "mo": {
+        "resultMs": {
+          "median": 3580.488125,
+          "min": 3432.97375,
+          "max": 3651.542625
+        },
+        "exitMs": {
+          "median": 4524.339958,
+          "min": 4499.040375,
+          "max": 4531.310625
+        },
+        "medianBytes": 83,
+        "samples": [
+          {
+            "resultMs": 3633,
+            "exitMs": 4519
+          },
+          {
+            "resultMs": 3487,
+            "exitMs": 4529
+          },
+          {
+            "resultMs": 3514,
+            "exitMs": 4531
+          },
+          {
+            "resultMs": 3433,
+            "exitMs": 4518
+          },
+          {
+            "resultMs": 3601,
+            "exitMs": 4526
+          },
+          {
+            "resultMs": 3580,
+            "exitMs": 4524
+          },
+          {
+            "resultMs": 3652,
+            "exitMs": 4499
+          }
+        ]
+      },
+      "sf": {
+        "resultMs": {
+          "median": 3875.778416,
+          "min": 3791.198833,
+          "max": 4131.145541
+        },
+        "exitMs": {
+          "median": 4528.539416,
+          "min": 4513.440833,
+          "max": 4542.173166
+        },
+        "medianBytes": 28359,
+        "samples": [
+          {
+            "resultMs": 4036,
+            "exitMs": 4534
+          },
+          {
+            "resultMs": 4080,
+            "exitMs": 4542
+          },
+          {
+            "resultMs": 3817,
+            "exitMs": 4527
+          },
+          {
+            "resultMs": 4131,
+            "exitMs": 4530
+          },
+          {
+            "resultMs": 3803,
+            "exitMs": 4526
+          },
+          {
+            "resultMs": 3791,
+            "exitMs": 4513
+          },
+          {
+            "resultMs": 3876,
+            "exitMs": 4529
+          }
+        ]
+      }
+    },
+    {
+      "type": "Apex trigger",
+      "mo": {
+        "resultMs": {
+          "median": 3624.15275,
+          "min": 3368.642666,
+          "max": 3747.778625
+        },
+        "exitMs": {
+          "median": 4522.337667,
+          "min": 4514.203583,
+          "max": 4541.9625
+        },
+        "medianBytes": 80,
+        "samples": [
+          {
+            "resultMs": 3624,
+            "exitMs": 4542
+          },
+          {
+            "resultMs": 3453,
+            "exitMs": 4522
+          },
+          {
+            "resultMs": 3649,
+            "exitMs": 4526
+          },
+          {
+            "resultMs": 3748,
+            "exitMs": 4520
+          },
+          {
+            "resultMs": 3681,
+            "exitMs": 4514
+          },
+          {
+            "resultMs": 3369,
+            "exitMs": 4526
+          },
+          {
+            "resultMs": 3610,
+            "exitMs": 4522
+          }
+        ]
+      },
+      "sf": {
+        "resultMs": {
+          "median": 3760.029542,
+          "min": 3704.623875,
+          "max": 3897.601459
+        },
+        "exitMs": {
+          "median": 4524.17,
+          "min": 4514.607458,
+          "max": 4535.51725
+        },
+        "medianBytes": 26986,
+        "samples": [
+          {
+            "resultMs": 3798,
+            "exitMs": 4515
+          },
+          {
+            "resultMs": 3898,
+            "exitMs": 4536
+          },
+          {
+            "resultMs": 3818,
+            "exitMs": 4530
+          },
+          {
+            "resultMs": 3732,
+            "exitMs": 4518
+          },
+          {
+            "resultMs": 3742,
+            "exitMs": 4523
+          },
+          {
+            "resultMs": 3760,
+            "exitMs": 4534
+          },
+          {
+            "resultMs": 3705,
+            "exitMs": 4524
+          }
+        ]
+      }
+    },
+    {
+      "type": "Visualforce page",
+      "mo": {
+        "resultMs": {
+          "median": 3496.350458,
+          "min": 3297.815167,
+          "max": 4536.702333
+        },
+        "exitMs": {
+          "median": 4526.771583,
+          "min": 4518.3075,
+          "max": 5525.348125
+        },
+        "medianBytes": 88,
+        "samples": [
+          {
+            "resultMs": 3489,
+            "exitMs": 4534
+          },
+          {
+            "resultMs": 3298,
+            "exitMs": 4527
+          },
+          {
+            "resultMs": 3496,
+            "exitMs": 4518
+          },
+          {
+            "resultMs": 3685,
+            "exitMs": 4533
+          },
+          {
+            "resultMs": 4537,
+            "exitMs": 5525
+          },
+          {
+            "resultMs": 3521,
+            "exitMs": 4524
+          },
+          {
+            "resultMs": 3424,
+            "exitMs": 4526
+          }
+        ]
+      },
+      "sf": {
+        "resultMs": {
+          "median": 3919.429083,
+          "min": 3635.872542,
+          "max": 4844.711083
+        },
+        "exitMs": {
+          "median": 4536.754208,
+          "min": 4519.21425,
+          "max": 5531.569708
+        },
+        "medianBytes": 27432,
+        "samples": [
+          {
+            "resultMs": 4363,
+            "exitMs": 5531
+          },
+          {
+            "resultMs": 3919,
+            "exitMs": 4537
+          },
+          {
+            "resultMs": 3636,
+            "exitMs": 4534
+          },
+          {
+            "resultMs": 4114,
+            "exitMs": 4537
+          },
+          {
+            "resultMs": 3811,
+            "exitMs": 4522
+          },
+          {
+            "resultMs": 4845,
+            "exitMs": 5532
+          },
+          {
+            "resultMs": 3766,
+            "exitMs": 4519
+          }
+        ]
+      }
+    },
+    {
+      "type": "Visualforce component",
+      "mo": {
+        "resultMs": {
+          "median": 3461.363,
+          "min": 3345.795292,
+          "max": 3489.593541
+        },
+        "exitMs": {
+          "median": 4536.040125,
+          "min": 4525.666042,
+          "max": 4549.533583
+        },
+        "medianBytes": 95,
+        "samples": [
+          {
+            "resultMs": 3446,
+            "exitMs": 4529
+          },
+          {
+            "resultMs": 3346,
+            "exitMs": 4536
+          },
+          {
+            "resultMs": 3480,
+            "exitMs": 4526
+          },
+          {
+            "resultMs": 3490,
+            "exitMs": 4550
+          },
+          {
+            "resultMs": 3375,
+            "exitMs": 4534
+          },
+          {
+            "resultMs": 3461,
+            "exitMs": 4545
+          },
+          {
+            "resultMs": 3472,
+            "exitMs": 4541
+          }
+        ]
+      },
+      "sf": {
+        "resultMs": {
+          "median": 3750.583208,
+          "min": 3208.806041,
+          "max": 3967.763333
+        },
+        "exitMs": {
+          "median": 4540.925542,
+          "min": 4523.017625,
+          "max": 4550.495125
+        },
+        "medianBytes": 26398,
+        "samples": [
+          {
+            "resultMs": 3209,
+            "exitMs": 4537
+          },
+          {
+            "resultMs": 3868,
+            "exitMs": 4541
+          },
+          {
+            "resultMs": 3655,
+            "exitMs": 4549
+          },
+          {
+            "resultMs": 3695,
+            "exitMs": 4550
+          },
+          {
+            "resultMs": 3751,
+            "exitMs": 4538
+          },
+          {
+            "resultMs": 3968,
+            "exitMs": 4544
+          },
+          {
+            "resultMs": 3773,
+            "exitMs": 4523
+          }
+        ]
+      }
+    },
+    {
+      "type": "Aura bundle",
+      "mo": {
+        "resultMs": {
+          "median": 2483.222791,
+          "min": 2321.895167,
+          "max": 2700.683166
+        },
+        "exitMs": {
+          "median": 3525.127041,
+          "min": 3505.008167,
+          "max": 3532.264625
+        },
+        "medianBytes": 84,
+        "samples": [
+          {
+            "resultMs": 2701,
+            "exitMs": 3525
+          },
+          {
+            "resultMs": 2351,
+            "exitMs": 3532
+          },
+          {
+            "resultMs": 2569,
+            "exitMs": 3530
+          },
+          {
+            "resultMs": 2322,
+            "exitMs": 3505
+          },
+          {
+            "resultMs": 2483,
+            "exitMs": 3515
+          },
+          {
+            "resultMs": 2362,
+            "exitMs": 3528
+          },
+          {
+            "resultMs": 2486,
+            "exitMs": 3513
+          }
+        ]
+      },
+      "sf": {
+        "resultMs": {
+          "median": 3954.59175,
+          "min": 3714.930208,
+          "max": 4057.459792
+        },
+        "exitMs": {
+          "median": 4543.69325,
+          "min": 4523.572,
+          "max": 4555.906291
+        },
+        "medianBytes": 27319,
+        "samples": [
+          {
+            "resultMs": 3894,
+            "exitMs": 4544
+          },
+          {
+            "resultMs": 3964,
+            "exitMs": 4556
+          },
+          {
+            "resultMs": 3955,
+            "exitMs": 4550
+          },
+          {
+            "resultMs": 3846,
+            "exitMs": 4528
+          },
+          {
+            "resultMs": 3715,
+            "exitMs": 4549
+          },
+          {
+            "resultMs": 4037,
+            "exitMs": 4535
+          },
+          {
+            "resultMs": 4057,
+            "exitMs": 4524
+          }
+        ]
+      }
+    },
+    {
+      "type": "LWC bundle",
+      "mo": {
+        "resultMs": {
+          "median": 2474.237792,
+          "min": 2374.978875,
+          "max": 2609.589792
+        },
+        "exitMs": {
+          "median": 3533.760083,
+          "min": 3522.929875,
+          "max": 3547.614417
+        },
+        "medianBytes": 98,
+        "samples": [
+          {
+            "resultMs": 2482,
+            "exitMs": 3525
+          },
+          {
+            "resultMs": 2452,
+            "exitMs": 3523
+          },
+          {
+            "resultMs": 2458,
+            "exitMs": 3541
+          },
+          {
+            "resultMs": 2375,
+            "exitMs": 3544
+          },
+          {
+            "resultMs": 2512,
+            "exitMs": 3548
+          },
+          {
+            "resultMs": 2474,
+            "exitMs": 3534
+          },
+          {
+            "resultMs": 2610,
+            "exitMs": 3523
+          }
+        ]
+      },
+      "sf": {
+        "resultMs": {
+          "median": 3853.550333,
+          "min": 3688.126584,
+          "max": 4881.51975
+        },
+        "exitMs": {
+          "median": 4540.762875,
+          "min": 4534.329667,
+          "max": 5527.58625
+        },
+        "medianBytes": 27296,
+        "samples": [
+          {
+            "resultMs": 4882,
+            "exitMs": 5528
+          },
+          {
+            "resultMs": 3914,
+            "exitMs": 4541
+          },
+          {
+            "resultMs": 3737,
+            "exitMs": 4540
+          },
+          {
+            "resultMs": 3902,
+            "exitMs": 4548
+          },
+          {
+            "resultMs": 3758,
+            "exitMs": 4534
+          },
+          {
+            "resultMs": 3854,
+            "exitMs": 4543
+          },
+          {
+            "resultMs": 3688,
+            "exitMs": 4535
+          }
+        ]
+      }
+    },
+    {
+      "type": "Static resource",
+      "mo": {
+        "resultMs": {
+          "median": 1664.873625,
+          "min": 1610.384917,
+          "max": 1837.990292
+        },
+        "exitMs": {
+          "median": 2519.087,
+          "min": 2511.689083,
+          "max": 2539.827375
+        },
+        "medianBytes": 88,
+        "samples": [
+          {
+            "resultMs": 1798,
+            "exitMs": 2530
+          },
+          {
+            "resultMs": 1610,
+            "exitMs": 2540
+          },
+          {
+            "resultMs": 1838,
+            "exitMs": 2529
+          },
+          {
+            "resultMs": 1631,
+            "exitMs": 2515
+          },
+          {
+            "resultMs": 1665,
+            "exitMs": 2516
+          },
+          {
+            "resultMs": 1636,
+            "exitMs": 2512
+          },
+          {
+            "resultMs": 1724,
+            "exitMs": 2519
+          }
+        ]
+      },
+      "sf": {
+        "resultMs": {
+          "median": 3785.320125,
+          "min": 3732.247417,
+          "max": 3978.306292
+        },
+        "exitMs": {
+          "median": 4535.071083,
+          "min": 4523.8235,
+          "max": 4541.798792
+        },
+        "medianBytes": 27674,
+        "samples": [
+          {
+            "resultMs": 3978,
+            "exitMs": 4530
+          },
+          {
+            "resultMs": 3785,
+            "exitMs": 4541
+          },
+          {
+            "resultMs": 3756,
+            "exitMs": 4524
+          },
+          {
+            "resultMs": 3732,
+            "exitMs": 4539
+          },
+          {
+            "resultMs": 3801,
+            "exitMs": 4526
+          },
+          {
+            "resultMs": 3851,
+            "exitMs": 4535
+          },
+          {
+            "resultMs": 3775,
+            "exitMs": 4542
+          }
+        ]
+      }
+    }
+  ],
+  "compileError": [
+    {
+      "type": "Apex class",
+      "mo": {
+        "resultMs": {
+          "median": 3537.363958,
+          "min": 3357.80275,
+          "max": 3827.883166
+        },
+        "exitMs": {
+          "median": 4528.513417,
+          "min": 4517.792708,
+          "max": 4549.33925
+        },
+        "bytes": 144,
+        "exit": 0,
+        "output": "Saving... Apex Class Update Failed ✖\nLine: 2  Column: 1  Error: Unexpected token '<EOF>'.\nLine: 2  Column: 1  Error: Unexpected token '<EOF>'."
+      },
+      "sf": {
+        "resultMs": {
+          "median": 3514.845666,
+          "min": 3439.723542,
+          "max": 3589.870083
+        },
+        "exitMs": {
+          "median": 4543.53,
+          "min": 4534.11225,
+          "max": 4574.841625
+        },
+        "bytes": 21503,
+        "exit": 1,
+        "output": "─────────────── Deploying Metadata ───────────────\n\n\n ◼ Preparing\n ◼ Waiting for the org to respond\n ◼ Deploying Metadata\n ◼ Running Tests\n ◼ Updating Source Tracking\n ◼ Done\n\n Status: ⠁\n Elapsed Time: 0ms\n\n\n ─────────────── Deploying Metadata ───────────────\n\n Deploying v67.0 metadata to <scratch-user>@example.com using the v68.0 SOAP\n API.\n\n ⣾ Preparing 20ms\n ◼ Waiting for the org to respond\n ◼ Deploying Metadata\n ◼ Running Tests\n ◼ Updating Source Tracking\n ◼ Done\n\n Status: ⠁\n Deploy ID: 0Afcf00000D17JJCAZ\n Target Org: <scratch-user>@example.com\n Elapsed Time: 28ms\n\n\n ─────────────── Deploying Metadata ───────────────\n\n Deploying v67.0 metadata to <scratch-user>@example.com using the v68.0 SOAP\n API.\n\n ⣾ Preparing 51ms\n ◼ Waiting for the org to respond\n ◼ Deploying Metadata\n ◼ Running Tests\n ◼ Updating Source Tracking\n ◼ Done\n\n Status: ⠁\n Deploy ID: 0Afcf00000D17JJCAZ\n Target Org: <scratch-user>@example.com\n Elapsed Time: 61ms\n\n\n ─────────────── Deploying Metadata ───────────────\n\n Deploying v67.0 metadata to <scratch-user>@example.com using the v68.0 SOAP\n API.\n\n ⣽ Preparing 83ms\n ◼ Waiting for the org to respond\n ◼ Deploying Metadata\n ◼ Running Tests\n ◼ Updating Source Tracking\n ◼ Done\n\n Status: ⠁\n Deploy ID: 0Afcf00000D17JJCAZ\n Target Org: <scratch-user>@example.com\n Elapsed Time: 91ms\n\n\n ─────────────── Deploying Metadata ───────────────\n\n Deploying v67.0 metadata to <scratch-user>@example.com using the v68.0 SOAP\n API.\n\n ⣽ Preparing 115ms\n ◼ Waiting for the org to respond\n ◼ Deploying Metadata\n ◼ Running Tests\n ◼ Updating Source Tracking\n ◼ Done\n\n Status: ⠂\n Deploy ID: 0Afcf00000D17JJCAZ\n Target Org: <scratch-user>@example.com\n Elapsed Time: 125ms\n\n\n ─────────────── Deploying Metadata ───────────────\n\n Deploying v67.0 metadata to <scratch-user>@example.com using the v68.0 SOAP\n API.\n\n ⣽ Preparing 148ms\n ◼ Waiting for the org to respond\n ◼ Deploying Metadata\n ◼ Running Tests\n ◼ Updating Source Tracking\n ◼ Done\n\n Status: ⠂\n Deploy ID: 0Afcf00000D17JJCAZ\n Target Org: <scratch-user>@example.com\n Elapsed Time: 156ms\n\n\n ─────────────── Deploying Metadata ───────────────\n\n Deploying v67.0 metadata to <scratch-user>@example.com using the v68.0 SOAP\n API.\n\n ✔ Preparing 157ms\n ◯ Waiting for the org to respond - Skipped\n ⣾ Deploying Metadata 23ms\n   ▸ Components: 0/1 (0%)\n ◼ Running Tests\n ◼ Updating Source Tracking\n ◼ Done\n\n Status: In Progress\n Deploy ID: 0Afcf00000D17JJCAZ\n Target Org: <scratch-user>@example.com\n Elapsed Time: 188ms\n\n\n ─────────────── Deploying Metadata ───────────────\n\n Deploying v67.0 metadata to <scratch-user>@example.com using the v68.0 SOAP\n API.\n\n ✔ Preparing 157ms\n ◯ Waiting for the org to respond - Skipped\n ⣾ Deploying Metadata 55ms\n   ▸ Components: 0/1 (0%)\n ◼ Running Tests\n ◼ Updating Source Tracking\n ◼ Done\n\n Status: In Progress\n Deploy ID: 0Afcf00000D17JJCAZ\n Target Org: <scratch-user>@example.com\n Elapsed Time: 219ms\n\n\n ─────────────── Deploying Metadata ───────────────\n\n Deploying v67.0 metadata to <scratch-user>@example.com using the v68.0 SOAP\n API.\n\n ✔ Preparing 157ms\n ◯ Waiting for the org to respond - Skipped\n ⣽ Deploying Metadata 87ms\n   ▸ Components: 0/1 (0%)\n ◼ Running Tests\n ◼ Updating Source Tracking\n ◼ Done\n\n Status: In Progress\n Deploy ID: 0Afcf00000D17JJCAZ\n Target Org: <scratch-user>@example.com\n Elapsed Time: 253ms\n\n\n ─────────────── Deploying Metadata ───────────────\n\n Deploying v67.0 metadata to <scratch-user>@example.com using the v68.0 SOAP\n API.\n\n ✔ Preparing 157ms\n ◯ Waiting for the org to respond - Skipped\n ⣽ Deploying Metadata 119ms\n   ▸ Components: 0/1 (0%)\n ◼ Running Tests\n ◼ Updating Source Tracking\n ◼ Done\n\n Status: In Progress\n Deploy ID: 0Afcf00000D17JJCAZ\n Target Org: <scratch-user>@example.com\n Elapsed Time: 286ms\n\n\n ─────────────── Deploying Metadata ───────────────\n\n Deploying v67.0 metadata to <scratch-user>@example.com using the v68.0 SOAP\n API.\n\n ✔ Preparing 157ms\n ◯ Waiting for the org to respond - Skipped\n ⣽ Deploying Metadata 151ms\n   ▸ Components: 0/1 (0%)\n ◼ Running Tests\n ◼ Updating Source Tracking\n ◼ Done\n\n Status: In Progress\n Deploy ID: 0Afcf00000D17JJCAZ\n Target Org: <scratch-user>@example.com\n Elapsed Time: 317ms\n\n\n ─────────────── Deploying Metadata ───────────────\n\n Deploying v67.0 metadata to <scratch-user>@example.com using the v68.0 SOAP\n API.\n\n ✔ Preparing 157ms\n ◯ Waiting for the org to respond - Skipped\n ⣻ Deploying Metadata 184ms\n   ▸ Components: 0/1 (0%)\n ◼ Running Tests\n ◼ Updating Source Tracking\n ◼ Done\n\n Status: In Progress\n Deploy ID: 0Afcf00000D17JJCAZ\n Target Org: <scratch-user>@example.com\n Elapsed Time: 351ms\n\n\n ─────────────── Deploying Metadata ───────────────\n\n Deploying v67.0 metadata to <scratch-user>@example.com using the v68.0 SOAP\n API.\n\n ✔ Preparing 157ms\n ◯ Waiting for the org to respond - Skipped\n ⣻ Deploying Metadata 217ms\n   ▸ Components: 0/1 (0%)\n ◼ Running Tests\n ◼ Updating Source Tracking\n ◼ Done\n\n Status: In Progress\n Deploy ID: 0Afcf00000D17JJCAZ\n Target Org: <scratch-user>@example.com\n Elapsed Time: 383ms\n\n\n ─────────────── Deploying Metadata ───────────────\n\n Deploying v67.0 metadata to <scratch-user>@example.com using the v68.0 SOAP\n API.\n\n ✔ Preparing 157ms\n ◯ Waiting for the org to respond - Skipped\n ⢿ Deploying Metadata 250ms\n   ▸ Components: 0/1 (0%)\n ◼ Running Tests\n ◼ Updating Source Tracking\n ◼ Done\n\n Status: In Progress\n Deploy ID: 0Afcf00000D17JJCAZ\n Target Org: <scratch-user>@example.com\n Elapsed Time: 415ms\n\n\n ─────────────── Deploying Metadata ───────────────\n\n Deploying v67.0 metadata to <scratch-user>@example.com using the v68.0 SOAP\n API.\n\n ✔ Preparing 157ms\n ◯ Waiting for the org to respond - Skipped\n ⢿ Deploying Metadata 283ms\n   ▸ Components: 0/1 (0%)\n ◼ Running Tests\n ◼ Updating Source Tracking\n ◼ Done\n\n Status: In Progress\n Deploy ID: 0Afcf00000D17JJCAZ\n Target Org: <scratch-user>@example.com\n Elapsed Time: 449ms\n\n\n ─────────────── Deploying Metadata ───────────────\n\n Deploying v67.0 metadata to <scratch-user>@example.com using the v68.0 SOAP\n API.\n\n ✔ Preparing 157ms\n ◯ Waiting for the org to respond - Skipped\n ⢿ Deploying Metadata 315ms\n   ▸ Components: 0/1 (0%)\n ◼ Running Tests\n ◼ Updating Source Tracking\n ◼ Done\n\n Status: In Progress\n Deploy ID: 0Afcf00000D17JJCAZ\n Target Org: <scratch-user>@example.com\n Elapsed Time: 480ms\n\n\n ─────────────── Deploying Metadata ───────────────\n\n Deploying v67.0 metadata to <scratch-user>@example.com using the v68.0 SOAP\n API.\n\n ✔ Preparing 157ms\n ◯ Waiting for the org to respond - Skipped\n ⡿ Deploying Metadata 347ms\n   ▸ Components: 0/1 (0%)\n ◼ Running Tests\n ◼ Updating Source Tracking\n ◼ Done\n\n Status: In Progress\n Deploy ID: 0Afcf00000D17JJCAZ\n Target Org: <scratch-user>@example.com\n Elapsed Time: 514ms\n\n\n ─────────────── Deploying Metadata ───────────────\n\n Deploying v67.0 metadata to <scratch-user>@example.com using the v68.0 SOAP\n API.\n\n ✔ Preparing 157ms\n ◯ Waiting for the org to respond - Skipped\n ⡿ Deploying Metadata 379ms\n   ▸ Components: 0/1 (0%)\n ◼ Running Tests\n ◼ Updating Source Tracking\n ◼ Done\n\n Status: In Progress\n Deploy ID: 0Afcf00000D17JJCAZ\n Target Org: <scratch-user>@example.com\n Elapsed Time: 545ms\n\n\n ─────────────── Deploying Metadata ───────────────\n\n Deploying v67.0 metadata to <scratch-user>@example.com using the v68.0 SOAP\n API.\n\n ✔ Preparing 157ms\n ◯ Waiting for the org to respond - Skipped\n ⣟ Deploying Metadata 411ms\n   ▸ Components: 0/1 (0%)\n ◼ Running Tests\n ◼ Updating Source Tracking\n ◼ Done\n\n Status: In Progress\n Deploy ID: 0Afcf00000D17JJCAZ\n Target Org: <scratch-user>@example.com\n Elapsed Time: 577ms\n\n\n ─────────────── Deploying Metadata ───────────────\n\n Deploying v67.0 metadata to <scratch-user>@example.com using the v68.0 SOAP\n API.\n\n ✔ Preparing 157ms\n ◯ Waiting for the org to respond - Skipped\n ⣟ Deploying Metadata 444ms\n   ▸ Components: 0/1 (0%)\n ◼ Running Tests\n ◼ Updating Source Tracking\n ◼ Done\n\n Status: In Progress\n Deploy ID: 0Afcf00000D17JJCAZ\n Target Org: <scratch-user>@example.com\n Elapsed Time: 609ms\n\n\n ─────────────── Deploying Metadata ───────────────\n\n Deploying v67.0 metadata to <scratch-user>@example.com using the v68.0 SOAP\n API.\n\n ✔ Preparing 157ms\n ◯ Waiting for the org to respond - Skipped\n ⣟ Deploying Metadata 477ms\n   ▸ Components: 0/1 (0%)\n ◼ Running Tests\n ◼ Updating Source Tracking\n ◼ Done\n\n Status: In Progress\n Deploy ID: 0Afcf00000D17JJCAZ\n Target Org: <scratch-user>@example.com\n Elapsed Time: 644ms\n\n\n ─────────────── Deploying Metadata ───────────────\n\n Deploying v67.0 metadata to <scratch-user>@example.com using the v68.0 SOAP\n API.\n\n ✔ Preparing 157ms\n ◯ Waiting for the org to respond - Skipped\n ⣯ Deploying Metadata 510ms\n   ▸ Components: 0/1 (0%)\n ◼ Running Tests\n ◼ Updating Source Tracking\n ◼ Done\n\n Status: In Progress\n Deploy ID: 0Afcf00000D17JJCAZ\n Target Org: <scratch-user>@example.com\n Elapsed Time: 677ms\n\n\n ─────────────── Deploying Metadata ───────────────\n\n Deploying v67.0 metadata to <scratch-user>@example.com using the v68.0 SOAP\n API.\n\n ✔ Preparing 157ms\n ◯ Waiting for the org to respond - Skipped\n ⣯ Deploying Metadata 543ms\n   ▸ Components: 0/1 (0%)\n ◼ Running Tests\n ◼ Updating Source Tracking\n ◼ Done\n\n Status: In Progress\n Deploy ID: 0Afcf00000D17JJCAZ\n Target Org: <scratch-user>@example.com\n Elapsed Time: 709ms\n\n\n ─────────────── Deploying Metadata ───────────────\n\n Deploying v67.0 metadata to <scratch-user>@example.com using the v68.0 SOAP\n API.\n\n ✔ Preparing 157ms\n ◯ Waiting for the org to respond - Skipped\n ⣷ Deploying Metadata 576ms\n   ▸ Components: 0/1 (0%)\n ◼ Running Tests\n ◼ Updating Source Tracking\n ◼ Done\n\n Status: In Progress\n Deploy ID: 0Afcf00000D17JJCAZ\n Target Org: <scratch-user>@example.com\n Elapsed Time: 741ms\n\n\n ─────────────── Deploying Metadata ───────────────\n\n Deploying v67.0 metadata to <scratch-user>@example.com using the v68.0 SOAP\n API.\n\n ✔ Preparing 157ms\n ◯ Waiting for the org to respond - Skipped\n ⣷ Deploying Metadata 609ms\n   ▸ Components: 0/1 (0%)\n ◼ Running Tests\n ◼ Updating Source Tracking\n ◼ Done\n\n Status: In Progress\n Deploy ID: 0Afcf00000D17JJCAZ\n Target Org: <scratch-user>@example.com\n Elapsed Time: 776ms\n\n\n ─────────────── Deploying Metadata ───────────────\n\n Deploying v67.0 metadata to <scratch-user>@example.com using the v68.0 SOAP\n API.\n\n ✔ Preparing 157ms\n ◯ Waiting for the org to respond - Skipped\n ⣷ Deploying Metadata 641ms\n   ▸ Components: 0/1 (0%)\n ◼ Running Tests\n ◼ Updating Source Tracking\n ◼ Done\n\n Status: In Progress\n Deploy ID: 0Afcf00000D17JJCAZ\n Target Org: <scratch-user>@example.com\n Elapsed Time: 808ms\n\n\n ─────────────── Deploying Metadata ───────────────\n\n Deploying v67.0 metadata to <scratch-user>@example.com using the v68.0 SOAP\n API.\n\n ✔ Preparing 157ms\n ◯ Waiting for the org to respond - Skipped\n ⣾ Deploying Metadata 675ms\n   ▸ Components: 0/1 (0%)\n ◼ Running Tests\n ◼ Updating Source Tracking\n ◼ Done\n\n Status: In Progress\n Deploy ID: 0Afcf00000D17JJCAZ\n Target Org: <scratch-user>@example.com\n Elapsed Time: 838ms\n\n\n ─────────────── Deploying Metadata ───────────────\n\n Deploying v67.0 metadata to <scratch-user>@example.com using the v68.0 SOAP\n API.\n\n ✔ Preparing 157ms\n ◯ Waiting for the org to respond - Skipped\n ⣾ Deploying Metadata 706ms\n   ▸ Components: 0/1 (0%)\n ◼ Running Tests\n ◼ Updating Source Tracking\n ◼ Done\n\n Status: In Progress\n Deploy ID: 0Afcf00000D17JJCAZ\n Target Org: <scratch-user>@example.com\n Elapsed Time: 871ms\n\n\n ─────────────── Deploying Metadata ───────────────\n\n Deploying v67.0 metadata to <scratch-user>@example.com using the v68.0 SOAP\n API.\n\n ✔ Preparing 157ms\n ◯ Waiting for the org to respond - Skipped\n ⣽ Deploying Metadata 739ms\n   ▸ Components: 0/1 (0%)\n ◼ Running Tests\n ◼ Updating Source Tracking\n ◼ Done\n\n Status: In Progress\n Deploy ID: 0Afcf00000D17JJCAZ\n Target Org: <scratch-user>@example.com\n Elapsed Time: 904ms\n\n\n ─────────────── Deploying Metadata ───────────────\n\n Deploying v67.0 metadata to <scratch-user>@example.com using the v68.0 SOAP\n API.\n\n ✔ Preparing 157ms\n ◯ Waiting for the org to respond - Skipped\n ⣽ Deploying Metadata 770ms\n   ▸ Components: 0/1 (0%)\n ◼ Running Tests\n ◼ Updating Source Tracking\n ◼ Done\n\n Status: In Progress\n Deploy ID: 0Afcf00000D17JJCAZ\n Target Org: <scratch-user>@example.com\n Elapsed Time: 937ms\n\n\n ─────────────── Deploying Metadata ───────────────\n\n Deploying v67.0 metadata to <scratch-user>@example.com using the v68.0 SOAP\n API.\n\n ✔ Preparing 157ms\n ◯ Waiting for the org to respond - Skipped\n ⣽ Deploying Metadata 804ms\n   ▸ Components: 0/1 (0%)\n ◼ Running Tests\n ◼ Updating Source Tracking\n ◼ Done\n\n Status: In Progress\n Deploy ID: 0Afcf00000D17JJCAZ\n Target Org: <scratch-user>@example.com\n Elapsed Time: 969ms\n\n\n ─────────────── Deploying Metadata ───────────────\n\n Deploying v67.0 metadata to <scratch-user>@example.com using the v68.0 SOAP\n API.\n\n ✔ Preparing 157ms\n ◯ Waiting for the org to respond - Skipped\n ⣻ Deploying Metadata 837ms\n   ▸ Components: 0/1 (0%)\n ◼ Running Tests\n ◼ Updating Source Tracking\n ◼ Done\n\n Status: In Progress\n Deploy ID: 0Afcf00000D17JJCAZ\n Target Org: <scratch-user>@example.com\n Elapsed Time: 1.00s\n\n\n ─────────────── Deploying Metadata ───────────────\n\n Deploying v67.0 metadata to <scratch-user>@example.com using the v68.0 SOAP\n API.\n\n ✔ Preparing 157ms\n ◯ Waiting for the org to respond - Skipped\n ⣻ Deploying Metadata 868ms\n   ▸ Components: 0/1 (0%)\n ◼ Running Tests\n ◼ Updating Source Tracking\n ◼ Done\n\n Status: In Progress\n Deploy ID: 0Afcf00000D17JJCAZ\n Target Org: <scratch-user>@example.com\n Elapsed Time: 1.03s\n\n\n ─────────────── Deploying Metadata ───────────────\n\n Deploying v67.0 metadata to <scratch-user>@example.com using the v68.0 SOAP\n API.\n\n ✔ Preparing 157ms\n ◯ Waiting for the org to respond - Skipped\n ⢿ Deploying Metadata 903ms\n   ▸ Components: 0/1 (0%)\n ◼ Running Tests\n ◼ Updating Source Tracking\n ◼ Done\n\n Status: In Progress\n Deploy ID: 0Afcf00000D17JJCAZ\n Target Org: <scratch-user>@example.com\n Elapsed Time: 1.07s\n\n\n ─────────────── Deploying Metadata ───────────────\n\n Deploying v67.0 metadata to <scratch-user>@example.com using the v68.0 SOAP\n API.\n\n ✔ Preparing 157ms\n ◯ Waiting for the org to respond - Skipped\n ⢿ Deploying Metadata 935ms\n   ▸ Components: 0/1 (0%)\n ◼ Running Tests\n ◼ Updating Source Tracking\n ◼ Done\n\n Status: In Progress\n Deploy ID: 0Afcf00000D17JJCAZ\n Target Org: <scratch-user>@example.com\n Elapsed Time: 1.10s\n\n\n ─────────────── Deploying Metadata ───────────────\n\n Deploying v67.0 metadata to <scratch-user>@example.com using the v68.0 SOAP\n API.\n\n ✔ Preparing 157ms\n ◯ Waiting for the org to respond - Skipped\n ⢿ Deploying Metadata 967ms\n   ▸ Components: 0/1 (0%)\n ◼ Running Tests\n ◼ Updating Source Tracking\n ◼ Done\n\n Status: In Progress\n Deploy ID: 0Afcf00000D17JJCAZ\n Target Org: <scratch-user>@example.com\n Elapsed Time: 1.13s\n\n\n ─────────────── Deploying Metadata ───────────────\n\n Deploying v67.0 metadata to <scratch-user>@example.com using the v68.0 SOAP\n API.\n\n ✔ Preparing 157ms\n ◯ Waiting for the org to respond - Skipped\n ⡿ Deploying Metadata 999ms\n   ▸ Components: 0/1 (0%)\n ◼ Running Tests\n ◼ Updating Source Tracking\n ◼ Done\n\n Status: In Progress\n Deploy ID: 0Afcf00000D17JJCAZ\n Target Org: <scratch-user>@example.com\n Elapsed Time: 1.16s\n\n\n ─────────────── Deploying Metadata ───────────────\n\n Deploying v67.0 metadata to <scratch-user>@example.com using the v68.0 SOAP\n API.\n\n ✔ Preparing 157ms\n ◯ Waiting for the org to respond - Skipped\n ⡿ Deploying Metadata 1.03s\n   ▸ Components: 0/1 (0%)\n ◼ Running Tests\n ◼ Updating Source Tracking\n ◼ Done\n\n Status: In Progress\n Deploy ID: 0Afcf00000D17JJCAZ\n Target Org: <scratch-user>@example.com\n Elapsed Time: 1.20s\n\n\n ─────────────── Deploying Metadata ───────────────\n\n Deploying v67.0 metadata to <scratch-user>@example.com using the v68.0 SOAP\n API.\n\n ✔ Preparing 157ms\n ◯ Waiting for the org to respond - Skipped\n ⣟ Deploying Metadata 1.06s\n   ▸ Components: 0/1 (0%)\n ◼ Running Tests\n ◼ Updating Source Tracking\n ◼ Done\n\n Status: In Progress\n Deploy ID: 0Afcf00000D17JJCAZ\n Target Org: <scratch-user>@example.com\n Elapsed Time: 1.23s\n\n\n ─────────────── Deploying Metadata ───────────────\n\n Deploying v67.0 metadata to <scratch-user>@example.com using the v68.0 SOAP\n API.\n\n ✔ Preparing 157ms\n ◯ Waiting for the org to respond - Skipped\n ⣟ Deploying Metadata 1.09s\n   ▸ Components: 0/1 (0%)\n ◼ Running Tests\n ◼ Updating Source Tracking\n ◼ Done\n\n Status: In Progress\n Deploy ID: 0Afcf00000D17JJCAZ\n Target Org: <scratch-user>@example.com\n Elapsed Time: 1.26s\n\n\n ─────────────── Deploying Metadata ───────────────\n\n Deploying v67.0 metadata to <scratch-user>@example.com using the v68.0 SOAP\n API.\n\n ✔ Preparing 157ms\n ◯ Waiting for the org to respond - Skipped\n ⣟ Deploying Metadata 1.12s\n   ▸ Components: 0/1 (0%)\n ◼ Running Tests\n ◼ Updating Source Tracking\n ◼ Done\n\n Status: In Progress\n Deploy ID: 0Afcf00000D17JJCAZ\n Target Org: <scratch-user>@example.com\n Elapsed Time: 1.29s\n\n\n ─────────────── Deploying Metadata ───────────────\n\n Deploying v67.0 metadata to <scratch-user>@example.com using the v68.0 SOAP\n API.\n\n ✔ Preparing 157ms\n ◯ Waiting for the org to respond - Skipped\n ✘ Deploying Metadata 1.14s\n   ▸ Components: 0/2 (0%)\n ◼ Running Tests\n ◼ Updating Source Tracking\n ◼ Done\n\n Status: Failed\n Deploy ID: 0Afcf00000D17JJCAZ\n Target Org: <scratch-user>@example.com\n Elapsed Time: 1.31s\n\n\nComponent Failures [1]\n┌───────────┬─────────────┬─────────────────────────────────┬─────────────┐\n│ Type      │ Name        │ Problem                         │ Line:Column │\n├───────────┼─────────────┼─────────────────────────────────┼─────────────┤\n│ ApexClass │ BenchApexSf │ Unexpected token '<EOF>'. (2:1) │ 2:1         │\n└───────────┴─────────────┴─────────────────────────────────┴─────────────┘"
+      },
+      "sfJson": {
+        "bytes": 2968,
+        "exit": 1,
+        "output": "{\n  \"status\": 1,\n  \"result\": {\n    \"checkOnly\": false,\n    \"completedDate\": \"2026-10-23T16:11:14.000Z\",\n    \"createdBy\": \"005cf00000NW6zX\",\n    \"createdByName\": \"User User\",\n    \"createdDate\": \"2026-10-23T16:11:13.000Z\",\n    \"details\": {\n      \"componentFailures\": [\n        {\n          \"changed\": false,\n          \"columnNumber\": 1,\n          \"componentType\": \"ApexClass\",\n          \"created\": false,\n          \"createdDate\": \"2026-10-23T16:11:14.000Z\",\n          \"deleted\": false,\n          \"fileName\": \"classes/BenchApexSf.cls\",\n          \"fullName\": \"BenchApexSf\",\n          \"lineNumber\": 2,\n          \"problem\": \"Unexpected token '<EOF>'.\",\n          \"problemType\": \"Error\",\n          \"success\": false\n        },\n        {\n          \"changed\": false,\n          \"columnNumber\": 1,\n          \"componentType\": \"ApexClass\",\n          \"created\": false,\n          \"createdDate\": \"2026-10-23T16:11:14.000Z\",\n          \"deleted\": false,\n          \"fileName\": \"classes/BenchApexSf.cls\",\n          \"fullName\": \"BenchApexSf\",\n          \"lineNumber\": 2,\n          \"problem\": \"Unexpected token '<EOF>'.\",\n          \"problemType\": \"Error\",\n          \"success\": false\n        }\n      ],\n      \"componentSuccesses\": [\n        {\n          \"changed\": true,\n          \"componentType\": \"\",\n          \"created\": false,\n          \"createdDate\": \"2026-10-23T16:11:14.000Z\",\n          \"deleted\": false,\n          \"fileName\": \"package.xml\",\n          \"fullName\": \"package.xml\",\n          \"success\": true\n        }\n      ],\n      \"runTestResult\": {\n        \"numFailures\": 0,\n        \"numTestsRun\": 0,\n        \"totalTime\": 0,\n        \"codeCoverage\": [],\n        \"codeCoverageWarnings\": [],\n        \"failures\": [],\n        \"flowCoverage\": [],\n        \"flowCoverageWarnings\": [],\n        \"successes\": []\n      }\n    },\n    \"done\": true,\n    \"id\": \"0Afcf00000D15W2CAJ\",\n    \"ignoreWarnings\": false,\n    \"lastModifiedDate\": \"2026-10-23T16:11:14.000Z\",\n    \"numberComponentErrors\": 2,\n    \"numberComponentsDeployed\": 0,\n    \"numberComponentsTotal\": 2,\n    \"numberFiles\": \"4\",\n    \"numberTestErrors\": 0,\n    \"numberTestsCompleted\": 0,\n    \"numberTestsTotal\": 0,\n    \"rollbackOnError\": true,\n    \"runTestsEnabled\": false,\n    \"startDate\": \"2026-10-23T16:11:13.000Z\",\n    \"status\": \"Failed\",\n    \"success\": false,\n    \"zipSize\": 804,\n    \"files\": [\n      {\n        \"fullName\": \"BenchApexSf\",\n        \"type\": \"ApexClass\",\n        \"state\": \"Failed\",\n        \"problemType\": \"Error\",\n        \"filePath\": \"/private/tmp/mo-bench/proj/force-app/main/default/classes/BenchApexSf.cls\",\n        \"lineNumber\": 2,\n        \"columnNumber\": 1,\n        \"error\": \"Unexpected token '<EOF>'. (2:1)\"\n      }\n    ],\n    \"zipFileCount\": 4,\n    \"deployUrl\": \"https://momentum-energy-5913-dev-ed.scratch.my.salesforce.com/lightning/setup/DeployStatus/page?address=%2Fchangemgmt%2FmonitorDeploymentsDetails.apexp%3FasyncId%3D0Afcf00000D15W2CAJ%26retURL%3D%252Fchangemgmt%252FmonitorDeployment.apexp\"\n  },\n  \"warnings\": []\n}"
+      }
+    },
+    {
+      "type": "LWC bundle",
+      "mo": {
+        "resultMs": {
+          "median": 5891.291833,
+          "min": 5659.532458,
+          "max": 6869.652
+        },
+        "exitMs": {
+          "median": 6543.695375,
+          "min": 6523.529375,
+          "max": 7530.553875
+        },
+        "bytes": 251,
+        "exit": 0,
+        "output": "Saving... Failed ✖\nlwc/benchLwcMo/benchLwcMo.js: [Line: 1, Col: 97] LWC1503: Parsing error: Unexpected token (1:97)\nNote: The Tooling API may have partially updated some bundle resources before the error. Re-deploying the full bundle is recommended."
+      },
+      "sf": {
+        "resultMs": {
+          "median": 3493.35825,
+          "min": 3394.314208,
+          "max": 3619.584333
+        },
+        "exitMs": {
+          "median": 4533.884041,
+          "min": 4517.012375,
+          "max": 4549.975625
+        },
+        "bytes": 22465,
+        "exit": 1,
+        "output": "─────────────── Deploying Metadata ───────────────\n\n\n ◼ Preparing\n ◼ Waiting for the org to respond\n ◼ Deploying Metadata\n ◼ Running Tests\n ◼ Updating Source Tracking\n ◼ Done\n\n Status: ⠁\n Elapsed Time: 0ms\n\n\n ─────────────── Deploying Metadata ───────────────\n\n Deploying v67.0 metadata to <scratch-user>@example.com using the v68.0 SOAP\n API.\n\n ⣾ Preparing 21ms\n ◼ Waiting for the org to respond\n ◼ Deploying Metadata\n ◼ Running Tests\n ◼ Updating Source Tracking\n ◼ Done\n\n Status: ⠁\n Deploy ID: 0Afcf00000D1678CAB\n Target Org: <scratch-user>@example.com\n Elapsed Time: 28ms\n\n\n ─────────────── Deploying Metadata ───────────────\n\n Deploying v67.0 metadata to <scratch-user>@example.com using the v68.0 SOAP\n API.\n\n ⣾ Preparing 54ms\n ◼ Waiting for the org to respond\n ◼ Deploying Metadata\n ◼ Running Tests\n ◼ Updating Source Tracking\n ◼ Done\n\n Status: ⠁\n Deploy ID: 0Afcf00000D1678CAB\n Target Org: <scratch-user>@example.com\n Elapsed Time: 60ms\n\n\n ─────────────── Deploying Metadata ───────────────\n\n Deploying v67.0 metadata to <scratch-user>@example.com using the v68.0 SOAP\n API.\n\n ⣽ Preparing 85ms\n ◼ Waiting for the org to respond\n ◼ Deploying Metadata\n ◼ Running Tests\n ◼ Updating Source Tracking\n ◼ Done\n\n Status: ⠁\n Deploy ID: 0Afcf00000D1678CAB\n Target Org: <scratch-user>@example.com\n Elapsed Time: 92ms\n\n\n ─────────────── Deploying Metadata ───────────────\n\n Deploying v67.0 metadata to <scratch-user>@example.com using the v68.0 SOAP\n API.\n\n ⣽ Preparing 118ms\n ◼ Waiting for the org to respond\n ◼ Deploying Metadata\n ◼ Running Tests\n ◼ Updating Source Tracking\n ◼ Done\n\n Status: ⠂\n Deploy ID: 0Afcf00000D1678CAB\n Target Org: <scratch-user>@example.com\n Elapsed Time: 123ms\n\n\n ─────────────── Deploying Metadata ───────────────\n\n Deploying v67.0 metadata to <scratch-user>@example.com using the v68.0 SOAP\n API.\n\n ✔ Preparing 143ms\n ◯ Waiting for the org to respond - Skipped\n ⣾ Deploying Metadata 5ms\n   ▸ Components: 0/1 (0%)\n ◼ Running Tests\n ◼ Updating Source Tracking\n ◼ Done\n\n Status: In Progress\n Deploy ID: 0Afcf00000D1678CAB\n Target Org: <scratch-user>@example.com\n Elapsed Time: 156ms\n\n\n ─────────────── Deploying Metadata ───────────────\n\n Deploying v67.0 metadata to <scratch-user>@example.com using the v68.0 SOAP\n API.\n\n ✔ Preparing 143ms\n ◯ Waiting for the org to respond - Skipped\n ⣾ Deploying Metadata 39ms\n   ▸ Components: 0/1 (0%)\n ◼ Running Tests\n ◼ Updating Source Tracking\n ◼ Done\n\n Status: In Progress\n Deploy ID: 0Afcf00000D1678CAB\n Target Org: <scratch-user>@example.com\n Elapsed Time: 188ms\n\n\n ─────────────── Deploying Metadata ───────────────\n\n Deploying v67.0 metadata to <scratch-user>@example.com using the v68.0 SOAP\n API.\n\n ✔ Preparing 143ms\n ◯ Waiting for the org to respond - Skipped\n ⣾ Deploying Metadata 70ms\n   ▸ Components: 0/1 (0%)\n ◼ Running Tests\n ◼ Updating Source Tracking\n ◼ Done\n\n Status: In Progress\n Deploy ID: 0Afcf00000D1678CAB\n Target Org: <scratch-user>@example.com\n Elapsed Time: 220ms\n\n\n ─────────────── Deploying Metadata ───────────────\n\n Deploying v67.0 metadata to <scratch-user>@example.com using the v68.0 SOAP\n API.\n\n ✔ Preparing 143ms\n ◯ Waiting for the org to respond - Skipped\n ⣽ Deploying Metadata 103ms\n   ▸ Components: 0/1 (0%)\n ◼ Running Tests\n ◼ Updating Source Tracking\n ◼ Done\n\n Status: In Progress\n Deploy ID: 0Afcf00000D1678CAB\n Target Org: <scratch-user>@example.com\n Elapsed Time: 252ms\n\n\n ─────────────── Deploying Metadata ───────────────\n\n Deploying v67.0 metadata to <scratch-user>@example.com using the v68.0 SOAP\n API.\n\n ✔ Preparing 143ms\n ◯ Waiting for the org to respond - Skipped\n ⣽ Deploying Metadata 134ms\n   ▸ Components: 0/1 (0%)\n ◼ Running Tests\n ◼ Updating Source Tracking\n ◼ Done\n\n Status: In Progress\n Deploy ID: 0Afcf00000D1678CAB\n Target Org: <scratch-user>@example.com\n Elapsed Time: 283ms\n\n\n ─────────────── Deploying Metadata ───────────────\n\n Deploying v67.0 metadata to <scratch-user>@example.com using the v68.0 SOAP\n API.\n\n ✔ Preparing 143ms\n ◯ Waiting for the org to respond - Skipped\n ⣻ Deploying Metadata 166ms\n   ▸ Components: 0/1 (0%)\n ◼ Running Tests\n ◼ Updating Source Tracking\n ◼ Done\n\n Status: In Progress\n Deploy ID: 0Afcf00000D1678CAB\n Target Org: <scratch-user>@example.com\n Elapsed Time: 316ms\n\n\n ─────────────── Deploying Metadata ───────────────\n\n Deploying v67.0 metadata to <scratch-user>@example.com using the v68.0 SOAP\n API.\n\n ✔ Preparing 143ms\n ◯ Waiting for the org to respond - Skipped\n ⣻ Deploying Metadata 199ms\n   ▸ Components: 0/1 (0%)\n ◼ Running Tests\n ◼ Updating Source Tracking\n ◼ Done\n\n Status: In Progress\n Deploy ID: 0Afcf00000D1678CAB\n Target Org: <scratch-user>@example.com\n Elapsed Time: 348ms\n\n\n ─────────────── Deploying Metadata ───────────────\n\n Deploying v67.0 metadata to <scratch-user>@example.com using the v68.0 SOAP\n API.\n\n ✔ Preparing 143ms\n ◯ Waiting for the org to respond - Skipped\n ⣻ Deploying Metadata 231ms\n   ▸ Components: 0/1 (0%)\n ◼ Running Tests\n ◼ Updating Source Tracking\n ◼ Done\n\n Status: In Progress\n Deploy ID: 0Afcf00000D1678CAB\n Target Org: <scratch-user>@example.com\n Elapsed Time: 380ms\n\n\n ─────────────── Deploying Metadata ───────────────\n\n Deploying v67.0 metadata to <scratch-user>@example.com using the v68.0 SOAP\n API.\n\n ✔ Preparing 143ms\n ◯ Waiting for the org to respond - Skipped\n ⢿ Deploying Metadata 262ms\n   ▸ Components: 0/1 (0%)\n ◼ Running Tests\n ◼ Updating Source Tracking\n ◼ Done\n\n Status: In Progress\n Deploy ID: 0Afcf00000D1678CAB\n Target Org: <scratch-user>@example.com\n Elapsed Time: 412ms\n\n\n ─────────────── Deploying Metadata ───────────────\n\n Deploying v67.0 metadata to <scratch-user>@example.com using the v68.0 SOAP\n API.\n\n ✔ Preparing 143ms\n ◯ Waiting for the org to respond - Skipped\n ⢿ Deploying Metadata 295ms\n   ▸ Components: 0/1 (0%)\n ◼ Running Tests\n ◼ Updating Source Tracking\n ◼ Done\n\n Status: In Progress\n Deploy ID: 0Afcf00000D1678CAB\n Target Org: <scratch-user>@example.com\n Elapsed Time: 445ms\n\n\n ─────────────── Deploying Metadata ───────────────\n\n Deploying v67.0 metadata to <scratch-user>@example.com using the v68.0 SOAP\n API.\n\n ✔ Preparing 143ms\n ◯ Waiting for the org to respond - Skipped\n ⡿ Deploying Metadata 327ms\n   ▸ Components: 0/1 (0%)\n ◼ Running Tests\n ◼ Updating Source Tracking\n ◼ Done\n\n Status: In Progress\n Deploy ID: 0Afcf00000D1678CAB\n Target Org: <scratch-user>@example.com\n Elapsed Time: 477ms\n\n\n ─────────────── Deploying Metadata ───────────────\n\n Deploying v67.0 metadata to <scratch-user>@example.com using the v68.0 SOAP\n API.\n\n ✔ Preparing 143ms\n ◯ Waiting for the org to respond - Skipped\n ⡿ Deploying Metadata 360ms\n   ▸ Components: 0/1 (0%)\n ◼ Running Tests\n ◼ Updating Source Tracking\n ◼ Done\n\n Status: In Progress\n Deploy ID: 0Afcf00000D1678CAB\n Target Org: <scratch-user>@example.com\n Elapsed Time: 509ms\n\n\n ─────────────── Deploying Metadata ───────────────\n\n Deploying v67.0 metadata to <scratch-user>@example.com using the v68.0 SOAP\n API.\n\n ✔ Preparing 143ms\n ◯ Waiting for the org to respond - Skipped\n ⡿ Deploying Metadata 392ms\n   ▸ Components: 0/1 (0%)\n ◼ Running Tests\n ◼ Updating Source Tracking\n ◼ Done\n\n Status: In Progress\n Deploy ID: 0Afcf00000D1678CAB\n Target Org: <scratch-user>@example.com\n Elapsed Time: 542ms\n\n\n ─────────────── Deploying Metadata ───────────────\n\n Deploying v67.0 metadata to <scratch-user>@example.com using the v68.0 SOAP\n API.\n\n ✔ Preparing 143ms\n ◯ Waiting for the org to respond - Skipped\n ⣟ Deploying Metadata 426ms\n   ▸ Components: 0/1 (0%)\n ◼ Running Tests\n ◼ Updating Source Tracking\n ◼ Done\n\n Status: In Progress\n Deploy ID: 0Afcf00000D1678CAB\n Target Org: <scratch-user>@example.com\n Elapsed Time: 574ms\n\n\n ─────────────── Deploying Metadata ───────────────\n\n Deploying v67.0 metadata to <scratch-user>@example.com using the v68.0 SOAP\n API.\n\n ✔ Preparing 143ms\n ◯ Waiting for the org to respond - Skipped\n ⣟ Deploying Metadata 457ms\n   ▸ Components: 0/1 (0%)\n ◼ Running Tests\n ◼ Updating Source Tracking\n ◼ Done\n\n Status: In Progress\n Deploy ID: 0Afcf00000D1678CAB\n Target Org: <scratch-user>@example.com\n Elapsed Time: 607ms\n\n\n ─────────────── Deploying Metadata ───────────────\n\n Deploying v67.0 metadata to <scratch-user>@example.com using the v68.0 SOAP\n API.\n\n ✔ Preparing 143ms\n ◯ Waiting for the org to respond - Skipped\n ⣯ Deploying Metadata 489ms\n   ▸ Components: 0/1 (0%)\n ◼ Running Tests\n ◼ Updating Source Tracking\n ◼ Done\n\n Status: In Progress\n Deploy ID: 0Afcf00000D1678CAB\n Target Org: <scratch-user>@example.com\n Elapsed Time: 638ms\n\n\n ─────────────── Deploying Metadata ───────────────\n\n Deploying v67.0 metadata to <scratch-user>@example.com using the v68.0 SOAP\n API.\n\n ✔ Preparing 143ms\n ◯ Waiting for the org to respond - Skipped\n ⣯ Deploying Metadata 521ms\n   ▸ Components: 0/1 (0%)\n ◼ Running Tests\n ◼ Updating Source Tracking\n ◼ Done\n\n Status: In Progress\n Deploy ID: 0Afcf00000D1678CAB\n Target Org: <scratch-user>@example.com\n Elapsed Time: 671ms\n\n\n ─────────────── Deploying Metadata ───────────────\n\n Deploying v67.0 metadata to <scratch-user>@example.com using the v68.0 SOAP\n API.\n\n ✔ Preparing 143ms\n ◯ Waiting for the org to respond - Skipped\n ⣯ Deploying Metadata 553ms\n   ▸ Components: 0/1 (0%)\n ◼ Running Tests\n ◼ Updating Source Tracking\n ◼ Done\n\n Status: In Progress\n Deploy ID: 0Afcf00000D1678CAB\n Target Org: <scratch-user>@example.com\n Elapsed Time: 703ms\n\n\n ─────────────── Deploying Metadata ───────────────\n\n Deploying v67.0 metadata to <scratch-user>@example.com using the v68.0 SOAP\n API.\n\n ✔ Preparing 143ms\n ◯ Waiting for the org to respond - Skipped\n ⣷ Deploying Metadata 585ms\n   ▸ Components: 0/1 (0%)\n ◼ Running Tests\n ◼ Updating Source Tracking\n ◼ Done\n\n Status: In Progress\n Deploy ID: 0Afcf00000D1678CAB\n Target Org: <scratch-user>@example.com\n Elapsed Time: 733ms\n\n\n ─────────────── Deploying Metadata ───────────────\n\n Deploying v67.0 metadata to <scratch-user>@example.com using the v68.0 SOAP\n API.\n\n ✔ Preparing 143ms\n ◯ Waiting for the org to respond - Skipped\n ⣷ Deploying Metadata 617ms\n   ▸ Components: 0/1 (0%)\n ◼ Running Tests\n ◼ Updating Source Tracking\n ◼ Done\n\n Status: In Progress\n Deploy ID: 0Afcf00000D1678CAB\n Target Org: <scratch-user>@example.com\n Elapsed Time: 767ms\n\n\n ─────────────── Deploying Metadata ───────────────\n\n Deploying v67.0 metadata to <scratch-user>@example.com using the v68.0 SOAP\n API.\n\n ✔ Preparing 143ms\n ◯ Waiting for the org to respond - Skipped\n ⣾ Deploying Metadata 650ms\n   ▸ Components: 0/1 (0%)\n ◼ Running Tests\n ◼ Updating Source Tracking\n ◼ Done\n\n Status: In Progress\n Deploy ID: 0Afcf00000D1678CAB\n Target Org: <scratch-user>@example.com\n Elapsed Time: 799ms\n\n\n ─────────────── Deploying Metadata ───────────────\n\n Deploying v67.0 metadata to <scratch-user>@example.com using the v68.0 SOAP\n API.\n\n ✔ Preparing 143ms\n ◯ Waiting for the org to respond - Skipped\n ⣾ Deploying Metadata 683ms\n   ▸ Components: 0/1 (0%)\n ◼ Running Tests\n ◼ Updating Source Tracking\n ◼ Done\n\n Status: In Progress\n Deploy ID: 0Afcf00000D1678CAB\n Target Org: <scratch-user>@example.com\n Elapsed Time: 832ms\n\n\n ─────────────── Deploying Metadata ───────────────\n\n Deploying v67.0 metadata to <scratch-user>@example.com using the v68.0 SOAP\n API.\n\n ✔ Preparing 143ms\n ◯ Waiting for the org to respond - Skipped\n ⣾ Deploying Metadata 715ms\n   ▸ Components: 0/1 (0%)\n ◼ Running Tests\n ◼ Updating Source Tracking\n ◼ Done\n\n Status: In Progress\n Deploy ID: 0Afcf00000D1678CAB\n Target Org: <scratch-user>@example.com\n Elapsed Time: 864ms\n\n\n ─────────────── Deploying Metadata ───────────────\n\n Deploying v67.0 metadata to <scratch-user>@example.com using the v68.0 SOAP\n API.\n\n ✔ Preparing 143ms\n ◯ Waiting for the org to respond - Skipped\n ⣽ Deploying Metadata 747ms\n   ▸ Components: 0/1 (0%)\n ◼ Running Tests\n ◼ Updating Source Tracking\n ◼ Done\n\n Status: In Progress\n Deploy ID: 0Afcf00000D1678CAB\n Target Org: <scratch-user>@example.com\n Elapsed Time: 897ms\n\n\n ─────────────── Deploying Metadata ───────────────\n\n Deploying v67.0 metadata to <scratch-user>@example.com using the v68.0 SOAP\n API.\n\n ✔ Preparing 143ms\n ◯ Waiting for the org to respond - Skipped\n ⣽ Deploying Metadata 780ms\n   ▸ Components: 0/1 (0%)\n ◼ Running Tests\n ◼ Updating Source Tracking\n ◼ Done\n\n Status: In Progress\n Deploy ID: 0Afcf00000D1678CAB\n Target Org: <scratch-user>@example.com\n Elapsed Time: 928ms\n\n\n ─────────────── Deploying Metadata ───────────────\n\n Deploying v67.0 metadata to <scratch-user>@example.com using the v68.0 SOAP\n API.\n\n ✔ Preparing 143ms\n ◯ Waiting for the org to respond - Skipped\n ⣻ Deploying Metadata 811ms\n   ▸ Components: 0/1 (0%)\n ◼ Running Tests\n ◼ Updating Source Tracking\n ◼ Done\n\n Status: In Progress\n Deploy ID: 0Afcf00000D1678CAB\n Target Org: <scratch-user>@example.com\n Elapsed Time: 961ms\n\n\n ─────────────── Deploying Metadata ───────────────\n\n Deploying v67.0 metadata to <scratch-user>@example.com using the v68.0 SOAP\n API.\n\n ✔ Preparing 143ms\n ◯ Waiting for the org to respond - Skipped\n ⣻ Deploying Metadata 844ms\n   ▸ Components: 0/1 (0%)\n ◼ Running Tests\n ◼ Updating Source Tracking\n ◼ Done\n\n Status: In Progress\n Deploy ID: 0Afcf00000D1678CAB\n Target Org: <scratch-user>@example.com\n Elapsed Time: 993ms\n\n\n ─────────────── Deploying Metadata ───────────────\n\n Deploying v67.0 metadata to <scratch-user>@example.com using the v68.0 SOAP\n API.\n\n ✔ Preparing 143ms\n ◯ Waiting for the org to respond - Skipped\n ⣻ Deploying Metadata 876ms\n   ▸ Components: 0/1 (0%)\n ◼ Running Tests\n ◼ Updating Source Tracking\n ◼ Done\n\n Status: In Progress\n Deploy ID: 0Afcf00000D1678CAB\n Target Org: <scratch-user>@example.com\n Elapsed Time: 1.02s\n\n\n ─────────────── Deploying Metadata ───────────────\n\n Deploying v67.0 metadata to <scratch-user>@example.com using the v68.0 SOAP\n API.\n\n ✔ Preparing 143ms\n ◯ Waiting for the org to respond - Skipped\n ⢿ Deploying Metadata 911ms\n   ▸ Components: 0/1 (0%)\n ◼ Running Tests\n ◼ Updating Source Tracking\n ◼ Done\n\n Status: In Progress\n Deploy ID: 0Afcf00000D1678CAB\n Target Org: <scratch-user>@example.com\n Elapsed Time: 1.05s\n\n\n ─────────────── Deploying Metadata ───────────────\n\n Deploying v67.0 metadata to <scratch-user>@example.com using the v68.0 SOAP\n API.\n\n ✔ Preparing 143ms\n ◯ Waiting for the org to respond - Skipped\n ⢿ Deploying Metadata 943ms\n   ▸ Components: 0/1 (0%)\n ◼ Running Tests\n ◼ Updating Source Tracking\n ◼ Done\n\n Status: In Progress\n Deploy ID: 0Afcf00000D1678CAB\n Target Org: <scratch-user>@example.com\n Elapsed Time: 1.09s\n\n\n ─────────────── Deploying Metadata ───────────────\n\n Deploying v67.0 metadata to <scratch-user>@example.com using the v68.0 SOAP\n API.\n\n ✔ Preparing 143ms\n ◯ Waiting for the org to respond - Skipped\n ⡿ Deploying Metadata 975ms\n   ▸ Components: 0/1 (0%)\n ◼ Running Tests\n ◼ Updating Source Tracking\n ◼ Done\n\n Status: In Progress\n Deploy ID: 0Afcf00000D1678CAB\n Target Org: <scratch-user>@example.com\n Elapsed Time: 1.12s\n\n\n ─────────────── Deploying Metadata ───────────────\n\n Deploying v67.0 metadata to <scratch-user>@example.com using the v68.0 SOAP\n API.\n\n ✔ Preparing 143ms\n ◯ Waiting for the org to respond - Skipped\n ⡿ Deploying Metadata 1.00s\n   ▸ Components: 0/1 (0%)\n ◼ Running Tests\n ◼ Updating Source Tracking\n ◼ Done\n\n Status: In Progress\n Deploy ID: 0Afcf00000D1678CAB\n Target Org: <scratch-user>@example.com\n Elapsed Time: 1.15s\n\n\n ─────────────── Deploying Metadata ───────────────\n\n Deploying v67.0 metadata to <scratch-user>@example.com using the v68.0 SOAP\n API.\n\n ✔ Preparing 143ms\n ◯ Waiting for the org to respond - Skipped\n ⡿ Deploying Metadata 1.03s\n   ▸ Components: 0/1 (0%)\n ◼ Running Tests\n ◼ Updating Source Tracking\n ◼ Done\n\n Status: In Progress\n Deploy ID: 0Afcf00000D1678CAB\n Target Org: <scratch-user>@example.com\n Elapsed Time: 1.18s\n\n\n ─────────────── Deploying Metadata ───────────────\n\n Deploying v67.0 metadata to <scratch-user>@example.com using the v68.0 SOAP\n API.\n\n ✔ Preparing 143ms\n ◯ Waiting for the org to respond - Skipped\n ⣟ Deploying Metadata 1.07s\n   ▸ Components: 0/1 (0%)\n ◼ Running Tests\n ◼ Updating Source Tracking\n ◼ Done\n\n Status: In Progress\n Deploy ID: 0Afcf00000D1678CAB\n Target Org: <scratch-user>@example.com\n Elapsed Time: 1.21s\n\n\n ─────────────── Deploying Metadata ───────────────\n\n Deploying v67.0 metadata to <scratch-user>@example.com using the v68.0 SOAP\n API.\n\n ✔ Preparing 143ms\n ◯ Waiting for the org to respond - Skipped\n ⣟ Deploying Metadata 1.10s\n   ▸ Components: 0/1 (0%)\n ◼ Running Tests\n ◼ Updating Source Tracking\n ◼ Done\n\n Status: In Progress\n Deploy ID: 0Afcf00000D1678CAB\n Target Org: <scratch-user>@example.com\n Elapsed Time: 1.25s\n\n\n ─────────────── Deploying Metadata ───────────────\n\n Deploying v67.0 metadata to <scratch-user>@example.com using the v68.0 SOAP\n API.\n\n ✔ Preparing 143ms\n ◯ Waiting for the org to respond - Skipped\n ⣯ Deploying Metadata 1.13s\n   ▸ Components: 0/1 (0%)\n ◼ Running Tests\n ◼ Updating Source Tracking\n ◼ Done\n\n Status: In Progress\n Deploy ID: 0Afcf00000D1678CAB\n Target Org: <scratch-user>@example.com\n Elapsed Time: 1.28s\n\n\n ─────────────── Deploying Metadata ───────────────\n\n Deploying v67.0 metadata to <scratch-user>@example.com using the v68.0 SOAP\n API.\n\n ✔ Preparing 143ms\n ◯ Waiting for the org to respond - Skipped\n ⣯ Deploying Metadata 1.16s\n   ▸ Components: 0/1 (0%)\n ◼ Running Tests\n ◼ Updating Source Tracking\n ◼ Done\n\n Status: In Progress\n Deploy ID: 0Afcf00000D1678CAB\n Target Org: <scratch-user>@example.com\n Elapsed Time: 1.31s\n\n\n ─────────────── Deploying Metadata ───────────────\n\n Deploying v67.0 metadata to <scratch-user>@example.com using the v68.0 SOAP\n API.\n\n ✔ Preparing 143ms\n ◯ Waiting for the org to respond - Skipped\n ✘ Deploying Metadata 1.18s\n   ▸ Components: 1/2 (50%)\n ◼ Running Tests\n ◼ Updating Source Tracking\n ◼ Done\n\n Status: Failed\n Deploy ID: 0Afcf00000D1678CAB\n Target Org: <scratch-user>@example.com\n Elapsed Time: 1.33s\n\n\nComponent Failures [1]\n┌──────────────────────────┬────────────┬────────────────────────────────────────────────────────┬─────────────┐\n│ Type                     │ Name       │ Problem                                                │ Line:Column │\n├──────────────────────────┼────────────┼────────────────────────────────────────────────────────┼─────────────┤\n│ LightningComponentBundle │ benchLwcSf │ LWC1503: Parsing error: Unexpected token (1:97) (1:97) │ 1:97        │\n└──────────────────────────┴────────────┴────────────────────────────────────────────────────────┴─────────────┘"
+      },
+      "sfJson": {
+        "bytes": 2928,
+        "exit": 1,
+        "output": "{\n  \"status\": 1,\n  \"result\": {\n    \"checkOnly\": false,\n    \"completedDate\": \"2026-10-23T16:13:09.000Z\",\n    \"createdBy\": \"005cf00000NW6zX\",\n    \"createdByName\": \"User User\",\n    \"createdDate\": \"2026-10-23T16:13:08.000Z\",\n    \"details\": {\n      \"componentFailures\": [\n        {\n          \"changed\": false,\n          \"componentType\": \"LightningComponentBundle\",\n          \"created\": false,\n          \"createdDate\": \"2026-10-23T16:13:09.000Z\",\n          \"deleted\": false,\n          \"fileName\": \"lwc/benchLwcSf/benchLwcSf.js\",\n          \"fullName\": \"markup://c:benchLwcSf\",\n          \"problem\": \"[Line: 1, Col: 97] LWC1503: Parsing error: Unexpected token (1:97)\",\n          \"problemType\": \"Error\",\n          \"success\": false\n        }\n      ],\n      \"componentSuccesses\": [\n        {\n          \"changed\": true,\n          \"componentType\": \"LightningComponentBundle\",\n          \"created\": false,\n          \"createdDate\": \"2026-10-23T16:13:08.000Z\",\n          \"deleted\": false,\n          \"fileName\": \"lwc/benchLwcSf\",\n          \"fullName\": \"benchLwcSf\",\n          \"id\": \"0Rbcf000008M8n7CAC\",\n          \"success\": true\n        },\n        {\n          \"changed\": true,\n          \"componentType\": \"\",\n          \"created\": false,\n          \"createdDate\": \"2026-10-23T16:13:09.000Z\",\n          \"deleted\": false,\n          \"fileName\": \"package.xml\",\n          \"fullName\": \"package.xml\",\n          \"success\": true\n        }\n      ],\n      \"runTestResult\": {\n        \"numFailures\": 0,\n        \"numTestsRun\": 0,\n        \"totalTime\": 0,\n        \"codeCoverage\": [],\n        \"codeCoverageWarnings\": [],\n        \"failures\": [],\n        \"flowCoverage\": [],\n        \"flowCoverageWarnings\": [],\n        \"successes\": []\n      }\n    },\n    \"done\": true,\n    \"id\": \"0Afcf00000D0rXxCAJ\",\n    \"ignoreWarnings\": false,\n    \"lastModifiedDate\": \"2026-10-23T16:13:09.000Z\",\n    \"numberComponentErrors\": 1,\n    \"numberComponentsDeployed\": 1,\n    \"numberComponentsTotal\": 2,\n    \"numberFiles\": \"6\",\n    \"numberTestErrors\": 0,\n    \"numberTestsCompleted\": 0,\n    \"numberTestsTotal\": 0,\n    \"rollbackOnError\": true,\n    \"runTestsEnabled\": false,\n    \"startDate\": \"2026-10-23T16:13:08.000Z\",\n    \"status\": \"Failed\",\n    \"success\": false,\n    \"zipSize\": 1156,\n    \"files\": [\n      {\n        \"fullName\": \"benchLwcSf\",\n        \"type\": \"LightningComponentBundle\",\n        \"state\": \"Failed\",\n        \"problemType\": \"Error\",\n        \"filePath\": \"/private/tmp/mo-bench/proj/force-app/main/default/lwc/benchLwcSf/benchLwcSf.js\",\n        \"lineNumber\": 1,\n        \"columnNumber\": 97,\n        \"error\": \"LWC1503: Parsing error: Unexpected token (1:97) (1:97)\"\n      }\n    ],\n    \"zipFileCount\": 6,\n    \"deployUrl\": \"https://momentum-energy-5913-dev-ed.scratch.my.salesforce.com/lightning/setup/DeployStatus/page?address=%2Fchangemgmt%2FmonitorDeploymentsDetails.apexp%3FasyncId%3D0Afcf00000D0rXxCAJ%26retURL%3D%252Fchangemgmt%252FmonitorDeployment.apexp\"\n  },\n  \"warnings\": []\n}"
+      }
+    }
+  ],
+  "jsonOutput": [
+    {
+      "type": "Apex class",
+      "bytes": 2488
+    },
+    {
+      "type": "Apex trigger",
+      "bytes": 2509
+    },
+    {
+      "type": "Visualforce page",
+      "bytes": 2482
+    },
+    {
+      "type": "Visualforce component",
+      "bytes": 2527
+    },
+    {
+      "type": "Aura bundle",
+      "bytes": 2767
+    },
+    {
+      "type": "LWC bundle",
+      "bytes": 2758
+    },
+    {
+      "type": "Static resource",
+      "bytes": 2530
+    }
+  ],
+  "finishedAt": "2026-10-23T16:13:19.630Z"
+}

@@ -6,6 +6,47 @@ The plugin also provides retrieve commands that can pull metadata in Salesforce 
 
 These commands are used within the [DX Code Companion](https://marketplace.visualstudio.com/items?itemName=MohithShrivastava.dx-code-companion) VS Code extension. If you use VS Code, installing the extension alongside this plugin is recommended.
 
+## mo-dx-plugin vs `sf project deploy start`
+
+mo-dx-plugin is built for the **inner loop**: save one file, see whether it compiled, fix, repeat. `sf project deploy start` is built for **shipping a set of changes**. They complement each other. The numbers below come from [benchmarks](./benchmarks/README.md) against real scratch orgs (median of 7 runs per component type).
+
+| | `sf deploy:*` (mo-dx-plugin) | `sf project deploy start` |
+|---|---|---|
+| Scope | One file or bundle per call | Any number of components, deletes, manifests |
+| API | Tooling API (in-place save) | Metadata API (packaged deploy) |
+| LWC / Aura / static resource save | **1.4–2.3× faster**, exits ~1 s sooner | Baseline |
+| Apex / trigger / Visualforce save | About the same | About the same |
+| Output per successful save | **80–98 bytes** | 2.5–2.8 KB (`--json`), 22–28 KB (default, non-terminal) |
+| Compile-error feedback | Slower (up to 0.6 s Apex, ~2.5 s LWC) | **Faster** |
+| Source tracking | Bypassed | Maintained |
+| Test runs / production Apex | Not supported | Supported |
+
+### Advantages
+
+- **Faster saves for LWC, Aura and static resources.** These save 0.8–2.1 s faster per save (1.4–2.3×), because the Tooling API updates the resource in place. There's no packaging, no deploy queue, and no source-tracking update.
+- **Speed doesn't depend on project size.** Only the path you pass is read. With 2,000 extra local Apex classes in the project, `sf project deploy start` got 0.1–0.4 s slower per save, and mo-dx-plugin didn't change.
+- **Compact output.** A save prints one line, plus `Line / Column / Error` for each problem. That's 25–33× less than `sf project deploy start --json` and 230–340× less than its default output in a non-terminal shell. For coding agents, 20 saves cost about 450 tokens of context instead of about 13K (`--json`) or about 139K (default).
+- **Small blast radius.** Each call touches exactly one component, so it's obvious what changed in the org.
+- **No setup.** No manifest or `package.xml` is needed. Create vs update is detected automatically, and it works against any org, including sandboxes and orgs without source tracking.
+
+### Limitations
+
+- **One component at a time.** No multi-component deploys, no destructive changes, no test runs. Tooling API saves are rejected for Apex in production orgs. Use `sf project deploy start` for those.
+- **No time saving for Apex or Visualforce.** Both tools wait on the same server-side compiler.
+- **Slower compile-error feedback.** In the benchmarks `sf project deploy start` reported errors sooner: up to 0.6 s for Apex and about 2.5 s for LWC.
+- **Bypasses source tracking.** The org records mo-dx-plugin saves as remote changes, so a later `sf project deploy start` on the same components stops with a conflict. Finish with `sf project deploy start --ignore-conflicts`, or resync with `sf project retrieve start`.
+- **No history.** The org copy is overwritten (see [Tracking changes against your org](#tracking-changes-against-your-org)).
+- **LWC bundle updates aren't atomic.** If one resource in a bundle fails, the others may already be saved. Fix the error and re-deploy the whole bundle directory.
+- **Failed saves exit 0 in 1.2.0.** Check the output for `✖`, or use the agent skill's [`mo-deploy.sh`](./skills/mo-dx-deploy/scripts/mo-deploy.sh) wrapper. A fix is in [#472](https://github.com/msrivastav13/mo-dx-plugin/pull/472).
+- **`--json` output is empty** for `deploy:trigger`, `deploy:vf`, `deploy:vfcomponent`, `deploy:aura` and `deploy:lwc`. Read the regular output instead.
+- **Single-file static resources are read as UTF-8**, so binary files (images, fonts) can be corrupted. Put them in a folder-based (zipped) resource, or deploy them with `sf project deploy start`.
+
+### Recommended workflow
+
+1. Iterate on a component with `sf deploy:<type> -p <path> -o <scratch-or-sandbox>` until it compiles and behaves.
+2. When the change is done, run a single `sf project deploy start` (add `--ignore-conflicts` for components you saved with mo-dx-plugin). This syncs source tracking and deploys anything else in the change.
+3. Use `sf project deploy start` for production, deletes, and anything that needs tests.
+
 ## Requirements
 
 - **Node.js >= 20**
@@ -62,6 +103,10 @@ See [CHANGELOG.md](./CHANGELOG.md) for full details. The key changes for existin
 ## Commands
 
 - [mo-dx-plugin](#mo-dx-plugin)
+  - [mo-dx-plugin vs `sf project deploy start`](#mo-dx-plugin-vs-sf-project-deploy-start)
+    - [Advantages](#advantages)
+    - [Limitations](#limitations)
+    - [Recommended workflow](#recommended-workflow)
   - [Requirements](#requirements)
   - [Installation](#installation)
     - [Install as plugin (recommended)](#install-as-plugin-recommended)
@@ -80,6 +125,7 @@ See [CHANGELOG.md](./CHANGELOG.md) for full details. The key changes for existin
     - [`sf metadata:rename`](#sf-metadatarename)
   - [Important Notes](#important-notes)
     - [Tracking changes against your org](#tracking-changes-against-your-org)
+    - [Performance](#performance)
     - [Metadata API Fallback](#metadata-api-fallback)
   - [Development](#development)
   - [License](#license)
@@ -266,6 +312,10 @@ EXAMPLES
 
 These commands do not maintain history. Files are overwritten on the server. Make sure you have source control set up for your project so you can recover code if needed.
 
+
+### Performance
+
+See [mo-dx-plugin vs `sf project deploy start`](#mo-dx-plugin-vs-sf-project-deploy-start) for the summary, and [benchmarks/](./benchmarks/README.md) for the full numbers and methodology.
 
 ### Metadata API Fallback
 
