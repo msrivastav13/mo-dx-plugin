@@ -53,5 +53,5 @@ sf retrieve:pkgsource -n "My Package" -r changesets/src -o my-sandbox
 | `dxsource` | `-m, --retainmetadata` | any value keeps `mdapiout/` |
 | `pkgsource` | `-r, --retrievedir` | output dir, default `src` |
 
-Requires a mo-dx-plugin release newer than 1.2.0. Older versions shell out to the removed
+Requires mo-dx-plugin 2.0.0 or newer. Older versions shell out to the removed
 `sfdx force:mdapi:retrieve` and fail. Upgrade with `sf plugins install mo-dx-plugin@latest`.

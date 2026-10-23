@@ -31,8 +31,8 @@ sf metadata:rename -t CustomObject -d Invoice__c -n Bill__c -o my-scratch
 2. Always pass `-o <org>`. Without it the command targets the default org.
 3. Use full names as the Metadata API expects them. Fields are
    `Object__c.Field__c`, layouts `Object__c-Layout Name`. Quote names with spaces.
-4. **Check the output, not the exit code.** It exits 0 even when the rename
-   fails.
+4. **Check the result.** From mo-dx-plugin 2.0.0 a failed rename exits 1. On
+   1.x it exits 0, so read the output.
    - Success: `CustomObject Invoice__c is successfully Renamed to Bill__c ✔`
    - Failure: `ERROR--sf:INVALID_CROSS_REFERENCE_KEY: … no CustomObject named Invoice__c found`
 5. Afterwards, update local source to match (rename files/folders and

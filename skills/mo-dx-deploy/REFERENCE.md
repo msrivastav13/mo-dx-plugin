@@ -21,7 +21,7 @@ Success:
 Saving... Apex Class Successfully Updated ✔.Command execution time: 2.6 seconds
 ```
 
-Compile failure (exit code is still 0):
+Compile failure (exit code 1 from 2.0.0; 0 on 1.x):
 
 ```
 Saving... Apex Class Update Failed ✖

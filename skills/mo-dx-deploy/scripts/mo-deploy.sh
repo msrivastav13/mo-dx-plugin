@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Saves one source file or bundle with the matching mo-dx-plugin deploy:* command.
-# Exits 1 when the save fails: the plugin itself exits 0 on compile errors and
-# only signals failure with a "✖" in its output.
+# Exits 1 when the save fails. mo-dx-plugin 2.0.0+ already exits 1 on failure;
+# 1.x exits 0 and only signals failure with a "✖" in its output, so both are checked.
 #
 # Usage: mo-deploy.sh <path> -o <org> [extra sf flags...]
 set -uo pipefail

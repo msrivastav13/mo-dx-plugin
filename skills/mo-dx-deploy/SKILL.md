@@ -28,10 +28,11 @@ sf deploy:apex -p force-app/main/default/classes/MyClass.cls -o my-scratch
 1. **Always pass `-o <org>`.** Without it the command silently targets the
    user's default org, which may be production. Before saving to a non-scratch
    org, confirm with the user.
-2. **Exit code 0 does not mean success.** Compile errors print a line ending in
-   `✖` followed by `Line: … Column: … Error: …` and still exit 0. `--json`
-   output is not reliably parseable. Either use `scripts/mo-deploy.sh` (it exits
-   1 on `✖`) or scan the output for `✖`.
+2. **Check for failure.** A failed save prints a line ending in `✖` followed
+   by `Line: … Column: … Error: …`. From mo-dx-plugin 2.0.0 it also exits 1.
+   On 1.x it exits 0, so use `scripts/mo-deploy.sh` (it exits 1 on `✖` with
+   any version) or scan the output for `✖`. Don't rely on `--json`: most
+   `deploy:*` commands print nothing in JSON mode.
 3. Run from inside an SFDX project (`sfdx-project.json`); every command requires one.
 4. Use forward-slash paths that keep the type folder (`classes/`, `lwc/`,
    `aura/`, `staticresources/`). The commands derive names from the path.

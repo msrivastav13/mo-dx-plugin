@@ -26,6 +26,7 @@ mo-dx-plugin is built for the **inner loop**: save one file, see whether it comp
 - **Faster saves for LWC, Aura and static resources.** These save 0.8–2.1 s faster per save (1.4–2.3×), because the Tooling API updates the resource in place. There's no packaging, no deploy queue, and no source-tracking update.
 - **Speed doesn't depend on project size.** Only the path you pass is read. With 2,000 extra local Apex classes in the project, `sf project deploy start` got 0.1–0.4 s slower per save, and mo-dx-plugin didn't change.
 - **Compact output.** A save prints one line, plus `Line / Column / Error` for each problem. That's 25–33× less than `sf project deploy start --json` and 230–340× less than its default output in a non-terminal shell. For coding agents, 20 saves cost about 450 tokens of context instead of about 13K (`--json`) or about 139K (default).
+- **Reliable exit codes (2.0.0+).** A failed save prints `✖` and the error lines, and exits 1. Scripts, CI, and agents can trust the exit code.
 - **Small blast radius.** Each call touches exactly one component, so it's obvious what changed in the org.
 - **No setup.** No manifest or `package.xml` is needed. Create vs update is detected automatically, and it works against any org, including sandboxes and orgs without source tracking.
 
@@ -37,7 +38,6 @@ mo-dx-plugin is built for the **inner loop**: save one file, see whether it comp
 - **Bypasses source tracking.** The org records mo-dx-plugin saves as remote changes, so a later `sf project deploy start` on the same components stops with a conflict. Finish with `sf project deploy start --ignore-conflicts`, or resync with `sf project retrieve start`.
 - **No history.** The org copy is overwritten (see [Tracking changes against your org](#tracking-changes-against-your-org)).
 - **LWC bundle updates aren't atomic.** If one resource in a bundle fails, the others may already be saved. Fix the error and re-deploy the whole bundle directory.
-- **Failed saves exit 0 in 1.2.0.** Check the output for `✖`, or use the agent skill's [`mo-deploy.sh`](./skills/mo-dx-deploy/scripts/mo-deploy.sh) wrapper. A fix is in [#472](https://github.com/msrivastav13/mo-dx-plugin/pull/472).
 - **`--json` output is empty** for `deploy:trigger`, `deploy:vf`, `deploy:vfcomponent`, `deploy:aura` and `deploy:lwc`. Read the regular output instead.
 - **Single-file static resources are read as UTF-8**, so binary files (images, fonts) can be corrupted. Put them in a folder-based (zipped) resource, or deploy them with `sf project deploy start`.
 
@@ -90,6 +90,18 @@ npx skills add msrivastav13/mo-dx-plugin
 
 Or copy a skill folder into `.claude/skills/` (Claude Code) or your agent's skills directory.
 
+## Upgrading to 2.0
+
+```sh
+sf plugins install mo-dx-plugin@2
+```
+
+Command names and flags haven't changed. What's different (full details in [CHANGELOG.md](./CHANGELOG.md)):
+
+- **Failures exit 1.** `deploy:*` and `metadata:rename` used to exit 0 even when a save or rename failed. Under `--json` the `status` is now `1` too. If a script relied on these commands never failing (e.g. no `|| true` around them), it will now stop on the first failed save. The printed output is the same.
+- **`retrieve:dxsource` and `retrieve:pkgsource` work again.** They no longer shell out to the removed `sfdx force:mdapi:*` commands, `unzip`, `cp` or `rm`. They call the Metadata API directly, which also closes a command-injection hole in how they built shell commands. They now exit 1 on failure. `retrieve:pkgsource` gives up after 30 minutes instead of waiting indefinitely.
+- **`metadata:rename --json`** now returns the Metadata API rename result instead of an empty `"{}"` string.
+
 ## Upgrading from 0.x
 
 See [CHANGELOG.md](./CHANGELOG.md) for full details. The key changes for existing users:
@@ -111,6 +123,7 @@ See [CHANGELOG.md](./CHANGELOG.md) for full details. The key changes for existin
   - [Installation](#installation)
     - [Install as plugin (recommended)](#install-as-plugin-recommended)
     - [Install from source](#install-from-source)
+  - [Upgrading to 2.0](#upgrading-to-20)
   - [Upgrading from 0.x](#upgrading-from-0x)
   - [Commands](#commands)
     - [`sf deploy:apex`](#sf-deployapex)
