@@ -1,21 +1,40 @@
 # Changelog
 
-## Unreleased
+## 2.0.0 (2026-10-23)
 
-### Bug Fixes
+A major release. Failed commands now exit 1, the retrieve commands work again on the current `sf` CLI, a command-injection hole is closed, and every known dependency vulnerability is patched. It also adds agent skills and benchmarks. Command names and flags are unchanged. See [Upgrading to 2.0](./README.md#upgrading-to-20).
 
-- **`deploy:*` and `metadata:rename` now exit 1 when they fail.** Compile errors, Tooling/Metadata API errors, and failed renames used to print a `✖`/`ERROR--` message and still exit 0, so scripts, CI, and agents treated failures as successes. The printed output is unchanged. Under `--json` the `status` is now `1` too.
-- `deploy:apex`, `deploy:trigger`, `deploy:vf` and `deploy:vfcomponent` no longer crash with a `TypeError` when the failure happens before compilation (e.g. metadata container/member creation). The underlying error, or the request's `ErrorMsg`, is shown instead.
-- `metadata:rename` now waits for the rename to finish before the command returns, and reports `success: false` results that were previously silent.
-- `retrieve:dxsource` and `retrieve:pkgsource` work again with the current `sf` CLI. They relied on `sfdx force:mdapi:retrieve`/`force:mdapi:convert`, which no longer exist. Failed retrieves now exit non-zero instead of 0. `retrieve:pkgsource` now waits up to 30 minutes, the same as `retrieve:dxsource`, instead of indefinitely.
+### Breaking Changes
 
+- **`deploy:*` and `metadata:rename` now exit 1 when they fail ([#472](https://github.com/msrivastav13/mo-dx-plugin/pull/472)).** Compile errors, Tooling/Metadata API errors, and failed renames used to print a `✖`/`ERROR--` message and still exit 0, so scripts, CI, and agents treated failures as successes. The printed output is unchanged. Under `--json` the `status` is now `1` too.
+
+  > ⚠️ Scripts that run these commands in sequence will now stop at the first failure. Add `|| true` if you relied on the old behaviour.
+
+- **`retrieve:dxsource` and `retrieve:pkgsource` no longer shell out ([#470](https://github.com/msrivastav13/mo-dx-plugin/pull/470)).** They call the Metadata API `retrieve` directly, extract the zip with `adm-zip` on every platform (no more `unzip`/`rm`/`cp` on macOS), and `dxsource` runs `project convert mdapi` in-process. Failed retrieves now exit 1 instead of 0. `retrieve:pkgsource` now waits up to 30 minutes, the same as `retrieve:dxsource`, instead of indefinitely.
+- **`metadata:rename --json`** now returns the Metadata API rename result instead of the string `"{}"`.
 
 ### Security
 
-- **Fixed command injection in `retrieve:dxsource` and `retrieve:pkgsource`.** Both commands built shell strings from `--packagename`, `--retrievedir`, `--pathname` and the org username and ran them with `child_process.exec`, so a crafted value (e.g. `-n 'x"; touch /tmp/pwned; echo "'`) ran arbitrary commands on the developer's machine. They now call the Metadata API `retrieve` directly, extract the zip with `adm-zip` on every platform (no more `unzip`/`rm`/`cp` shell-outs on macOS), and run `project convert mdapi` in-process. No user input reaches a shell. The unused `packagexmlbuilder` modules that shelled out the same way were removed.
-- **Patched all known dependency vulnerabilities (11 → 0)**, including `websocket-driver` (critical), `fast-uri`, `http-cache-semantics`, `js-yaml`, `browserslist` and `brace-expansion` (high). `adm-zip` is bumped to `^0.6.1` (high: symlink-following and SUID-preserving extraction, decompression bombs), which bundles its own types, so `@types/adm-zip` is dropped.
+- **Fixed command injection in `retrieve:dxsource` and `retrieve:pkgsource` ([#470](https://github.com/msrivastav13/mo-dx-plugin/pull/470)).** Both commands built shell strings from `--packagename`, `--retrievedir`, `--pathname` and the org username, then ran them with `child_process.exec`. A crafted value (e.g. `-n 'x"; touch /tmp/pwned; echo "'`) ran arbitrary commands on the developer's machine. No user input reaches a shell now. The unused `packagexmlbuilder` modules that shelled out the same way were removed.
+- **Patched all known dependency vulnerabilities (11 → 0)**, including `websocket-driver` (critical), `fast-uri`, `http-cache-semantics`, `js-yaml`, `browserslist` and `brace-expansion` (high). `adm-zip` is bumped to `^0.6.1` (high: symlink-following and SUID-preserving extraction, decompression bombs). It bundles its own types, so `@types/adm-zip` is dropped.
 - **Replaced the unmaintained `xmldom-sfdx-encoding`** (a 2022 fork of `xmldom` 0.1.x) with the maintained `@xmldom/xmldom` for parsing `-meta.xml` files.
 
+### Bug Fixes
+
+- `retrieve:dxsource` and `retrieve:pkgsource` work again with the current `sf` CLI. They relied on `sfdx force:mdapi:retrieve`/`force:mdapi:convert`, which no longer exist.
+- `deploy:apex`, `deploy:trigger`, `deploy:vf` and `deploy:vfcomponent` no longer crash with a `TypeError` when the failure happens before compilation (e.g. metadata container/member creation). The underlying error, or the request's `ErrorMsg`, is shown instead.
+- `deploy:aura` and `deploy:lwc` now report bundle-creation failures that used to leave the spinner running and return silently.
+- `metadata:rename` now waits for the rename to finish before the command returns, and reports `success: false` results that were previously silent.
+
+### New
+
+- **Agent skills ([#471](https://github.com/msrivastav13/mo-dx-plugin/pull/471)).** `skills/` contains `mo-dx-deploy`, `mo-dx-retrieve` and `mo-dx-rename` [Agent Skills](https://agentskills.io) for coding agents. Install them with `npx skills add msrivastav13/mo-dx-plugin`. `mo-dx-deploy` includes a `mo-deploy.sh` wrapper that picks the right `deploy:*` command from a file path.
+- **Benchmarks ([#473](https://github.com/msrivastav13/mo-dx-plugin/pull/473)).** `benchmarks/` compares `deploy:*` with `sf project deploy start` on real scratch orgs. LWC, Aura and static resource saves are 1.4–2.3× faster, Apex and Visualforce are about even, and output is 25–33× smaller than `--json`. The README now has a "mo-dx-plugin vs `sf project deploy start`" section with advantages, limitations, and a recommended workflow.
+
+### Dependencies
+
+- Refreshed the lockfile within existing ranges (`@salesforce/core` 8.32.6, `@salesforce/sf-plugins-core` 12.2.28, `fs-extra` 11.4.1, `oclif` 4.24.0).
+- Removed the unused `@oclif/test` devDependency.
 
 ## 1.2.0 (2026-06-19)
 
