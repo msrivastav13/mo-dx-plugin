@@ -1,16 +1,11 @@
 import { SfCommand, Flags, requiredOrgFlagWithDeprecations, orgApiVersionFlagWithDeprecations, loglevel } from '@salesforce/sf-plugins-core';
 import { Messages } from '@salesforce/core';
-import AdmZip from 'adm-zip';
 import chalk from 'chalk';
-import * as child from 'child_process';
-import fs from 'fs-extra';
-import * as util from 'util';
+import { retrievePackage } from '../../service/retrievePackage.js';
 
 Messages.importMessagesDirectoryFromMetaUrl(import.meta.url);
 
 const messages = Messages.loadMessages('mo-dx-plugin', 'org');
-
-const exec = util.promisify(child.exec);
 
 export default class Pkgsource extends SfCommand<any> {
   public static description = messages.getMessage('retrieveSource');
@@ -45,45 +40,22 @@ export default class Pkgsource extends SfCommand<any> {
   public async run(): Promise<any> {
     const { flags } = await this.parse(Pkgsource);
 
-    const defaultusername = flags['target-org'].getUsername();
+    const conn = flags['target-org'].getConnection(flags['api-version']);
     const tmpDir = flags.retrievedir ? flags.retrievedir : 'src' ;
-    let errored = false;
 
     this.spinner.start(chalk.yellowBright('Retrieving Metadata...'));
 
-    const retrieveCommand = `sfdx force:mdapi:retrieve -s -p "${
-      flags.packagename
-    }" -u ${defaultusername}  -r ./${tmpDir} -w -1 --json`;
-
     try {
-      await exec(retrieveCommand, { maxBuffer: 1000000 * 1024 });
-    } catch (exception) {
-      errored = true;
-      this.logJson(exception as object);
+      const { messages: retrieveMessages } = await retrievePackage({
+        conn,
+        packageName: flags.packagename,
+        targetDir: tmpDir
+      });
+      this.spinner.stop(chalk.greenBright('Retrieve and Unzip Completed ✔'));
+      retrieveMessages.forEach(message => this.warn(message));
+    } catch (error) {
       this.spinner.stop(chalk.redBright('Retrieve Operation Failed ✖'));
-    }
-
-    if (!errored) {
-      this.spinner.stop(
-        chalk.greenBright('Retrieve Completed ✔.  Unzipping...')
-      );
-      // unzip result to a temp folder mdapi
-      if (process.platform.includes('darwin')) {
-        await exec(`unzip -qqo ./${tmpDir}/unpackaged.zip -d ./${tmpDir}`); // Use standard MACOSX unzip
-      } else {
-        // use a third party library to unzip the zipped resource
-        try {
-          const zip = new AdmZip('./' + tmpDir + '/unpackaged.zip');
-          await zip.extractAllTo('./' + tmpDir, true);
-        } catch (error) {
-          console.error(chalk.redBright(error + '✖'));
-          return;
-        }
-      }
-
-      this.spinner.start(chalk.yellowBright('Unzip Completed ✔'));
-      await fs.unlink('./' + tmpDir + '/unpackaged.zip');
-      this.spinner.stop(chalk.greenBright('Finished ✔'));
+      this.error(error instanceof Error ? error.message : String(error));
     }
 
     return '';
