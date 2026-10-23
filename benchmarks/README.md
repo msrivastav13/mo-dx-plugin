@@ -83,13 +83,14 @@ This is closest to working against a sandbox or Developer Edition org with track
 
 ### Compile errors (tracked scratch org, small project, median of 5)
 
-| Type | Time to result: mo-dx / sf | Output bytes: mo-dx / sf / sf `--json` | Exit code: mo-dx 1.2.0 / sf |
+| Type | Time to result: mo-dx / sf | Output bytes: mo-dx / sf / sf `--json` | Exit code: mo-dx (measured on 1.2.0) / sf |
 |---|---|---|---|
 | Apex class | 3.73 s / **3.15 s** | 144 / 22,006 / 2,968 | 0 / 1 |
 | LWC bundle | 5.71 s / **3.19 s** | 251 / 22,460 / 2,928 | 0 / 1 |
 
-mo-dx-plugin 1.2.0 exits 0 on compile errors. [#472](https://github.com/msrivastav13/mo-dx-plugin/pull/472)
-makes it exit 1.
+These runs used 1.2.0, which exits 0 on compile errors. From 2.0.0
+([#472](https://github.com/msrivastav13/mo-dx-plugin/pull/472)) it exits 1. The
+change only affects the exit code, not timing or output.
 
 What each tool prints for the Apex error:
 
@@ -163,10 +164,9 @@ which makes an agent's change easy to reason about and review.
   own components here). After an inner loop with mo-dx-plugin, finish with
   `sf project deploy start --ignore-conflicts` for the components you
   changed, or `sf project retrieve start` to resync.
-- **mo-dx-plugin 1.2.0:** failures exit 0, so check the output for `✖`, or
+- **mo-dx-plugin 1.x:** failures exit 0, so check the output for `✖`, or
   use the [`mo-deploy.sh`](../skills/mo-dx-deploy/scripts/mo-deploy.sh)
-  wrapper from the agent skill. [#472](https://github.com/msrivastav13/mo-dx-plugin/pull/472)
-  fixes this.
+  wrapper from the agent skill. 2.0.0 exits 1 on failure.
 
 A reasonable agent workflow: iterate on one component with `deploy:*` against
 a scratch org or sandbox, then run one `sf project deploy start` for the
