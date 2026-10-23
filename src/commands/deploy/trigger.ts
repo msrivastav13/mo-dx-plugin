@@ -3,7 +3,7 @@ import { Messages } from '@salesforce/core';
 import chalk from 'chalk';
 import fs from 'fs-extra';
 import { Deploy, DeployResult } from '../../service/deploy.js';
-import { display } from '../../service/displayError.js';
+import { reportDeployFailure } from '../../service/displayError.js';
 import { getFileName } from '../../service/getFileName.js';
 import { getNameSpacePrefix } from '../../service/getNamespacePrefix.js';
 
@@ -81,13 +81,7 @@ export default class TriggerDeploy extends SfCommand<any> {
         this.spinner.stop(chalk.bold.greenBright(`Trigger Successfully ${mode} ✔.Command execution time: ${executionTime} seconds`));
         return '';
     } else {
-        if (deployResult.queryResult.records.length > 0 && deployResult.queryResult.records[0].DeployDetails.componentFailures.length > 0) {
-          display(deployResult, this);
-        }
-        this.spinner.stop(chalk.bold.redBright('Trigger Update Failed ✖'));
-        if ( typeof deployResult.error !== 'undefined' ) {
-          console.log(chalk.bold.redBright(deployResult.error));
-        }
+        reportDeployFailure(deployResult, this, 'Trigger Update Failed ✖');
     }
   }
 }

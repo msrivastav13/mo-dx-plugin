@@ -3,7 +3,7 @@ import { Messages } from '@salesforce/core';
 import chalk from 'chalk';
 import fs from 'fs-extra';
 import {SobjectResult} from '../../models/sObjectResult.js';
-import {displaylog} from '../../service/displayError.js';
+import {displaylog, stopWithFailure} from '../../service/displayError.js';
 import {getNameSpacePrefix} from '../../service/getNamespacePrefix.js';
 
 Messages.importMessagesDirectoryFromMetaUrl(import.meta.url);
@@ -104,8 +104,8 @@ export default class AuraDeploy extends SfCommand<any> {
           auraDefinitionBundleVar.Id = newauraDefinitionBundle.id;
           auraDefinitionBundles.push(auraDefinitionBundleVar);
         } else {
+          stopWithFailure(this, 'Aura Component Save Failed ✖');
           displaylog(JSON.stringify(newauraDefinitionBundle.errors), this);
-          displaylog(chalk.bold.redBright('Aura Component Save Failed'), this);
         }
       }
       if (auraDefinitionBundles.length > 0) {
@@ -117,12 +117,12 @@ export default class AuraDeploy extends SfCommand<any> {
           const executionTime = (this.endTime - this.startTime) / 1000;
           this.spinner.stop(chalk.bold.greenBright(`AuraBundle Deployed Successfully ✔.Command execution time: ${executionTime} seconds`));
         } catch (exception) {
-          this.spinner.stop(chalk.bold.redBright('Aura Component Save Failed ✖'));
+          stopWithFailure(this, 'Aura Component Save Failed ✖');
           displaylog(String(exception), this);
         }
       }
     } catch (exception) {
-      this.spinner.stop(chalk.bold.redBright('Aura Component Save Failed ✖'));
+      stopWithFailure(this, 'Aura Component Save Failed ✖');
       displaylog(String(exception), this);
     }
 

@@ -1,6 +1,7 @@
 import { SfCommand, Flags, requiredOrgFlagWithDeprecations, orgApiVersionFlagWithDeprecations, loglevel } from '@salesforce/sf-plugins-core';
 import { Messages } from '@salesforce/core';
 import chalk from 'chalk';
+import { markFailed } from '../../service/displayError.js';
 
 Messages.importMessagesDirectoryFromMetaUrl(import.meta.url);
 
@@ -45,26 +46,19 @@ export default class RenameMetadata extends SfCommand<any> {
     const { flags } = await this.parse(RenameMetadata);
 
     const conn = flags['target-org'].getConnection(flags['api-version']);
-    let result: Promise<any>; // tslint:disable-line:no-any
     try {
-      result = conn.metadata.rename(flags.metadatatype, flags.oldfullname, flags.newfullname) as any; // tslint:disable-line:no-any
-      result
-        .then(
-          res => {
-            if (res.success) {
-              this.log(chalk.bold.greenBright(flags.metadatatype + ' ' + flags.oldfullname + ' is successfully Renamed to ' + flags.newfullname + ' ✔'));
-            }
-          }
-        )
-        .catch(
-          error => {
-            this.log('ERROR--' + chalk.bold.redBright(error));
-          }
-        );
+      const result = await conn.metadata.rename(flags.metadatatype, flags.oldfullname, flags.newfullname);
+      if (result.success) {
+        this.log(chalk.bold.greenBright(flags.metadatatype + ' ' + flags.oldfullname + ' is successfully Renamed to ' + flags.newfullname + ' ✔'));
+      } else {
+        this.log('ERROR--' + chalk.bold.redBright(JSON.stringify(result.errors)));
+        markFailed();
+      }
+      return result;
     } catch (ex) {
       this.log('ERROR--' + chalk.bold.redBright(ex));
+      markFailed();
     }
-    return JSON.stringify(result);
   }
 
 }

@@ -1,5 +1,13 @@
 # Changelog
 
+## Unreleased
+
+### Bug Fixes
+
+- **`deploy:*` and `metadata:rename` now exit 1 when they fail.** Compile errors, Tooling/Metadata API errors, and failed renames used to print a `✖`/`ERROR--` message and still exit 0, so scripts, CI, and agents treated failures as successes. The printed output is unchanged. Under `--json` the `status` is now `1` too.
+- `deploy:apex`, `deploy:trigger`, `deploy:vf` and `deploy:vfcomponent` no longer crash with a `TypeError` when the failure happens before compilation (e.g. metadata container/member creation). The underlying error, or the request's `ErrorMsg`, is shown instead.
+- `metadata:rename` now waits for the rename to finish before the command returns, and reports `success: false` results that were previously silent.
+
 ## 1.2.0 (2026-06-19)
 
 A maintenance release focused on security, dependency currency, and a `metadata:rename` bug fix.

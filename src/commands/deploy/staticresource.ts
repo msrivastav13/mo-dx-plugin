@@ -4,7 +4,7 @@ import AdmZip from "adm-zip";
 import chalk from 'chalk';
 import fs from "fs-extra";
 import Mime from "mime-types";
-import { displaylog } from "../../service/displayError.js";
+import { displaylog, stopWithFailure } from "../../service/displayError.js";
 import { getNameSpacePrefix } from "../../service/getNamespacePrefix.js";
 
 Messages.importMessagesDirectoryFromMetaUrl(import.meta.url);
@@ -135,9 +135,7 @@ export default class StaticResourceDeploy extends SfCommand<any> {
         chalk.bold.greenBright(`StaticResource Deployed Successfully ✔.Command execution time: ${executionTime} seconds`)
       );
     } catch (e) {
-      this.spinner.stop(
-        chalk.bold.redBright("Static Resource Save Failed ✖")
-      );
+      stopWithFailure(this, "Static Resource Save Failed ✖");
       displaylog(String(e), this);
     }
 
